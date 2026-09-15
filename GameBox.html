@@ -42,6 +42,16 @@
     border-radius: 8px; padding: 8px 14px; font-size: 14px;
   }
   .back-btn:active { background: var(--border); }
+  header { flex-wrap: wrap; }
+  .diff-wrap { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .diff-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+  .diff-bar { display: flex; gap: 4px; }
+  .diff-bar button {
+    background: var(--surface2); color: var(--muted); border: 1px solid var(--border);
+    border-radius: 8px; padding: 5px 8px; font-size: 11px; font-weight: 700;
+  }
+  .diff-bar button.active { background: var(--accent); color: #08210f; border-color: var(--accent); }
+  @media (max-width: 420px) { .diff-label { display: none; } }
 
   /* ---------- Menu ---------- */
   #menu { max-width: 520px; margin: 0 auto; padding: 20px 16px 40px; }
@@ -256,11 +266,20 @@
   <button class="back-btn" id="backBtn" style="display:none">&#8592; Menu</button>
   <div class="dot"></div>
   <h1>GameBox</h1>
+  <div class="diff-wrap">
+    <span class="diff-label">Difficulty</span>
+    <div class="diff-bar" id="diffBar">
+      <button data-diff="easy">Easy</button>
+      <button data-diff="medium">Med</button>
+      <button data-diff="hard">Hard</button>
+      <button data-diff="impossible">Imp</button>
+    </div>
+  </div>
 </header>
 
 <!-- ================= MENU ================= -->
 <div id="menu" class="screen active">
-  <p class="sub">15 games, 1 file, 100% offline. Pick one:</p>
+  <p class="sub">15 games, 1 file, 100% offline. Set difficulty up top, then pick a game:</p>
   <div class="game-list">
     <button class="game-card" data-game="snake">
       <div class="icon" style="background:#14361f;color:#4ade80">S</div>
@@ -304,7 +323,7 @@
     </button>
     <button class="game-card" data-game="mines">
       <div class="icon" style="background:#1c2a1c;color:#86efac">Mi</div>
-      <div class="meta"><div class="name">Minesweeper</div><div class="desc">9x9 grid, 10 mines. Dig carefully.</div></div>
+      <div class="meta"><div class="name">Minesweeper</div><div class="desc">Dig carefully. Bigger grids on higher difficulty.</div></div>
       <div class="arrow">&#8250;</div>
     </button>
     <button class="game-card" data-game="hangman">
@@ -507,12 +526,12 @@
 <div id="reaction" class="screen">
   <div class="hud">
     <div class="stat"><div class="label">Best</div><div class="value" id="rxBest">&#8734;</div></div>
-    <div class="stat"><div class="label">Avg (5)</div><div class="value" id="rxAvg">&#8212;</div></div>
+    <div class="stat"><div class="label">Avg</div><div class="value" id="rxAvg">&#8212;</div></div>
     <button class="btn" id="rxReset">Reset</button>
   </div>
   <div id="rxPanel">Tap to begin</div>
   <div class="banner" id="rxBanner"></div>
-  <p class="sub-hint">Wait for green, then tap as fast as you can. 5 runs per set.</p>
+  <p class="sub-hint">Wait for green, then tap as fast as you can. Too early fails the set on Hard+.</p>
 </div>
 
 <!-- ================= DODGER ================= -->
@@ -556,6 +575,44 @@
   function hideBanner(el) { el.classList.remove("show"); }
   function lsGet(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
   function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+
+  /* ============ Difficulty ============ */
+  var DIFF = lsGet("gb_diff", "medium");
+  function diff() { return DIFF; }
+  var DP = {
+    snake:     { easy:{tick:210}, medium:{tick:150}, hard:{tick:110}, impossible:{tick:78} },
+    g2048:     { easy:{four:0.05}, medium:{four:0.10}, hard:{four:0.25}, impossible:{four:0.40} },
+    memory:    { easy:{peek:1500, back:1000}, medium:{back:700}, hard:{back:420}, impossible:{back:250} },
+    ttt:       { easy:{rand:0.75}, medium:{rand:0.3}, hard:{}, impossible:{minimax:true} },
+    whack:     { easy:{mole:1100}, medium:{mole:800}, hard:{mole:550}, impossible:{mole:380} },
+    breakout:  { easy:{pw:80, mult:0.85, lives:5}, medium:{pw:64, mult:1, lives:3}, hard:{pw:52, mult:1.2, lives:2}, impossible:{pw:44, mult:1.4, lives:1} },
+    flappy:    { easy:{gap:155, speed:2.0, every:115}, medium:{gap:115, speed:2.3, every:95}, hard:{gap:95, speed:2.7, every:85}, impossible:{gap:78, speed:3.3, every:72} },
+    simon:     { easy:{step:640, flash:400}, medium:{step:480, flash:320}, hard:{step:350, flash:240}, impossible:{step:250, flash:170} },
+    mines:     { easy:{size:9, mines:8}, medium:{size:9, mines:12}, hard:{size:10, mines:18}, impossible:{size:11, mines:24} },
+    hangman:   { easy:{misses:8, pool:0}, medium:{misses:6, pool:0}, hard:{misses:5, pool:1}, impossible:{misses:4, pool:2} },
+    pong:      { easy:{cpu:2.8, ball:3.4}, medium:{cpu:4.4, ball:4}, hard:{cpu:5.8, ball:4.6}, impossible:{cpu:7.6, ball:5.2} },
+    connect4:  { easy:{rand:0.5}, medium:{}, hard:{safe:true}, impossible:{depth:4} },
+    lightsout: { easy:{presses:[4,7]}, medium:{presses:[8,14]}, hard:{presses:[16,24]}, impossible:{presses:[26,36]} },
+    reaction:  { easy:{runs:3, early:"restart", min:1200, max:4000}, medium:{runs:5, early:"retry", min:1200, max:4000}, hard:{runs:5, early:"fail", min:900, max:3000}, impossible:{runs:7, early:"fail", min:700, max:2200} },
+    dodger:    { easy:{speed:2.2, spawn:65}, medium:{speed:3, spawn:55}, hard:{speed:4.2, spawn:45}, impossible:{speed:5.5, spawn:34} }
+  };
+  (function () {
+    var btns = $("diffBar").querySelectorAll("button");
+    function paint() {
+      for (var i = 0; i < btns.length; i++) {
+        btns[i].classList.toggle("active", btns[i].getAttribute("data-diff") === DIFF);
+      }
+    }
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].addEventListener("click", function () {
+        DIFF = this.getAttribute("data-diff");
+        lsSet("gb_diff", DIFF);
+        paint();
+        beep(520, 0.06);
+      });
+    }
+    paint();
+  })();
 
   var audioCtx = null;
   function beep(freq, dur) {
@@ -651,7 +708,7 @@
       reset();
       this.textContent = "Restart";
       if (timer) clearInterval(timer);
-      timer = setInterval(step, 150);
+      timer = setInterval(step, DP.snake[diff()].tick);
     });
     var padBtns = document.querySelectorAll(".dpad button");
     for (var i = 0; i < padBtns.length; i++) {
@@ -695,7 +752,7 @@
       for (var r = 0; r < 4; r++) for (var c = 0; c < 4; c++) if (grid[r][c] === 0) empty.push([r, c]);
       if (!empty.length) return;
       var spot = empty[Math.floor(Math.random() * empty.length)];
-      grid[spot[0]][spot[1]] = Math.random() < 0.9 ? 2 : 4;
+      grid[spot[0]][spot[1]] = Math.random() < DP.g2048[diff()].four ? 4 : 2;
     }
     function render() {
       var el = $("tGrid");
@@ -811,6 +868,22 @@
         card.addEventListener("click", function () { flip(card); });
         el.appendChild(card);
       });
+      var mcfg = DP.memory[diff()];
+      if (mcfg.peek) {
+        lock = true;
+        var shown = el.querySelectorAll(".mem-card");
+        for (var i = 0; i < shown.length; i++) {
+          shown[i].classList.add("flipped");
+          shown[i].textContent = shown[i].dataset.sym;
+        }
+        setTimeout(function () {
+          for (var j = 0; j < shown.length; j++) {
+            shown[j].classList.remove("flipped");
+            shown[j].textContent = "?";
+          }
+          lock = false;
+        }, mcfg.peek);
+      }
     }
     function flip(card) {
       if (lock || card.classList.contains("flipped") || card.classList.contains("done")) return;
@@ -834,7 +907,7 @@
           a.classList.remove("flipped"); b.classList.remove("flipped");
           a.textContent = "?"; b.textContent = "?";
           lock = false;
-        }, 700);
+        }, DP.memory[diff()].back);
       }
     }
     $("memNew").addEventListener("click", reset);
@@ -882,7 +955,7 @@
     }
     function cpuMove() {
       if (over) return;
-      var moveIdx = bestMove(board);
+      var moveIdx = DP.ttt[diff()].minimax ? minimaxMove(board) : bestMove(board);
       board[moveIdx] = "O";
       render();
       var w = winner(board);
@@ -890,6 +963,13 @@
     }
     function bestMove(b) {
       var i;
+      var cfg = DP.ttt[diff()];
+      // easy / medium: sometimes just play a random open cell
+      if (cfg.rand && Math.random() < cfg.rand) {
+        var open = [];
+        for (i = 0; i < 9; i++) if (b[i] === "") open.push(i);
+        if (open.length) return open[Math.floor(Math.random() * open.length)];
+      }
       // 1. win if possible
       for (i = 0; i < 9; i++) if (b[i] === "") { b[i] = "O"; if (winner(b) === "O") { b[i] = ""; return i; } b[i] = ""; }
       // 2. block player win
@@ -903,6 +983,32 @@
       var any = [];
       for (i = 0; i < 9; i++) if (b[i] === "") any.push(i);
       return any[Math.floor(Math.random() * any.length)];
+    }
+    function minimaxMove(b) {
+      var bestScore = -2, move = -1;
+      for (var i = 0; i < 9; i++) {
+        if (b[i] !== "") continue;
+        b[i] = "O";
+        var s = mini(b, false);
+        b[i] = "";
+        if (s > bestScore) { bestScore = s; move = i; }
+      }
+      return move;
+    }
+    function mini(b, isMax) {
+      var w = winner(b);
+      if (w === "O") return 1;
+      if (w === "X") return -1;
+      if (w === "draw") return 0;
+      var best = isMax ? -2 : 2;
+      for (var i = 0; i < 9; i++) {
+        if (b[i] !== "") continue;
+        b[i] = isMax ? "O" : "X";
+        var s = mini(b, !isMax);
+        b[i] = "";
+        if (isMax ? s > best : s < best) best = s;
+      }
+      return best;
     }
     function finish(w) {
       over = true;
@@ -954,7 +1060,7 @@
       $("wStart").textContent = "Restart";
       if (moleTimer) clearInterval(moleTimer);
       if (clockTimer) clearInterval(clockTimer);
-      moleTimer = setInterval(popMole, 800);
+      moleTimer = setInterval(popMole, DP.whack[diff()].mole);
       clockTimer = setInterval(function () {
         timeLeft--;
         $("wTime").textContent = timeLeft;
@@ -988,17 +1094,19 @@
         bricks.push({ x: 10 + c * (bw + gap), y: 40 + r * (bh + gap), w: bw, h: bh, alive: true, row: r });
       }
     }
-    function speedMult() { return 1 + (level - 1) * 0.15; }
+    function speedMult() { return (1 + (level - 1) * 0.15) * DP.breakout[diff()].mult; }
     function resetBall() {
       var m = speedMult();
       ball = { x: paddle.x + PW / 2, y: paddle.y - R - 2, dx: 2.2 * (Math.random() < 0.5 ? -1 : 1) * m, dy: -3 * m };
     }
     function init() {
+      var cfg = DP.breakout[diff()];
+      PW = cfg.pw; lives = cfg.lives;
       paddle = { x: W / 2 - PW / 2, y: H - 24 };
-      score = 0; lives = 3; level = 1; playing = false;
+      score = 0; level = 1; playing = false;
       makeBricks(); resetBall();
       $("brkScore").textContent = "0";
-      $("brkLives").textContent = "3";
+      $("brkLives").textContent = lives;
       hideBanner($("brkBanner"));
       draw();
     }
@@ -1118,7 +1226,7 @@
       draw();
     }
     function spawnPipe() {
-      var gap = 115, margin = 50;
+      var gap = DP.flappy[diff()].gap, margin = 50;
       var gapY = margin + Math.random() * (GY - gap - margin * 2);
       pipes.push({ x: W + 10, gapY: gapY, gap: gap, scored: false });
     }
@@ -1138,8 +1246,9 @@
       bird.vy = Math.min(bird.vy + 0.28, 8);
       bird.y += bird.vy;
       if (bird.y < 12) { bird.y = 12; bird.vy = 0; }
-      if (frame % 95 === 0) spawnPipe();
-      var speed = 2.3;
+      var fp = DP.flappy[diff()];
+      if (frame % fp.every === 0) spawnPipe();
+      var speed = fp.speed;
       for (var i = pipes.length - 1; i >= 0; i--) {
         var p = pipes[i];
         p.x -= speed;
@@ -1219,13 +1328,14 @@
       level++;
       $("simLevel").textContent = level;
       seq.push(Math.floor(Math.random() * 4));
+      var p = DP.simon[diff()];
       showing = true;
       for (var i = 0; i < seq.length; i++) {
         (function (i) {
-          later(function () { flash(seq[i], 320); }, 600 + i * 480);
+          later(function () { flash(seq[i], p.flash); }, 600 + i * p.step);
         })(i);
       }
-      later(function () { showing = false; pos = 0; }, 600 + seq.length * 480);
+      later(function () { showing = false; pos = 0; }, 600 + seq.length * p.step);
     }
     function startGame() {
       clearTos();
@@ -1291,11 +1401,14 @@
       }
     }
     function reset() {
+      var cfg = DP.mines[diff()];
+      SIZE = cfg.size; MINES = cfg.mines;
+      $("mnGrid").style.gridTemplateColumns = "repeat(" + SIZE + ", 1fr)";
       cells = [];
       for (var i = 0; i < SIZE * SIZE; i++) cells.push({ mine: false, open: false, flag: false, boom: false, n: 0 });
       started = false; dead = false; won = false; opened = 0; flagMode = false;
       $("mnFlagBtn").innerHTML = "&#128681; Flag: OFF";
-      $("mnStatus").textContent = "Mines: 10";
+      $("mnStatus").textContent = "Mines: " + MINES;
       hideBanner($("mnBanner"));
       render();
     }
@@ -1383,13 +1496,18 @@
   /* ============ 10. HANGMAN ============ */
   (function () {
     var WORDS = ["APPLE","BANANA","TIGER","PLANET","ORANGE","GUITAR","CASTLE","DOLPHIN","FOREST","ISLAND","ROCKET","SILVER","WINDOW","CAMERA","DRAGON","EAGLE","FLOWER","GARDEN","HONEY","JUNGLE","LEMON","MANGO","OCEAN","PIANO","QUEEN","RIVER","SUNSET","TUNNEL","VIOLIN","WINTER","ZEBRA","BRIDGE","CANDLE","DESERT","ENGINE","FEATHER","GLASS","HARBOR","IGLOO","JUICE"];
-    var word, wrong, guessed, done;
+    var word, wrong, guessed, done, maxWrong = 6;
+    var HARD_WORDS = ["ADVENTURE","BUTTERFLY","CHOCOLATE","DINOSAUR","EARTHQUAKE","FOUNTAIN","GRAVITY","HORIZON","ILLUSION","JOURNAL","KNAPSACK","LANTERN","MAGNETISM","NIGHTFALL","OCTOPUS","PARADOX","QUARREL","SILHOUETTE","TELESCOPE","ULTRAVIOLET","VOLCANO","WILDERNESS","XYLOPHONE","YESTERDAY","ZIGZAG"];
+    var IMPOSSIBLE_WORDS = ["ABRUPTLY","BAGPIPES","BAYOU","BUZZWORD","CROQUET","CYCLONE","DWARVES","EPITOME","FLAPJACK","GAZEBO","GENEALOGY","HAIKU","HYPHEN","IVORY","JACUZZI","JUKEBOX","KHAKI","LARYNX","MNEMONIC","MYRRH","NYMPH","OXYGEN","PHLEGM","PSYCHE","QUARTZ","QUIZZED","RHYTHM","SPHINX","SYNDROME","THESAURUS","VORTEX","WALTZ","WHARF","YACHT","ZEALOUS","ZEPHYR"];
     var canvas = $("hgCanvas"), ctx = canvas.getContext("2d");
 
     function reset() {
-      word = WORDS[Math.floor(Math.random() * WORDS.length)];
+      var cfg = DP.hangman[diff()];
+      maxWrong = cfg.misses;
+      var pool = cfg.pool === 2 ? IMPOSSIBLE_WORDS : cfg.pool === 1 ? HARD_WORDS : WORDS;
+      word = pool[Math.floor(Math.random() * pool.length)];
       wrong = 0; guessed = {}; done = false;
-      $("hgMiss").textContent = "0/6";
+      $("hgMiss").textContent = "0/" + maxWrong;
       hideBanner($("hgBanner"));
       buildKeys();
       renderWord();
@@ -1417,7 +1535,7 @@
         }
       }
       if (word.indexOf(L) < 0) wrong++;
-      $("hgMiss").textContent = wrong + "/6";
+      $("hgMiss").textContent = wrong + "/" + maxWrong;
       drawFigure();
       renderWord();
       var solved = true;
@@ -1427,7 +1545,7 @@
         banner($("hgBanner"), "You got it! The word was <b>" + word + "</b>");
         return;
       }
-      if (wrong >= 6) {
+      if (wrong >= maxWrong) {
         done = true;
         banner($("hgBanner"), "Game over. The word was <b>" + word + "</b>");
       }
@@ -1487,7 +1605,7 @@
     }
     function resetBall(dir) {
       ball.x = W / 2; ball.y = H / 2;
-      ball.vx = 4 * dir; ball.vy = (Math.random() * 4 - 2) || 2;
+      ball.vx = DP.pong[diff()].ball * dir; ball.vy = (Math.random() * 4 - 2) || 2;
     }
     function point(who) {
       if (who === "you") you++; else cpu++;
@@ -1502,9 +1620,10 @@
       if (!playing) { raf = null; return; }
       if (keys.ArrowUp) py = Math.max(0, py - 7);
       if (keys.ArrowDown) py = Math.min(H - 70, py + 7);
+      var cpuSp = DP.pong[diff()].cpu;
       var centre = cy + 35;
-      if (centre < ball.y - 12) cy = Math.min(H - 70, cy + 4.4);
-      else if (centre > ball.y + 12) cy = Math.max(0, cy - 4.4);
+      if (centre < ball.y - 12) cy = Math.min(H - 70, cy + cpuSp);
+      else if (centre > ball.y + 12) cy = Math.max(0, cy - cpuSp);
       ball.x += ball.vx; ball.y += ball.vy;
       if (ball.y < ball.r) { ball.y = ball.r; ball.vy = -ball.vy; beep(220, 0.05); }
       if (ball.y > H - ball.r) { ball.y = H - ball.r; ball.vy = -ball.vy; beep(220, 0.05); }
@@ -1639,19 +1758,98 @@
       $("c4Status").textContent = "Your turn";
     }
     function pickColumn() {
-      // 1. win now  2. block player  3. centre-ish random
+      var cfg = DP.connect4[diff()];
+      if (cfg.depth) return bestColumnMinimax(cfg.depth);
       var i, c;
+      // 1. win now
       for (i = 0; i < COLS; i++) {
         if (!full(i)) { drop(i, 2); var w = findWin(2); undrop(i); if (w) return i; }
       }
+      // 2. block player win
       for (i = 0; i < COLS; i++) {
         if (!full(i)) { drop(i, 1); var w2 = findWin(1); undrop(i); if (w2) return i; }
+      }
+      // easy: half the time just play a random column
+      if (cfg.rand && Math.random() < cfg.rand) {
+        var anyCol = [];
+        for (i = 0; i < COLS; i++) if (!full(i)) anyCol.push(i);
+        if (anyCol.length) return anyCol[Math.floor(Math.random() * anyCol.length)];
       }
       var order = [3, 2, 4, 1, 5, 0, 6];
       var open = [];
       for (i = 0; i < order.length; i++) { c = order[i]; if (!full(c)) open.push(c); }
       if (!open.length) return -1;
-      return open[Math.floor(Math.random() * Math.min(3, open.length))];
+      var pick = open[Math.floor(Math.random() * Math.min(3, open.length))];
+      // hard: don't hand the player an immediate win
+      if (cfg.safe) {
+        drop(pick, 2);
+        var safePick = !opponentCanWinNow();
+        undrop(pick);
+        if (!safePick) {
+          for (i = 0; i < open.length; i++) {
+            drop(open[i], 2);
+            var ok = !opponentCanWinNow();
+            undrop(open[i]);
+            if (ok) return open[i];
+          }
+        }
+      }
+      return pick;
+    }
+    function opponentCanWinNow() {
+      for (var i = 0; i < COLS; i++) {
+        if (!full(i)) { drop(i, 1); var w = findWin(1); undrop(i); if (w) return true; }
+      }
+      return false;
+    }
+    function bestColumnMinimax(depth) {
+      var bestScore = -Infinity, bestCols = [];
+      for (var c = 0; c < COLS; c++) {
+        if (full(c)) continue;
+        drop(c, 2);
+        var s = minimaxC4(depth - 1, false);
+        undrop(c);
+        if (s > bestScore) { bestScore = s; bestCols = [c]; }
+        else if (s === bestScore) bestCols.push(c);
+      }
+      return bestCols.length ? bestCols[Math.floor(Math.random() * bestCols.length)] : -1;
+    }
+    function minimaxC4(depth, maximizing) {
+      var score = evalBoard();
+      if (score >= 100000 || score <= -100000) return score;
+      if (depth === 0) return score;
+      var anyOpen = false;
+      for (var c0 = 0; c0 < COLS; c0++) if (!full(c0)) { anyOpen = true; break; }
+      if (!anyOpen) return 0;
+      if (maximizing) {
+        var best = -Infinity;
+        for (var c = 0; c < COLS; c++) {
+          if (full(c)) continue;
+          drop(c, 2);
+          best = Math.max(best, minimaxC4(depth - 1, false));
+          undrop(c);
+        }
+        return best;
+      }
+      var worst = Infinity;
+      for (var c2 = 0; c2 < COLS; c2++) {
+        if (full(c2)) continue;
+        drop(c2, 1);
+        worst = Math.min(worst, minimaxC4(depth - 1, true));
+        undrop(c2);
+      }
+      return worst;
+    }
+    function evalBoard() {
+      if (findWin(2)) return 100000;
+      if (findWin(1)) return -100000;
+      var s = 0;
+      for (var r = 0; r < ROWS; r++) for (var c = 0; c < COLS; c++) {
+        var w = 3 - Math.abs(3 - c);
+        if (grid[r][c] === 2) s += w;
+        else if (grid[r][c] === 1) s -= w;
+      }
+      return s;
     }
     function undrop(col) {
       for (var r = 0; r < ROWS; r++) {
@@ -1676,7 +1874,8 @@
       grid = [];
       for (var r = 0; r < N; r++) grid.push(new Array(N).fill(false));
       // generate by pressing random cells from an all-off board (guarantees solvable)
-      var presses = 8 + Math.floor(Math.random() * 7);
+      var pr = DP.lightsout[diff()].presses;
+      var presses = pr[0] + Math.floor(Math.random() * (pr[1] - pr[0] + 1));
       for (var p = 0; p < presses; p++) toggle(Math.floor(Math.random() * N), Math.floor(Math.random() * N));
       moves = 0; done = false;
       $("loMoves").textContent = "0";
@@ -1738,6 +1937,7 @@
     }
     function clearTo() { if (to) { clearTimeout(to); to = null; } }
     function next() {
+      var cfg = DP.reaction[diff()];
       state = "wait";
       setPanel("wait", "Wait for green...");
       clearTo();
@@ -1745,7 +1945,7 @@
         state = "go";
         goTime = performance.now();
         setPanel("go", "TAP!");
-      }, 1200 + Math.random() * 2800);
+      }, cfg.min + Math.random() * (cfg.max - cfg.min));
     }
     function finishSet() {
       var sum = 0;
@@ -1766,18 +1966,33 @@
       } else if (state === "wait") {
         // too early
         clearTo();
-        state = "idle";
-        setPanel("early", "Too early! Tap to retry");
-        beep(150, 0.25);
+        var ecfg = DP.reaction[diff()];
+        if (ecfg.early === "restart") {
+          // easy: gentle restart of the wait, no penalty
+          beep(150, 0.15);
+          next();
+        } else if (ecfg.early === "fail") {
+          // hard+: the whole set is failed
+          state = "idle";
+          times = [];
+          setPanel("early", "Too early! Set failed");
+          banner($("rxBanner"), "Too early! <b>Set failed</b> - tap to start over");
+          beep(150, 0.25);
+        } else {
+          state = "idle";
+          setPanel("early", "Too early! Tap to retry");
+          beep(150, 0.25);
+        }
       } else if (state === "go") {
+        var runs = DP.reaction[diff()].runs;
         var ms = Math.round(performance.now() - goTime);
         times.push(ms);
         beep(520, 0.06);
         var best = lsGet("rxBest", null);
         if (best === null || ms < best) { best = ms; lsSet("rxBest", best); }
         $("rxBest").textContent = best + "ms";
-        if (times.length >= 5) finishSet();
-        else { state = "idle"; setPanel("", ms + " ms\nTap for run " + (times.length + 1) + "/5"); }
+        if (times.length >= runs) finishSet();
+        else { state = "idle"; setPanel("", ms + " ms\nTap for run " + (times.length + 1) + "/" + runs); }
       }
     });
     $("rxReset").addEventListener("click", function () {
@@ -1801,7 +2016,7 @@
     var px = W / 2 - 14, pw = 28, ph = 28;   // player box
     var blocks = [], score = 0, spawnIn = 0;
 
-    function speed() { return 3 + Math.min(7, score / 8); }
+    function speed() { return DP.dodger[diff()].speed + Math.min(7, score / 8); }
     function reset() {
       blocks = []; score = 0; spawnIn = 0;
       px = W / 2 - 14;
@@ -1824,7 +2039,8 @@
       if (spawnIn <= 0) {
         var bw = 40 + Math.random() * 70;
         blocks.push({ x: Math.random() * (W - bw), y: -40, w: bw, h: 26 });
-        spawnIn = Math.max(22, 55 - score * 2);
+        var sp = DP.dodger[diff()].spawn;
+        spawnIn = Math.max(sp * 0.4, sp - score * 2);
       }
       var s = speed();
       for (var i = blocks.length - 1; i >= 0; i--) {
