@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>GameBox - 20 Offline Games</title>
+<title>GameBox - 30 Offline Games</title>
 <style>
   :root {
     --bg: #101418;
@@ -306,6 +306,71 @@
   .mm-dot.b { background: var(--ink); }
   .mm-dot.w { background: var(--muted); }
 
+  /* ---------- Reversi ---------- */
+  #rvBoard { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; }
+  .rv-cell { aspect-ratio: 1/1; border-radius: 4px; border: 1px solid #0f3d1e; background: #175029; padding: 0; position: relative; }
+  .rv-cell.b::after, .rv-cell.w::after { content: ""; position: absolute; inset: 14%; border-radius: 50%; }
+  .rv-cell.b::after { background: #090909; }
+  .rv-cell.w::after { background: #f2f2f2; }
+  .rv-cell.hint::after { content: ""; position: absolute; inset: 38%; border-radius: 50%; background: rgba(255,255,255,0.3); }
+
+  /* ---------- Dots & Boxes ---------- */
+  #dbBoard { display: grid; gap: 1px; }
+  #dbBoard button { padding: 0; border-radius: 3px; }
+  .db-dot { background: transparent !important; border: none !important; position: relative; aspect-ratio: 1/1; }
+  .db-dot::after { content: ""; position: absolute; inset: 40%; border-radius: 50%; background: var(--muted); }
+  .db-edge { background: transparent; border: none; position: relative; aspect-ratio: 1/1; }
+  .db-edge::after { content: ""; position: absolute; border-radius: 2px; background: var(--surface2); border: 1px solid var(--border); }
+  .db-h::after { left: 4%; right: 4%; top: 40%; bottom: 40%; }
+  .db-v::after { top: 4%; bottom: 4%; left: 40%; right: 40%; }
+  .db-h.p::after, .db-v.p::after { background: var(--accent2); border-color: #7dd3fc; }
+  .db-h.c::after, .db-v.c::after { background: var(--danger); border-color: #fca5a5; }
+  .db-box { background: #141a21; border: 1px solid var(--border); aspect-ratio: 1/1; }
+  .db-box.p { background: #14532d; }
+  .db-box.c { background: #3b1414; }
+
+  /* ---------- Battleship ---------- */
+  #shWrap { display: flex; gap: 14px; flex-wrap: wrap; }
+  .sh-board { flex: 1 1 150px; min-width: 150px; }
+  .sh-grid { display: grid; gap: 2px; }
+  .sh-cell { aspect-ratio: 1/1; border-radius: 3px; background: #141a21; border: 1px solid var(--border); padding: 0; position: relative; }
+  .sh-cell.ship { background: #2f3a46; }
+  .sh-cell.hit { background: var(--danger); }
+  .sh-cell.sunk { background: #7a2b2b; }
+  .sh-cell.miss::after { content: ""; position: absolute; inset: 36%; border-radius: 50%; background: var(--muted); }
+
+  /* ---------- Square canvases (Sokoban / Maze) ---------- */
+  .sq-canvas {
+    background: #0b0f13; border: 1px solid var(--border); border-radius: 12px;
+    width: 100%; aspect-ratio: 1/1; display: block; touch-action: none;
+  }
+
+  /* ---------- SameGame ---------- */
+  #sgGrid { display: grid; gap: 3px; }
+  .sg-cell { aspect-ratio: 1/1; border-radius: 6px; border: 1px solid rgba(0,0,0,0.3); padding: 0; }
+  .sg-cell.gone { background: transparent !important; border-color: transparent; }
+
+  /* ---------- Word Scramble ---------- */
+  #wcSlots { display: flex; gap: 8px; justify-content: center; margin: 20px 0; flex-wrap: wrap; }
+  .wc-slot { width: 44px; height: 48px; border-radius: 8px; border: 1px dashed var(--border); background: var(--surface2); color: var(--ink); font-size: 22px; font-weight: 700; }
+  .wc-slot.filled { border-style: solid; }
+  .wc-slot.bad { border-color: var(--danger); color: var(--danger); }
+  #wcLetters { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .wc-letter { width: 44px; height: 48px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--ink); font-size: 22px; font-weight: 700; }
+  .wc-letter.used { opacity: 0.25; }
+
+  /* ---------- RPS ---------- */
+  #rpBtns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+  .rp-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 14px; padding: 18px 0; font-size: 40px; }
+  .rp-btn:active { background: var(--accent); }
+  #rpShow { text-align: center; font-size: 18px; margin-top: 16px; min-height: 26px; }
+
+  /* ---------- Stroop ---------- */
+  #stRule { text-align: center; color: var(--muted); font-size: 13px; letter-spacing: 1px; text-transform: uppercase; margin: 18px 0 6px; }
+  #stWord { text-align: center; font-size: clamp(44px, 16vw, 72px); font-weight: 800; min-height: 84px; }
+  #stOpts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .st-opt { background: var(--surface2); border: 1px solid var(--border); color: var(--ink); border-radius: 12px; padding: 16px 0; font-size: 18px; font-weight: 700; }
+
   footer { text-align: center; color: var(--muted); font-size: 12px; padding: 10px 0 30px; }
 </style>
 </head>
@@ -328,7 +393,7 @@
 
 <!-- ================= MENU ================= -->
 <div id="menu" class="screen active">
-  <p class="sub">20 games, 1 file, 100% offline. Set difficulty up top, then pick a game:</p>
+  <p class="sub">30 games, 1 file, 100% offline. Set difficulty up top, then pick a game:</p>
   <div class="game-list">
     <button class="game-card" data-game="snake">
       <div class="icon" style="background:#14361f;color:#4ade80">S</div>
@@ -428,6 +493,56 @@
     <button class="game-card" data-game="master">
       <div class="icon" style="background:#3a1a2b;color:#f472b6">Mm</div>
       <div class="meta"><div class="name">Mastermind</div><div class="desc">Crack the hidden colour code.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="reversi">
+      <div class="icon" style="background:#0f3d1e;color:#4ade80">O</div>
+      <div class="meta"><div class="name">Reversi</div><div class="desc">Othello vs the CPU. Flank and flip.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="dots">
+      <div class="icon" style="background:#123038;color:#22d3ee">&#9633;</div>
+      <div class="meta"><div class="name">Dots &amp; Boxes</div><div class="desc">Draw lines, complete boxes, chain them.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="ships">
+      <div class="icon" style="background:#0f2733;color:#38bdf8">&#9875;</div>
+      <div class="meta"><div class="name">Battleship</div><div class="desc">Sink the CPU fleet before it sinks yours.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="sokoban">
+      <div class="icon" style="background:#3b2a14;color:#fdba74">&#128230;</div>
+      <div class="meta"><div class="name">Sokoban</div><div class="desc">Push crates onto goals. No pulling!</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="maze">
+      <div class="icon" style="background:#2a1f3a;color:#a78bfa">&#127739;</div>
+      <div class="meta"><div class="name">Maze Escape</div><div class="desc">Freshly generated maze. Find the exit.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="samegame">
+      <div class="icon" style="background:#331a33;color:#e879f9">&#9639;</div>
+      <div class="meta"><div class="name">SameGame</div><div class="desc">Clear colour groups. Bigger groups, bigger score.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="scramble">
+      <div class="icon" style="background:#14361f;color:#86efac">W</div>
+      <div class="meta"><div class="name">Word Scramble</div><div class="desc">Unscramble words against the clock.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="rps">
+      <div class="icon" style="background:#3a1414;color:#fb7185">&#9994;</div>
+      <div class="meta"><div class="name">Rock Paper Scissors</div><div class="desc">Best of 5 vs an AI that learns your habits.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="stroop">
+      <div class="icon" style="background:#3b3410;color:#fde047">&#128064;</div>
+      <div class="meta"><div class="name">Stroop Test</div><div class="desc">Ink colour or word meaning? Don&#39;t get fooled.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="aim">
+      <div class="icon" style="background:#14232e;color:#60a5fa">&#127919;</div>
+      <div class="meta"><div class="name">Aim Trainer</div><div class="desc">Tap targets before they shrink away.</div></div>
       <div class="arrow">&#8250;</div>
     </button>
   </div>
@@ -693,6 +808,152 @@
   <p class="sub-hint">Tap holes to cycle colours. Black dot = right colour &amp; spot, white = right colour, wrong spot.</p>
 </div>
 
+<!-- ================= REVERSI ================= -->
+<div id="reversi" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">You</div><div class="value" id="rvYou">2</div></div>
+    <div class="stat"><div class="label">CPU</div><div class="value" id="rvCpu">2</div></div>
+    <button class="btn" id="rvNew">New</button>
+  </div>
+  <div id="rvStatus" class="sub-hint" style="text-align:left;margin:0 0 10px">Your turn</div>
+  <div id="rvBoard"></div>
+  <div class="banner" id="rvBanner"></div>
+  <p class="sub-hint">You are black. Tap a dotted cell &#8212; flanking CPU discs flips them your colour.</p>
+</div>
+
+<!-- ================= DOTS AND BOXES ================= -->
+<div id="dots" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">You</div><div class="value" id="dbYou">0</div></div>
+    <div class="stat"><div class="label">CPU</div><div class="value" id="dbCpu">0</div></div>
+    <button class="btn" id="dbNew">New</button>
+  </div>
+  <div id="dbStatus" class="sub-hint" style="text-align:left;margin:0 0 10px">Your turn</div>
+  <div id="dbBoard"></div>
+  <div class="banner" id="dbBanner"></div>
+  <p class="sub-hint">Tap a line to draw it. Completing a box scores it and grants another turn.</p>
+</div>
+
+<!-- ================= BATTLESHIP ================= -->
+<div id="ships" class="screen">
+  <div class="hud">
+    <div class="stat" style="min-width:130px"><div class="label">Status</div><div class="value" id="shStatus" style="font-size:15px">Fire!</div></div>
+    <button class="btn" id="shNew">New</button>
+  </div>
+  <div id="shWrap">
+    <div class="sh-board"><p class="sub-hint" style="margin:0 0 6px">Enemy fleet &#8212; tap to fire</p><div id="shEnemy"></div></div>
+    <div class="sh-board"><p class="sub-hint" style="margin:0 0 6px">Your fleet</p><div id="shMine"></div></div>
+  </div>
+  <div class="banner" id="shBanner"></div>
+  <p class="sub-hint">Fleet: 4+3+3+2 cells. Enemy ships never touch each other &#8212; use that.</p>
+</div>
+
+<!-- ================= SOKOBAN ================= -->
+<div id="sokoban" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Level</div><div class="value" id="skLevel">1/3</div></div>
+    <div class="stat"><div class="label">Moves</div><div class="value" id="skMoves">0</div></div>
+    <button class="btn" id="skNew">New</button>
+  </div>
+  <canvas id="skCanvas" class="sq-canvas" width="360" height="360"></canvas>
+  <div class="banner" id="skBanner"></div>
+  <div class="dpad">
+    <div class="blank"></div><button data-mv="up">&#9650;</button><div class="blank"></div>
+    <button data-mv="left">&#9664;</button><div class="blank"></div><button data-mv="right">&#9654;</button>
+    <div class="blank"></div><button data-mv="down">&#9660;</button><div class="blank"></div>
+  </div>
+  <p class="sub-hint">Push every crate onto a gold goal. You can push, never pull.</p>
+</div>
+
+<!-- ================= MAZE ================= -->
+<div id="maze" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Time</div><div class="value" id="mzTime">0s</div></div>
+    <div class="stat"><div class="label">Moves</div><div class="value" id="mzMoves">0</div></div>
+    <div class="stat"><div class="label">Best</div><div class="value" id="mzBest">&#8734;</div></div>
+    <button class="btn" id="mzNew">New</button>
+  </div>
+  <canvas id="mzCanvas" class="sq-canvas" width="360" height="360"></canvas>
+  <div class="banner" id="mzBanner"></div>
+  <div class="dpad">
+    <div class="blank"></div><button data-mv="up">&#9650;</button><div class="blank"></div>
+    <button data-mv="left">&#9664;</button><div class="blank"></div><button data-mv="right">&#9654;</button>
+    <div class="blank"></div><button data-mv="down">&#9660;</button><div class="blank"></div>
+  </div>
+  <p class="sub-hint">Reach the gold square. Every maze is a perfect maze &#8212; exactly one path.</p>
+</div>
+
+<!-- ================= SAMEGAME ================= -->
+<div id="samegame" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Score</div><div class="value" id="sgScore">0</div></div>
+    <div class="stat"><div class="label">Best</div><div class="value" id="sgBest">0</div></div>
+    <button class="btn" id="sgNew">New</button>
+  </div>
+  <div id="sgGrid"></div>
+  <div class="banner" id="sgBanner"></div>
+  <p class="sub-hint">Tap groups of 2+ matching tiles. Groups of n score (n-2)&#178;. Clear the board for +1000.</p>
+</div>
+
+<!-- ================= WORD SCRAMBLE ================= -->
+<div id="scramble" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Solved</div><div class="value" id="wcScore">0</div></div>
+    <div class="stat"><div class="label">Time</div><div class="value" id="wcTime">60</div></div>
+    <button class="btn" id="wcNew">Start</button>
+  </div>
+  <div id="wcSlots"></div>
+  <div id="wcLetters"></div>
+  <div style="margin-top:14px;text-align:center">
+    <button class="btn secondary" id="wcSkip">Skip (-3s)</button>
+  </div>
+  <div class="banner" id="wcBanner"></div>
+  <p class="sub-hint">Tap letters to build the word. Tap a filled slot to put a letter back.</p>
+</div>
+
+<!-- ================= ROCK PAPER SCISSORS ================= -->
+<div id="rps" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">You</div><div class="value" id="rpYou">0</div></div>
+    <div class="stat"><div class="label">CPU</div><div class="value" id="rpCpu">0</div></div>
+    <button class="btn" id="rpNew">New Match</button>
+  </div>
+  <div id="rpShow">First to 3 wins. Choose:</div>
+  <div id="rpBtns">
+    <button class="rp-btn" data-rp="rock">&#9994;</button>
+    <button class="rp-btn" data-rp="paper">&#9995;</button>
+    <button class="rp-btn" data-rp="scissors">&#9996;</button>
+  </div>
+  <div class="banner" id="rpBanner"></div>
+  <p class="sub-hint">The CPU studies your patterns. Higher difficulty = better memory.</p>
+</div>
+
+<!-- ================= STROOP ================= -->
+<div id="stroop" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Score</div><div class="value" id="stScore">0</div></div>
+    <div class="stat"><div class="label">Time</div><div class="value" id="stTime">30</div></div>
+    <button class="btn" id="stStart">Start</button>
+  </div>
+  <div id="stRule">TAP THE INK COLOUR</div>
+  <div id="stWord">&#8212;</div>
+  <div id="stOpts"></div>
+  <div class="banner" id="stBanner"></div>
+  <p class="sub-hint">Wrong answer costs 2 seconds. On Hard+ the rule can flip to word meaning mid-game.</p>
+</div>
+
+<!-- ================= AIM TRAINER ================= -->
+<div id="aim" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Hits</div><div class="value" id="amHits">0</div></div>
+    <div class="stat"><div class="label">Best</div><div class="value" id="amBest">0</div></div>
+    <button class="btn" id="amStart">Start</button>
+  </div>
+  <canvas id="amCanvas" class="tall-canvas" width="360" height="480"></canvas>
+  <div class="banner" id="amBanner"></div>
+  <p class="sub-hint">Tap the target before it shrinks away. 30 seconds.</p>
+</div>
+
 <script>
 (function () {
   "use strict";
@@ -746,7 +1007,17 @@
     slide:     { easy:{size:3}, medium:{size:4}, hard:{size:5}, impossible:{size:6} },
     math:      { easy:{ops:"+", lo:1, hi:20, time:60, pen:2}, medium:{ops:"+-", lo:1, hi:50, time:60, pen:3}, hard:{ops:"+-*", lo:1, hi:50, mlo:2, mhi:12, time:60, pen:4}, impossible:{ops:"+-*/", lo:10, hi:99, mlo:3, mhi:15, time:45, pen:5} },
     invaders:  { easy:{rows:3, cols:6, lives:3, alienSpd:0.35, bombEvery:1500, bombSpd:2.2}, medium:{rows:4, cols:6, lives:3, alienSpd:0.55, bombEvery:1000, bombSpd:2.8}, hard:{rows:5, cols:7, lives:2, alienSpd:0.75, bombEvery:700, bombSpd:3.4}, impossible:{rows:5, cols:8, lives:1, alienSpd:1.0, bombEvery:450, bombSpd:4.2} },
-    master:    { easy:{len:3, colors:6, rows:8}, medium:{len:4, colors:6, rows:8}, hard:{len:4, colors:7, rows:7}, impossible:{len:5, colors:8, rows:6} }
+    master:    { easy:{len:3, colors:6, rows:8}, medium:{len:4, colors:6, rows:8}, hard:{len:4, colors:7, rows:7}, impossible:{len:5, colors:8, rows:6} },
+    reversi:   { easy:{ai:"random"}, medium:{ai:"greedy"}, hard:{ai:"corner"}, impossible:{ai:"minimax", depth:3} },
+    dots:      { easy:{n:3, lvl:0}, medium:{n:4, lvl:1}, hard:{n:5, lvl:2}, impossible:{n:5, lvl:3} },
+    ships:     { easy:{ai:"random"}, medium:{ai:"hunt"}, hard:{ai:"parity"}, impossible:{ai:"parity2"} },
+    sokoban:   { easy:{set:0}, medium:{set:1}, hard:{set:2}, impossible:{set:3} },
+    maze:      { easy:{n:8}, medium:{n:12}, hard:{n:16}, impossible:{n:20} },
+    samegame:  { easy:{n:8, colors:4}, medium:{n:10, colors:5}, hard:{n:12, colors:5}, impossible:{n:12, colors:6} },
+    scramble:  { easy:{pool:0, time:90}, medium:{pool:1, time:75}, hard:{pool:2, time:60}, impossible:{pool:3, time:40} },
+    rps:       { easy:{ai:0}, medium:{ai:1}, hard:{ai:2}, impossible:{ai:3} },
+    stroop:    { easy:{time:40, wordRule:0, cong:0.6}, medium:{time:30, wordRule:0.1, cong:0.3}, hard:{time:25, wordRule:0.25, cong:0.1}, impossible:{time:20, wordRule:0.45, cong:0} },
+    aim:       { easy:{r:34, life:2400, spd:0}, medium:{r:26, life:1700, spd:0}, hard:{r:20, life:1300, spd:2}, impossible:{r:15, life:1000, spd:3} }
   };
   (function () {
     var btns = $("diffBar").querySelectorAll("button");
@@ -862,7 +1133,7 @@
       if (timer) clearInterval(timer);
       timer = setInterval(step, DP.snake[diff()].tick);
     });
-    var padBtns = document.querySelectorAll(".dpad button");
+    var padBtns = document.querySelectorAll("#snake .dpad button");
     for (var i = 0; i < padBtns.length; i++) {
       padBtns[i].addEventListener("click", function () { setDir(this.getAttribute("data-dir")); });
     }
@@ -2834,6 +3105,1329 @@
     }
     $("mmCheck").addEventListener("click", check);
     $("mmNew").addEventListener("click", reset);
+    reset();
+  })();
+
+  /* ============ 21. REVERSI ============ */
+  (function () {
+    var N = 8;
+    var DIRS = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+    var b, turn, over;   // 0 empty, 1 black (you), 2 white (cpu)
+
+    function inB(r, c) { return r >= 0 && r < N && c >= 0 && c < N; }
+    function flipsFor(r, c, who) {
+      if (b[r][c]) return [];
+      var all = [];
+      for (var d = 0; d < 8; d++) {
+        var line = [], rr = r + DIRS[d][0], cc = c + DIRS[d][1];
+        while (inB(rr, cc) && b[rr][cc] === 3 - who) { line.push([rr, cc]); rr += DIRS[d][0]; cc += DIRS[d][1]; }
+        if (line.length && inB(rr, cc) && b[rr][cc] === who) all = all.concat(line);
+      }
+      return all;
+    }
+    function legalMoves(who) {
+      var out = [];
+      for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) {
+        if (!b[r][c] && flipsFor(r, c, who).length) out.push([r, c]);
+      }
+      return out;
+    }
+    function apply(r, c, who) {
+      var f = flipsFor(r, c, who);
+      b[r][c] = who;
+      for (var i = 0; i < f.length; i++) b[f[i][0]][f[i][1]] = who;
+      return f.length;
+    }
+    function counts() {
+      var bl = 0, wh = 0;
+      for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) { if (b[r][c] === 1) bl++; else if (b[r][c] === 2) wh++; }
+      return [bl, wh];
+    }
+    function render(hints) {
+      var el = $("rvBoard");
+      el.innerHTML = "";
+      var legal = {};
+      if (hints) { var lm = legalMoves(turn); for (var i = 0; i < lm.length; i++) legal[lm[i][0] + "," + lm[i][1]] = true; }
+      for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) {
+        (function (r, c) {
+          var cell = document.createElement("button");
+          cell.className = "rv-cell" + (b[r][c] === 1 ? " b" : b[r][c] === 2 ? " w" : "") + (legal[r + "," + c] ? " hint" : "");
+          cell.addEventListener("click", function () { play(r, c); });
+          el.appendChild(cell);
+        })(r, c);
+      }
+      var ct = counts();
+      $("rvYou").textContent = ct[0];
+      $("rvCpu").textContent = ct[1];
+    }
+    function endCheck() {
+      var myMoves = legalMoves(1), cpuMoves = legalMoves(2);
+      if (myMoves.length === 0 && cpuMoves.length === 0) {
+        over = true;
+        var ct = counts();
+        var msg = ct[0] > ct[1] ? "You win <b>" + ct[0] + " - " + ct[1] + "</b>!" : ct[0] < ct[1] ? "CPU wins <b>" + ct[1] + " - " + ct[0] + "</b>" : "Draw, <b>" + ct[0] + " - " + ct[1] + "</b>";
+        banner($("rvBanner"), msg);
+        $("rvStatus").textContent = "Game over";
+        render(false);
+        return true;
+      }
+      return false;
+    }
+    function play(r, c) {
+      if (over || turn !== 1) return;
+      if (!flipsFor(r, c, 1).length) return;
+      apply(r, c, 1);
+      beep(440, 0.06);
+      turn = 2;
+      render(false);
+      $("rvStatus").textContent = "CPU thinking...";
+      setTimeout(cpuTurn, 400);
+    }
+    function cpuTurn() {
+      if (over) return;
+      if (!legalMoves(2).length) {
+        turn = 1;
+        if (!legalMoves(1).length) { endCheck(); return; }
+        $("rvStatus").textContent = "CPU passes — your turn";
+        render(true);
+        return;
+      }
+      var mv = pickMove();
+      apply(mv[0], mv[1], 2);
+      beep(300, 0.06);
+      turn = 1;
+      render(true);
+      if (!legalMoves(1).length) {
+        if (!legalMoves(2).length) { endCheck(); return; }
+        turn = 2;
+        $("rvStatus").textContent = "You pass — CPU moves";
+        setTimeout(cpuTurn, 400);
+        return;
+      }
+      $("rvStatus").textContent = "Your turn";
+    }
+    function pickMove() {
+      var cfg = DP.reversi[diff()];
+      var moves = legalMoves(2);
+      if (!moves.length) return null;
+      if (cfg.ai === "random" && Math.random() < 0.7) return moves[Math.floor(Math.random() * moves.length)];
+      if (cfg.ai === "minimax") {
+        var best = null, bestScore = -Infinity;
+        for (var i = 0; i < moves.length; i++) {
+          var saved = cloneBoard();
+          apply(moves[i][0], moves[i][1], 2);
+          var s = -mm(3 - 2, cfg.depth - 1, -Infinity, Infinity);
+          restoreBoard(saved);
+          if (s > bestScore) { bestScore = s; best = moves[i]; }
+        }
+        return best || moves[0];
+      }
+      // greedy / corner: weight corners & edges
+      var W = [
+        [120,-20,20,5,5,20,-20,120],
+        [-20,-40,-5,-5,-5,-5,-40,-20],
+        [20,-5,15,3,3,15,-5,20],
+        [5,-5,3,3,3,3,-5,5],
+        [5,-5,3,3,3,3,-5,5],
+        [20,-5,15,3,3,15,-5,20],
+        [-20,-40,-5,-5,-5,-5,-40,-20],
+        [120,-20,20,5,5,20,-20,120]
+      ];
+      var bestW = -Infinity, pick = moves[0];
+      for (var j = 0; j < moves.length; j++) {
+        var w = W[moves[j][0]][moves[j][1]] + (cfg.ai === "greedy" ? 0 : flipsFor(moves[j][0], moves[j][1], 2).length * 2);
+        if (cfg.ai === "greedy" && Math.random() < 0.3) w = flipsFor(moves[j][0], moves[j][1], 2).length;
+        if (w > bestW) { bestW = w; pick = moves[j]; }
+      }
+      return pick;
+    }
+    function cloneBoard() { return b.map(function (r) { return r.slice(); }); }
+    function restoreBoard(s) { b = s.map(function (r) { return r.slice(); }); }
+    function mm(forWho, depth, alpha, beta) {
+      var moves = legalMoves(forWho === 2 ? 2 : 1);
+      var other = forWho === 2 ? 1 : 2;
+      if (depth === 0) {
+        var ct = counts();
+        return forWho === 2 ? ct[1] - ct[0] : ct[0] - ct[1];
+      }
+      if (!moves.length) {
+        var om = legalMoves(other);
+        if (!om.length) { var ct2 = counts(); return (ct2[1] - ct2[0]) * 100; }
+        return -mm(other, depth - 1, -beta, -alpha);
+      }
+      var best = -Infinity;
+      for (var i = 0; i < moves.length; i++) {
+        var saved = cloneBoard();
+        apply(moves[i][0], moves[i][1], other === 1 ? 1 : 2);
+        var s = -mm(other, depth - 1, -beta, -alpha);
+        restoreBoard(saved);
+        if (s > best) best = s;
+        if (best > alpha) alpha = best;
+        if (alpha >= beta) break;
+      }
+      return best;
+    }
+    function reset() {
+      b = [];
+      for (var r = 0; r < N; r++) b.push(new Array(N).fill(0));
+      b[3][3] = 2; b[3][4] = 1; b[4][3] = 1; b[4][4] = 2;
+      turn = 1; over = false;
+      $("rvStatus").textContent = "Your turn";
+      hideBanner($("rvBanner"));
+      render(true);
+    }
+    $("rvNew").addEventListener("click", reset);
+    reset();
+  })();
+
+  /* ============ 22. DOTS AND BOXES ============ */
+  (function () {
+    var n, hEdges, vEdges, boxes, turn, over;   // 1 you, 2 cpu
+
+    function idx(r, c) { return r * n + c; }          // h edges & boxes
+    function idxV(r, c) { return r * (n + 1) + c; }   // v edges (c can be n)
+    function boxDone(r, c) {
+      return hEdges[idx(r, c)] && hEdges[idx(r + 1, c)] && vEdges[idxV(r, c)] && vEdges[idxV(r, c + 1)];
+    }
+    function reset() {
+      n = DP.dots[diff()].n;
+      var total = n * (n + 1);
+      hEdges = new Array(total).fill(0);   // h edge r,c = between (r-1,c) and (r,c) for r in 0..n
+      vEdges = new Array(n * (n + 1)).fill(0);
+      boxes = [];
+      for (var r = 0; r < n; r++) { boxes.push([]); for (var c = 0; c < n; c++) boxes[r].push(0); }
+      turn = 1; over = false;
+      $("dbYou").textContent = "0"; $("dbCpu").textContent = "0";
+      $("dbStatus").textContent = "Your turn";
+      hideBanner($("dbBanner"));
+      render();
+    }
+    function render() {
+      var el = $("dbBoard");
+      el.style.gridTemplateColumns = "repeat(" + (n * 2 + 1) + ", 1fr)";
+      el.innerHTML = "";
+      for (var gr = 0; gr <= 2 * n; gr++) {
+        for (var gc = 0; gc <= 2 * n; gc++) {
+          (function (gr, gc) {
+            if (gr % 2 === 0 && gc % 2 === 0) {
+              var d = document.createElement("div");
+              d.className = "db-dot";
+              el.appendChild(d);
+            } else if (gr % 2 === 1 && gc % 2 === 0) {
+              // horizontal edge: row gr+1 in hEdges (gr/2 rounded), col gc/2
+              var hr = Math.floor(gr / 2) + (0), hc = gc / 2;
+              var hBtn = document.createElement("button");
+              hBtn.className = "db-edge db-h" + (hEdges[idx(hr, hc)] ? " " + (hEdges[idx(hr, hc)] === 1 ? "p" : "c") : "");
+              hBtn.addEventListener("click", function () { drawEdge("h", hr, hc); });
+              el.appendChild(hBtn);
+            } else if (gr % 2 === 0 && gc % 2 === 1) {
+              var vr = gr / 2, vc = Math.floor(gc / 2);
+              var vBtn = document.createElement("button");
+              vBtn.className = "db-edge db-v" + (vEdges[idxV(vr, vc)] ? " " + (vEdges[idxV(vr, vc)] === 1 ? "p" : "c") : "");
+              vBtn.addEventListener("click", function () { drawEdge("v", vr, vc); });
+              el.appendChild(vBtn);
+            } else {
+              var br = (gr - 1) / 2, bc = (gc - 1) / 2;
+              var box = document.createElement("div");
+              box.className = "db-box" + (boxes[br][bc] ? " " + (boxes[br][bc] === 1 ? "p" : "c") : "");
+              el.appendChild(box);
+            }
+          })(gr, gc);
+        }
+      }
+    }
+    function placeEdge(kind, r, c, who) {
+      if (kind === "h") hEdges[idx(r, c)] = who; else vEdges[idxV(r, c)] = who;
+      var gained = 0;
+      // horizontal edge at (r,c): boxes above (r-1,c) and below (r,c)
+      var check = [];
+      if (kind === "h") { check.push([r - 1, c], [r, c]); } else { check.push([r, c - 1], [r, c]); }
+      for (var i = 0; i < check.length; i++) {
+        var br = check[i][0], bc = check[i][1];
+        if (br >= 0 && br < n && bc >= 0 && bc < n && !boxes[br][bc] && boxDone(br, bc)) {
+          boxes[br][bc] = who;
+          gained++;
+        }
+      }
+      return gained;
+    }
+    function drawEdge(kind, r, c) {
+      if (over || turn !== 1) return;
+      if (kind === "h" && hEdges[idx(r, c)]) return;
+      if (kind === "v" && vEdges[idxV(r, c)]) return;
+      var g = placeEdge(kind, r, c, 1);
+      beep(g ? 520 : 330, 0.05);
+      render();
+      updateScore();
+      if (g) { if (checkEnd()) return; $("dbStatus").textContent = "Box! Go again"; return; }
+      turn = 2;
+      $("dbStatus").textContent = "CPU thinking...";
+      setTimeout(cpuMove, 420);
+    }
+    function updateScore() {
+      var you = 0, cpu = 0;
+      for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) { if (boxes[r][c] === 1) you++; else if (boxes[r][c] === 2) cpu++; }
+      $("dbYou").textContent = you; $("dbCpu").textContent = cpu;
+    }
+    function checkEnd() {
+      var total = n * n, got = 0;
+      for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (boxes[r][c]) got++;
+      if (got === total) {
+        over = true;
+        var you = 0, cpu = 0;
+        for (var r2 = 0; r2 < n; r2++) for (var c2 = 0; c2 < n; c2++) { if (boxes[r2][c2] === 1) you++; else cpu++; }
+        banner($("dbBanner"), you > cpu ? "You win <b>" + you + " - " + cpu + "</b>!" : you < cpu ? "CPU wins <b>" + cpu + " - " + you + "</b>" : "Draw <b>" + you + " - " + cpu + "</b>");
+        $("dbStatus").textContent = "Game over";
+        return true;
+      }
+      return false;
+    }
+    function allEdges() {
+      var out = [];
+      for (var r = 0; r <= n; r++) for (var c = 0; c < n; c++) if (!hEdges[idx(r, c)]) out.push(["h", r, c]);
+      for (var r2 = 0; r2 < n; r2++) for (var c2 = 0; c2 <= n; c2++) if (!vEdges[idxV(r2, c2)]) out.push(["v", r2, c2]);
+      return out;
+    }
+    function edgesGivingBoxes(who) {
+      // edges that complete at least one box
+      var out = [];
+      var all = allEdges();
+      for (var i = 0; i < all.length; i++) {
+        var e = all[i];
+        var g = simulateGain(e, who);
+        if (g > 0) out.push([e, g]);
+      }
+      return out;
+    }
+    function simulateGain(e, who) {
+      var kind = e[0], r = e[1], c = e[2];
+      if (kind === "h") hEdges[idx(r, c)] = who; else vEdges[idxV(r, c)] = who;
+      var g = 0;
+      var check = kind === "h" ? [[r - 1, c], [r, c]] : [[r, c - 1], [r, c]];
+      for (var i = 0; i < check.length; i++) {
+        var br = check[i][0], bc = check[i][1];
+        if (br >= 0 && br < n && bc >= 0 && bc < n && !boxes[br][bc] && boxDone(br, bc)) g++;
+      }
+      if (kind === "h") hEdges[idx(r, c)] = 0; else vEdges[idxV(r, c)] = 0;
+      return g;
+    }
+    function safeEdges() {
+      var all = allEdges(), out = [];
+      for (var i = 0; i < all.length; i++) if (simulateGain(all[i], 1) === 0) out.push(all[i]);
+      return out;
+    }
+    function cpuMove() {
+      if (over || turn !== 2) return;
+      var cfg = DP.dots[diff()].lvl;
+      var twoBoxes = null, oneBox = null, safe = safeEdges(), all = allEdges();
+      if (!all.length) return;   // no edges left to draw
+      var giving = edgesGivingBoxes(2);
+      for (var i = 0; i < giving.length; i++) {
+        if (giving[i][1] >= 2) twoBoxes = giving[i][0];
+        else if (!oneBox) oneBox = giving[i][0];
+      }
+      var pick;
+      if (twoBoxes) pick = twoBoxes;
+      else if (oneBox && (cfg < 2 || !safe.length)) pick = oneBox;
+      else if (cfg >= 1 && safe.length) pick = safe[Math.floor(Math.random() * safe.length)];
+      else if (cfg === 0 && oneBox) pick = oneBox;
+      else pick = all[Math.floor(Math.random() * all.length)];
+      // lvl 3: prefer safe edges, sacrifice only 2-box chains, never open big chains
+      if (cfg >= 3) {
+        if (twoBoxes) pick = twoBoxes;
+        else if (safe.length) pick = safe[Math.floor(Math.random() * safe.length)];
+        else if (oneBox) pick = oneBox;
+      }
+      var g = placeEdge(pick[0], pick[1], pick[2], 2);
+      beep(g ? 480 : 300, 0.05);
+      render();
+      updateScore();
+      if (checkEnd()) return;
+      if (g) { $("dbStatus").textContent = "CPU took a box — it goes again"; setTimeout(cpuMove, 420); return; }
+      turn = 1;
+      $("dbStatus").textContent = "Your turn";
+    }
+    $("dbNew").addEventListener("click", reset);
+    reset();
+  })();
+
+  /* ============ 23. BATTLESHIP ============ */
+  (function () {
+    var N = 7;
+    var SHIPS = [4, 3, 3, 2];
+    var mine, enemy, myShots, enemyShots, over;
+    var huntQueue = [], huntTarget = null;
+
+    function idx(r, c) { return r * N + c; }
+    function inB(r, c) { return r >= 0 && r < N && c >= 0 && c < N; }
+    function placeFleet() {
+      var g = new Array(N * N).fill(0);
+      for (var s = 0; s < SHIPS.length; s++) {
+        var len = SHIPS[s], placed = false, guard = 0;
+        while (!placed && guard++ < 500) {
+          var horiz = Math.random() < 0.5;
+          var r = Math.floor(Math.random() * (horiz ? N : N - len + 1));
+          var c = Math.floor(Math.random() * (horiz ? N - len + 1 : N));
+          var ok = true;
+          for (var i = 0; i < len; i++) {
+            var rr = r + (horiz ? 0 : i), cc = c + (horiz ? i : 0);
+            if (g[idx(rr, cc)]) { ok = false; break; }
+            // ships never touch: check neighbours
+            for (var dr = -1; dr <= 1 && ok; dr++) for (var dc = -1; dc <= 1; dc++) {
+              var nr = rr + dr, nc = cc + dc;
+              if (inB(nr, nc) && g[idx(nr, nc)]) { ok = false; break; }
+            }
+            if (!ok) break;
+          }
+          if (ok) {
+            for (var j = 0; j < len; j++) {
+              var r2 = r + (horiz ? 0 : j), c2 = c + (horiz ? j : 0);
+              g[idx(r2, c2)] = s + 1;
+            }
+            placed = true;
+          }
+        }
+      }
+      return g;
+    }
+    function reset() {
+      mine = placeFleet();
+      enemy = placeFleet();
+      myShots = new Array(N * N).fill(0);    // 0 unknown, 1 miss, 2 hit, 3 sunk
+      enemyShots = new Array(N * N).fill(0);
+      over = false;
+      huntQueue = []; huntTarget = null;
+      $("shStatus").textContent = "Fire!";
+      hideBanner($("shBanner"));
+      render();
+    }
+    function shipAlive(g, hits, s) {
+      for (var i = 0; i < g.length; i++) if (g[i] === s && hits[i] !== 2 && hits[i] !== 3) return true;
+      return false;
+    }
+    function markSunk(g, hits) {
+      var changed = false;
+      for (var s = 1; s <= SHIPS.length; s++) {
+        if (!shipAlive(g, hits, s)) {
+          for (var i = 0; i < hits.length; i++) if (g[i] === s && hits[i] === 2) { hits[i] = 3; changed = true; }
+        }
+      }
+      return changed;
+    }
+    function render() {
+      markSunk(enemy, myShots);
+      markSunk(mine, enemyShots);
+      var e = $("shEnemy"), m = $("shMine");
+      e.innerHTML = ""; m.innerHTML = "";
+      e.style.gridTemplateColumns = "repeat(" + N + ", 1fr)";
+      m.style.gridTemplateColumns = "repeat(" + N + ", 1fr)";
+      for (var i = 0; i < N * N; i++) {
+        (function (i) {
+          var cell = document.createElement("button");
+          var cls = "sh-cell";
+          if (myShots[i] === 1) cls += " miss";
+          else if (myShots[i] === 2) cls += " hit";
+          else if (myShots[i] === 3) cls += " sunk";
+          cell.className = cls;
+          cell.addEventListener("click", function () { fire(i); });
+          e.appendChild(cell);
+        })(i);
+      }
+      for (var j = 0; j < N * N; j++) {
+        var mcell = document.createElement("div");
+        var mcls = "sh-cell";
+        if (mine[j] && enemyShots[j] === 0) mcls += " ship";
+        if (enemyShots[j] === 1) mcls += " miss";
+        else if (enemyShots[j] === 2) mcls += " hit";
+        else if (enemyShots[j] === 3) mcls += " sunk";
+        else if (mine[j]) mcls += " ship";
+        mcell.className = mcls;
+        m.appendChild(mcell);
+      }
+    }
+    function fire(i) {
+      if (over || myShots[i]) return;
+      myShots[i] = enemy[i] ? 2 : 1;
+      beep(myShots[i] === 2 ? 520 : 200, 0.08);
+      render();
+      if (checkWin()) return;
+      $("shStatus").textContent = myShots[i] === 2 ? "Hit!" : "Miss.";
+      setTimeout(enemyTurn, 500);
+    }
+    function checkWin() {
+      var allSunk = true;
+      for (var i = 0; i < enemy.length; i++) if (enemy[i] && myShots[i] !== 2 && myShots[i] !== 3) allSunk = false;
+      if (allSunk) {
+        over = true;
+        banner($("shBanner"), "Victory! Enemy fleet destroyed.");
+        $("shStatus").textContent = "You win!";
+        return true;
+      }
+      var allMineSunk = true;
+      for (var j = 0; j < mine.length; j++) if (mine[j] && enemyShots[j] !== 2 && enemyShots[j] !== 3) allMineSunk = false;
+      if (allMineSunk) {
+        over = true;
+        banner($("shBanner"), "Defeat. Your fleet is sunk.");
+        $("shStatus").textContent = "CPU wins";
+        return true;
+      }
+      return false;
+    }
+    function enemyTurn() {
+      if (over) return;
+      var cfg = DP.ships[diff()].ai;
+      var shot = pickShot(cfg);
+      if (shot === null) { checkWin(); return; }
+      enemyShots[shot] = mine[shot] ? 2 : 1;
+      beep(enemyShots[shot] === 2 ? 440 : 180, 0.08);
+      if (enemyShots[shot] === 2) {
+        if (cfg !== "random") {
+          // queue neighbours for hunt
+          var r = Math.floor(shot / N), c = shot % N;
+          var nbrs = [[r-1,c],[r+1,c],[r,c-1],[r,c+1]];
+          for (var k = 0; k < nbrs.length; k++) {
+            var nr = nbrs[k][0], nc = nbrs[k][1];
+            if (inB(nr, nc) && !enemyShots[idx(nr, nc)]) huntQueue.push(idx(nr, nc));
+          }
+        }
+        render();
+        if (checkWin()) return;
+        $("shStatus").textContent = "You're hit! CPU fires again";
+        setTimeout(enemyTurn, 550);
+        return;
+      }
+      render();
+      if (checkWin()) return;
+      $("shStatus").textContent = "CPU missed. Fire!";
+    }
+    function pickShot(cfg) {
+      var open = [];
+      for (var i = 0; i < N * N; i++) if (!enemyShots[i]) open.push(i);
+      if (!open.length) return null;
+      if (cfg === "random") return open[Math.floor(Math.random() * open.length)];
+      // hunt: finish wounded ships first
+      while (huntQueue.length) {
+        var q = huntQueue.shift();
+        if (!enemyShots[q]) return q;
+      }
+      var parity = cfg === "parity2" ? 2 : (cfg === "parity" ? 2 : 1);
+      var cand = [];
+      for (var j = 0; j < open.length; j++) {
+        var r = Math.floor(open[j] / N), c = open[j] % N;
+        if ((r + c) % 2 === 0) cand.push(open[j]);
+      }
+      if (cfg === "parity2") {
+        // also weight cells adjacent to hits
+        var adj = [];
+        for (var k = 0; k < cand.length; k++) {
+          var r2 = Math.floor(cand[k] / N), c2 = cand[k] % N;
+          var nb = [[r2-1,c2],[r2+1,c2],[r2,c2-1],[r2,c2+1]];
+          for (var m = 0; m < 4; m++) {
+            var nr = nb[m][0], nc = nb[m][1];
+            if (inB(nr, nc) && enemyShots[idx(nr, nc)] === 2) { adj.push(cand[k]); break; }
+          }
+        }
+        if (adj.length) return adj[Math.floor(Math.random() * adj.length)];
+      }
+      if (cand.length) return cand[Math.floor(Math.random() * cand.length)];
+      return open[Math.floor(Math.random() * open.length)];
+    }
+    $("shNew").addEventListener("click", reset);
+    reset();
+  })();
+
+  /* ============ 24. SOKOBAN ============ */
+  (function () {
+    // levels: # wall, . floor, $ crate, * crate on goal, @ player, + player on goal, o goal
+    var SETS = [
+      [ // easy
+        "#######",
+        "#..o..#",
+        "#.$.@.#",
+        "#..o..#",
+        "#######"
+      ],
+      [ // medium
+        "########",
+        "#..o...#",
+        "#.$$@..#",
+        "#..o...#",
+        "#..o...#",
+        "########"
+      ],
+      [ // hard
+        "########",
+        "#..o...#",
+        "#.##$..#",
+        "#..$@..#",
+        "#.#$#..#",
+        "#..o...#",
+        "#.o....#",
+        "########"
+      ],
+      [ // impossible (classic hard microban-style)
+        "########",
+        "#.o....#",
+        "#.$$$..#",
+        "#.o@o..#",
+        "#.$....#",
+        "#.o....#",
+        "########"
+      ]
+    ];
+    var canvas = $("skCanvas"), ctx = canvas.getContext("2d");
+    var level, player, crates, goals, walls, moves, won;
+
+    function loadSet() {
+      var setIdx = DP.sokoban[diff()].set;
+      var set = SETS[setIdx];
+      level = set.map(function (row) { return row.split(""); });
+      player = null; crates = []; goals = []; walls = [];
+      var maxC = 0;
+      for (var r = 0; r < level.length; r++) {
+        maxC = Math.max(maxC, level[r].length);
+        for (var c = 0; c < level[r].length; c++) {
+          var ch = level[r][c];
+          if (ch === "#") walls.push([r, c]);
+          if (ch === "$" || ch === "*") crates.push([r, c]);
+          if (ch === "o" || ch === "*" || ch === "+") goals.push([r, c]);
+          if (ch === "@" || ch === "+") player = { r: r, c: c };
+        }
+      }
+      level.rows = level.length;
+      level.cols = maxC;
+      moves = 0; won = false;
+      $("skMoves").textContent = "0";
+      $("skLevel").textContent = "1/1";
+      hideBanner($("skBanner"));
+      draw();
+    }
+    function isWall(r, c) {
+      for (var i = 0; i < walls.length; i++) if (walls[i][0] === r && walls[i][1] === c) return true;
+      return false;
+    }
+    function crateAt(r, c) {
+      for (var i = 0; i < crates.length; i++) if (crates[i][0] === r && crates[i][1] === c) return i;
+      return -1;
+    }
+    function isGoal(r, c) {
+      for (var i = 0; i < goals.length; i++) if (goals[i][0] === r && goals[i][1] === c) return true;
+      return false;
+    }
+    function draw() {
+      var W = canvas.width, H = canvas.height;
+      var cs = Math.floor(Math.min(W / level.cols, H / level.rows));
+      var ox = (W - cs * level.cols) / 2, oy = (H - cs * level.rows) / 2;
+      ctx.fillStyle = "#0b0f13";
+      ctx.fillRect(0, 0, W, H);
+      for (var r = 0; r < level.rows; r++) for (var c = 0; c < level.cols; c++) {
+        if (isWall(r, c)) {
+          ctx.fillStyle = "#2c3743";
+          ctx.fillRect(ox + c * cs, oy + r * cs, cs, cs);
+        } else {
+          ctx.fillStyle = "#141a21";
+          ctx.fillRect(ox + c * cs, oy + r * cs, cs, cs);
+        }
+      }
+      for (var g = 0; g < goals.length; g++) {
+        ctx.fillStyle = "#fbbf24";
+        ctx.fillRect(ox + goals[g][1] * cs + cs * 0.35, oy + goals[g][0] * cs + cs * 0.35, cs * 0.3, cs * 0.3);
+      }
+      for (var k = 0; k < crates.length; k++) {
+        var onGoal = isGoal(crates[k][0], crates[k][1]);
+        ctx.fillStyle = onGoal ? "#4ade80" : "#b08050";
+        ctx.fillRect(ox + crates[k][1] * cs + 2, oy + crates[k][0] * cs + 2, cs - 4, cs - 4);
+      }
+      if (player) {
+        ctx.fillStyle = "#38bdf8";
+        ctx.fillRect(ox + player.c * cs + 3, oy + player.r * cs + 3, cs - 6, cs - 6);
+      }
+    }
+    function tryMove(dr, dc) {
+      if (won) return;
+      var nr = player.r + dr, nc = player.c + dc;
+      if (isWall(nr, nc)) return;
+      var ci = crateAt(nr, nc);
+      if (ci >= 0) {
+        var cr = nr + dr, cc = nc + dc;
+        if (isWall(cr, cc) || crateAt(cr, cc) >= 0) return;
+        crates[ci] = [cr, cc];
+        beep(240, 0.05);
+      } else {
+        beep(180, 0.03);
+      }
+      player.r = nr; player.c = nc;
+      moves++;
+      $("skMoves").textContent = moves;
+      draw();
+      var allOn = true;
+      for (var i = 0; i < crates.length; i++) if (!isGoal(crates[i][0], crates[i][1])) allOn = false;
+      if (allOn && crates.length === goals.length) {
+        won = true;
+        banner($("skBanner"), "Solved in <b>" + moves + "</b> moves!");
+        beep(700, 0.25);
+      }
+    }
+    var mvBtns = document.querySelectorAll("#sokoban .dpad button");
+    for (var i = 0; i < mvBtns.length; i++) {
+      (function (btn) {
+        btn.addEventListener("click", function () {
+          var mv = btn.getAttribute("data-mv");
+          if (mv === "up") tryMove(-1, 0);
+          else if (mv === "down") tryMove(1, 0);
+          else if (mv === "left") tryMove(0, -1);
+          else if (mv === "right") tryMove(0, 1);
+        });
+      })(mvBtns[i]);
+    }
+    var tsx = 0, tsy = 0;
+    canvas.addEventListener("touchstart", function (e) { tsx = e.touches[0].clientX; tsy = e.touches[0].clientY; }, { passive: true });
+    canvas.addEventListener("touchend", function (e) {
+      var dx = e.changedTouches[0].clientX - tsx, dy = e.changedTouches[0].clientY - tsy;
+      if (Math.abs(dx) < 24 && Math.abs(dy) < 24) return;
+      if (Math.abs(dx) > Math.abs(dy)) tryMove(0, dx > 0 ? 1 : -1);
+      else tryMove(dy > 0 ? 1 : -1, 0);
+    }, { passive: true });
+    document.addEventListener("keydown", function (e) {
+      if (current !== "sokoban") return;
+      var map = { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] };
+      if (map[e.key]) { e.preventDefault(); tryMove(map[e.key][0], map[e.key][1]); }
+    });
+    $("skNew").addEventListener("click", loadSet);
+    loadSet();
+  })();
+
+  /* ============ 25. MAZE ESCAPE ============ */
+  (function () {
+    var canvas = $("mzCanvas"), ctx = canvas.getContext("2d");
+    var n, cells, px, py, moves, startT, timer = null, done;
+
+    function reset() {
+      n = DP.maze[diff()].n;
+      // recursive backtracker on grid: walls stored per cell {r,c,t,b,l}
+      cells = [];
+      for (var r = 0; r < n; r++) { cells.push([]); for (var c = 0; c < n; c++) cells[r].push({ t: true, b: true, l: true, r: true, v: false }); }
+      var stack = [[0, 0]];
+      cells[0][0].v = true;
+      while (stack.length) {
+        var cur = stack[stack.length - 1];
+        var nbrs = [];
+        var r = cur[0], c = cur[1];
+        if (r > 0 && !cells[r-1][c].v) nbrs.push([r-1, c, "t", "b"]);
+        if (r < n-1 && !cells[r+1][c].v) nbrs.push([r+1, c, "b", "t"]);
+        if (c > 0 && !cells[r][c-1].v) nbrs.push([r, c-1, "l", "r"]);
+        if (c < n-1 && !cells[r][c+1].v) nbrs.push([r, c+1, "r", "l"]);
+        if (!nbrs.length) { stack.pop(); continue; }
+        var pick = nbrs[Math.floor(Math.random() * nbrs.length)];
+        cells[r][c][pick[2]] = false;
+        cells[pick[0]][pick[1]][pick[3]] = false;
+        cells[pick[0]][pick[1]].v = true;
+        stack.push([pick[0], pick[1]]);
+      }
+      px = 0; py = 0; moves = 0; done = false;
+      startT = Date.now();
+      $("mzMoves").textContent = "0";
+      $("mzTime").textContent = "0s";
+      $("mzBest").textContent = lsGet("gb_maze_best_" + n, "\u221E");
+      hideBanner($("mzBanner"));
+      if (timer) clearInterval(timer);
+      timer = setInterval(function () {
+        if (!done) $("mzTime").textContent = Math.floor((Date.now() - startT) / 1000) + "s";
+      }, 500);
+      draw();
+    }
+    function draw() {
+      var W = canvas.width, H = canvas.height;
+      var cs = Math.floor(Math.min(W / n, H / n));
+      var ox = (W - cs * n) / 2, oy = (H - cs * n) / 2;
+      ctx.fillStyle = "#0b0f13";
+      ctx.fillRect(0, 0, W, H);
+      ctx.strokeStyle = "#3d4a57";
+      ctx.lineWidth = 2;
+      for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) {
+        var x = ox + c * cs, y = oy + r * cs;
+        var cell = cells[r][c];
+        ctx.beginPath();
+        if (cell.t) { ctx.moveTo(x, y); ctx.lineTo(x + cs, y); }
+        if (cell.b) { ctx.moveTo(x, y + cs); ctx.lineTo(x + cs, y + cs); }
+        if (cell.l) { ctx.moveTo(x, y); ctx.lineTo(x, y + cs); }
+        if (cell.r) { ctx.moveTo(x + cs, y); ctx.lineTo(x + cs, y + cs); }
+        ctx.stroke();
+      }
+      // exit
+      ctx.fillStyle = "#fbbf24";
+      ctx.fillRect(ox + (n - 1) * cs + cs * 0.3, oy + (n - 1) * cs + cs * 0.3, cs * 0.4, cs * 0.4);
+      // player
+      ctx.fillStyle = "#38bdf8";
+      ctx.beginPath();
+      ctx.arc(ox + px * cs + cs / 2, oy + py * cs + cs / 2, cs * 0.3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    function tryMove(dr, dc) {
+      if (done) return;
+      var cell = cells[py][px];
+      if (dr === -1 && cell.t) return;
+      if (dr === 1 && cell.b) return;
+      if (dc === -1 && cell.l) return;
+      if (dc === 1 && cell.r) return;
+      py += dr; px += dc;
+      moves++;
+      $("mzMoves").textContent = moves;
+      beep(300, 0.02);
+      draw();
+      if (px === n - 1 && py === n - 1) {
+        done = true;
+        var secs = Math.floor((Date.now() - startT) / 1000);
+        if (timer) { clearInterval(timer); timer = null; }
+        var best = lsGet("gb_maze_best_" + n, null);
+        if (best === null || secs < best) { best = secs; lsSet("gb_maze_best_" + n, best); }
+        $("mzBest").textContent = best;
+        banner($("mzBanner"), "Escaped in <b>" + secs + "s</b> and " + moves + " moves!");
+        beep(700, 0.25);
+      }
+    }
+    var mvBtns = document.querySelectorAll("#maze .dpad button");
+    for (var i = 0; i < mvBtns.length; i++) {
+      (function (btn) {
+        btn.addEventListener("click", function () {
+          var mv = btn.getAttribute("data-mv");
+          if (mv === "up") tryMove(-1, 0);
+          else if (mv === "down") tryMove(1, 0);
+          else if (mv === "left") tryMove(0, -1);
+          else if (mv === "right") tryMove(0, 1);
+        });
+      })(mvBtns[i]);
+    }
+    var tsx = 0, tsy = 0;
+    canvas.addEventListener("touchstart", function (e) { tsx = e.touches[0].clientX; tsy = e.touches[0].clientY; }, { passive: true });
+    canvas.addEventListener("touchend", function (e) {
+      var dx = e.changedTouches[0].clientX - tsx, dy = e.changedTouches[0].clientY - tsy;
+      if (Math.abs(dx) < 24 && Math.abs(dy) < 24) return;
+      if (Math.abs(dx) > Math.abs(dy)) tryMove(0, dx > 0 ? 1 : -1);
+      else tryMove(dy > 0 ? 1 : -1, 0);
+    }, { passive: true });
+    document.addEventListener("keydown", function (e) {
+      if (current !== "maze") return;
+      var map = { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] };
+      if (map[e.key]) { e.preventDefault(); tryMove(map[e.key][0], map[e.key][1]); }
+    });
+    stopFns.maze = function () { if (timer) { clearInterval(timer); timer = null; } };
+    $("mzNew").addEventListener("click", reset);
+    reset();
+  })();
+
+  /* ============ 26. SAMEGAME ============ */
+  (function () {
+    var n, colors, grid, score, done;
+    var PAL = ["#f87171", "#fbbf24", "#4ade80", "#38bdf8", "#a78bfa", "#fb923c", "#f472b6"];
+
+    function reset() {
+      var c = DP.samegame[diff()];
+      n = c.n; colors = c.colors;
+      grid = [];
+      for (var r = 0; r < n; r++) {
+        grid.push([]);
+        for (var col = 0; col < n; col++) grid[r].push(Math.floor(Math.random() * colors));
+      }
+      score = 0; done = false;
+      $("sgScore").textContent = "0";
+      hideBanner($("sgBanner"));
+      $("sgBest").textContent = lsGet("gb_samegame_best_" + n + "x" + colors, 0);
+      render();
+    }
+    function render(hl) {
+      var el = $("sgGrid");
+      el.style.gridTemplateColumns = "repeat(" + n + ", 1fr)";
+      el.innerHTML = "";
+      for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) {
+        (function (r, c) {
+          var b = document.createElement("button");
+          if (grid[r][c] < 0) b.className = "sg-cell gone";
+          else {
+            b.className = "sg-cell";
+            b.style.background = PAL[grid[r][c]];
+            if (hl) for (var i = 0; i < hl.length; i++) if (hl[i][0] === r && hl[i][1] === c) b.style.filter = "brightness(1.4)";
+          }
+          b.addEventListener("click", function () { tap(r, c); });
+          el.appendChild(b);
+        })(r, c);
+      }
+    }
+    function group(r, c) {
+      var val = grid[r][c];
+      if (val < 0) return [];
+      var seen = {}, out = [], stack = [[r, c]];
+      seen[r + "," + c] = true;
+      while (stack.length) {
+        var cur = stack.pop();
+        out.push(cur);
+        var nb = [[cur[0]-1,cur[1]],[cur[0]+1,cur[1]],[cur[0],cur[1]-1],[cur[0],cur[1]+1]];
+        for (var i = 0; i < 4; i++) {
+          var rr = nb[i][0], cc = nb[i][1];
+          if (rr >= 0 && rr < n && cc >= 0 && cc < n && grid[rr][cc] === val && !seen[rr + "," + cc]) {
+            seen[rr + "," + cc] = true;
+            stack.push([rr, cc]);
+          }
+        }
+      }
+      return out;
+    }
+    function tap(r, c) {
+      if (done) return;
+      var g = group(r, c);
+      if (g.length < 2) return;
+      var val = grid[r][c];
+      for (var i = 0; i < g.length; i++) grid[g[i][0]][g[i][1]] = -1;
+      score += (g.length - 2) * (g.length - 2);
+      $("sgScore").textContent = score;
+      beep(400 + g.length * 20, 0.07);
+      collapse();
+      render();
+      if (noMoves()) finish();
+    }
+    function collapse() {
+      // gravity: tiles fall down
+      for (var c = 0; c < n; c++) {
+        var col = [];
+        for (var r = n - 1; r >= 0; r--) if (grid[r][c] >= 0) col.push(grid[r][c]);
+        for (var r2 = n - 1, k = 0; r2 >= 0; r2--, k++) grid[r2][c] = k < col.length ? col[k] : -1;
+      }
+      // shift empty columns left
+      var writeC = 0;
+      for (var c2 = 0; c2 < n; c2++) {
+        var empty = true;
+        for (var r3 = 0; r3 < n; r3++) if (grid[r3][c2] >= 0) empty = false;
+        if (!empty) {
+          if (writeC !== c2) {
+            for (var r4 = 0; r4 < n; r4++) { grid[r4][writeC] = grid[r4][c2]; grid[r4][c2] = -1; }
+          }
+          writeC++;
+        }
+      }
+    }
+    function noMoves() {
+      for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) {
+        if (grid[r][c] < 0) continue;
+        if (r + 1 < n && grid[r+1][c] === grid[r][c]) return false;
+        if (c + 1 < n && grid[r][c+1] === grid[r][c]) return false;
+      }
+      return true;
+    }
+    function finish() {
+      done = true;
+      var left = 0;
+      for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (grid[r][c] >= 0) left++;
+      if (left === 0) score += 1000;
+      var best = lsGet("gb_samegame_best_" + n + "x" + colors, 0);
+      if (score > best) { best = score; lsSet("gb_samegame_best_" + n + "x" + colors, best); }
+      $("sgBest").textContent = best;
+      $("sgScore").textContent = score;
+      banner($("sgBanner"), left === 0 ? "PERFECT CLEAR! +1000. Total: <b>" + score + "</b>" : "No moves left. " + left + " tiles remain. Score: <b>" + score + "</b>");
+      beep(left === 0 ? 800 : 300, 0.25);
+    }
+    $("sgNew").addEventListener("click", reset);
+    reset();
+  })();
+
+  /* ============ 27. WORD SCRAMBLE ============ */
+  (function () {
+    var POOLS = [
+      ["CAT","DOG","SUN","MAP","CAR","BUS","CUP","HAT","BEE","FOX","PIE","JAM","KEY","OWL","ICE","BAT","PEN","TOY","EGG","ARC"],
+      ["APPLE","BEACH","CHAIR","DANCE","EAGLE","FRUIT","GRAPE","HOUSE","LEMON","MANGO","NURSE","OCEAN","PIANO","QUEEN","RIVER","SMILE","TIGER","WATER","ZEBRA","PLANT"],
+      ["BUTTER","GARDEN","MARKET","ORANGE","PENCIL","ROCKET","SPIDER","TURTLE","WINTER","BASKET","CANDLE","DOLPHIN","FOREST","GUITAR","ISLAND","JUNGLE","KNIGHT","PLANET","SILVER","WINDOW"],
+      ["ADVENTURE","BUTTERFLY","CHOCOLATE","DINOSAUR","EARTHQUAKE","FOUNTAIN","GRAVITY","HORIZON","ILLUSION","JOURNAL","LANTERN","MAGNETISM","NIGHTFALL","OCTOPUS","PARADOX","SILHOUETTE","TELESCOPE","VOLCANO","WILDERNESS","XYLOPHONE"]
+    ];
+    var word, letters, slots, timeLeft, solved, running = false, timer = null;
+
+    function reset() {
+      var c = DP.scramble[diff()];
+      word = POOLS[c.pool][Math.floor(Math.random() * POOLS[c.pool].length)];
+      letters = word.split("");
+      do {
+        for (var i = letters.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var t = letters[i]; letters[i] = letters[j]; letters[j] = t;
+        }
+      } while (letters.join("") === word);
+      slots = new Array(word.length).fill(null);
+      timeLeft = c.time; solved = 0;
+      $("wcScore").textContent = "0";
+      $("wcTime").textContent = timeLeft;
+      hideBanner($("wcBanner"));
+      renderLetters();
+      renderSlots();
+      running = true;
+      $("wcNew").textContent = "Restart";
+      if (timer) clearInterval(timer);
+      timer = setInterval(function () {
+        timeLeft--;
+        $("wcTime").textContent = timeLeft;
+        if (timeLeft <= 0) end();
+      }, 1000);
+    }
+    function renderLetters() {
+      var el = $("wcLetters");
+      el.innerHTML = "";
+      letters.forEach(function (L, i) {
+        var b = document.createElement("button");
+        b.className = "wc-letter" + (slots.indexOf(i) >= 0 ? " used" : "");
+        b.textContent = L;
+        b.addEventListener("click", function () { placeLetter(i); });
+        el.appendChild(b);
+      });
+    }
+    function renderSlots() {
+      var el = $("wcSlots");
+      el.innerHTML = "";
+      slots.forEach(function (li, si) {
+        var b = document.createElement("button");
+        b.className = "wc-slot" + (li !== null ? " filled" : "");
+        b.textContent = li !== null ? letters[li] : "";
+        b.addEventListener("click", function () { removeLetter(si); });
+        el.appendChild(b);
+      });
+    }
+    function placeLetter(i) {
+      if (!running || slots.indexOf(i) >= 0) return;
+      for (var s = 0; s < slots.length; s++) {
+        if (slots[s] === null) { slots[s] = i; break; }
+      }
+      beep(400, 0.03);
+      renderSlots(); renderLetters();
+      if (slots.every(function (v) { return v !== null; })) check();
+    }
+    function removeLetter(si) {
+      if (!running || slots[si] === null) return;
+      slots[si] = null;
+      renderSlots(); renderLetters();
+    }
+    function check() {
+      var guess = slots.map(function (i) { return letters[i]; }).join("");
+      if (guess === word) {
+        solved++;
+        $("wcScore").textContent = solved;
+        beep(700, 0.15);
+        nextWord();
+      } else {
+        beep(150, 0.15);
+        banner($("wcBanner"), "Not quite — try again");
+        setTimeout(hideBanner, 900, $("wcBanner"));
+      }
+    }
+    function nextWord() {
+      var c = DP.scramble[diff()];
+      word = POOLS[c.pool][Math.floor(Math.random() * POOLS[c.pool].length)];
+      letters = word.split("");
+      do {
+        for (var i = letters.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var t = letters[i]; letters[i] = letters[j]; letters[j] = t;
+        }
+      } while (letters.join("") === word);
+      slots = new Array(word.length).fill(null);
+      hideBanner($("wcBanner"));
+      renderLetters();
+      renderSlots();
+    }
+    function end() {
+      running = false;
+      if (timer) { clearInterval(timer); timer = null; }
+      $("wcSlots").innerHTML = "";
+      $("wcLetters").innerHTML = "";
+      banner($("wcBanner"), "Time! You unscrambled <b>" + solved + "</b> words. The last word was " + word);
+      $("wcNew").textContent = "Start";
+      beep(300, 0.2);
+    }
+    $("wcSkip").addEventListener("click", function () {
+      if (!running) return;
+      timeLeft -= 3;
+      $("wcTime").textContent = timeLeft;
+      beep(200, 0.1);
+      if (timeLeft <= 0) { end(); return; }
+      nextWord();
+    });
+    $("wcNew").addEventListener("click", reset);
+    stopFns.scramble = function () { running = false; if (timer) { clearInterval(timer); timer = null; } };
+    var c = DP.scramble[diff()];
+    $("wcTime").textContent = c.time;
+    $("wcSlots").innerHTML = "";
+    $("wcLetters").innerHTML = "";
+  })();
+
+  /* ============ 28. ROCK PAPER SCISSORS ============ */
+  (function () {
+    var MOVES = ["rock", "paper", "scissors"];
+    var EMO = { rock: "\u270A", paper: "\u270B", scissors: "\u270C" };
+    var you = 0, cpu = 0, history = [], over = false;
+
+    function beats(a, b) { return (a === "rock" && b === "scissors") || (a === "paper" && b === "rock") || (a === "scissors" && b === "paper"); }
+    function reset() {
+      you = 0; cpu = 0; history = []; over = false;
+      $("rpYou").textContent = "0"; $("rpCpu").textContent = "0";
+      $("rpShow").textContent = "First to 3 wins. Choose:";
+      hideBanner($("rpBanner"));
+    }
+    function predict() {
+      // AI levels: 0 pure random; 1 frequency; 2 markov-1; 3 markov-2 + frequency blend
+      var lvl = DP.rps[diff()].ai;
+      if (lvl === 0 || history.length < 1) return MOVES[Math.floor(Math.random() * 3)];
+      var myMoves = history.map(function (h) { return h[0]; });
+      if (lvl === 1) {
+        var counts = { rock: 0, paper: 0, scissors: 0 };
+        myMoves.forEach(function (m) { counts[m]++; });
+        var fav = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; })[0];
+        return counter(fav);
+      }
+      var k = lvl === 2 ? 1 : 2;
+      if (myMoves.length < k) {
+        // fall back to frequency
+        var counts2 = { rock: 0, paper: 0, scissors: 0 };
+        myMoves.forEach(function (m) { counts2[m]++; });
+        return counter(Object.keys(counts2).sort(function (a, b) { return counts2[b] - counts2[a]; })[0]);
+      }
+      var last = myMoves.slice(-k).join(",");
+      var nexts = { rock: 0, paper: 0, scissors: 0 };
+      for (var i = 0; i + k < myMoves.length + 1 && i + k <= myMoves.length - 1; i++) {
+        if (myMoves.slice(i, i + k).join(",") === last) nexts[myMoves[i + k]]++;
+      }
+      var total = nexts.rock + nexts.paper + nexts.scissors;
+      if (total === 0) {
+        var counts3 = { rock: 0, paper: 0, scissors: 0 };
+        myMoves.forEach(function (m) { counts3[m]++; });
+        return counter(Object.keys(counts3).sort(function (a, b) { return counts3[b] - counts3[a]; })[0]);
+      }
+      var pred = Object.keys(nexts).sort(function (a, b) { return nexts[b] - nexts[a]; })[0];
+      return counter(pred);
+    }
+    function counter(m) {
+      // play the thing that beats m
+      if (m === "rock") return "paper";
+      if (m === "paper") return "scissors";
+      return "rock";
+    }
+    function play(mine) {
+      if (over) return;
+      var cpuMove = predict();
+      history.push([mine, cpuMove]);
+      var res;
+      if (mine === cpuMove) res = "draw";
+      else if (beats(mine, cpuMove)) { res = "you"; you++; $("rpYou").textContent = you; }
+      else { res = "cpu"; cpu++; $("rpCpu").textContent = cpu; }
+      $("rpShow").innerHTML = EMO[mine] + " vs " + EMO[cpuMove] + " &#8212; " +
+        (res === "draw" ? "draw" : res === "you" ? "you win the round" : "CPU takes it");
+      beep(res === "you" ? 600 : res === "cpu" ? 200 : 350, 0.08);
+      if (you >= 3 || cpu >= 3) {
+        over = true;
+        banner($("rpBanner"), you >= 3 ? "You win the match <b>" + you + " - " + cpu + "</b>!" : "CPU wins the match <b>" + cpu + " - " + you + "</b>");
+      }
+    }
+    var btns = document.querySelectorAll(".rp-btn");
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].addEventListener("click", function () { play(this.getAttribute("data-rp")); });
+    }
+    $("rpNew").addEventListener("click", reset);
+    reset();
+  })();
+
+  /* ============ 29. STROOP TEST ============ */
+  (function () {
+    var NAMES = ["RED", "GREEN", "BLUE", "YELLOW"];
+    var COLS = ["#f87171", "#4ade80", "#60a5fa", "#fbbf24"];
+    var curInk = 0, curWord = 0, rule = "ink";
+    var score = 0, timeLeft, running = false, timer = null;
+
+    function reset() {
+      var c = DP.stroop[diff()];
+      score = 0; timeLeft = c.time; running = true; rule = "ink";
+      $("stScore").textContent = "0";
+      $("stTime").textContent = timeLeft;
+      $("stRule").textContent = "TAP THE INK COLOUR";
+      hideBanner($("stBanner"));
+      if (timer) clearInterval(timer);
+      timer = setInterval(function () {
+        timeLeft--;
+        $("stTime").textContent = timeLeft;
+        if (timeLeft <= 0) end();
+      }, 1000);
+      next();
+    }
+    function next() {
+      var c = DP.stroop[diff()];
+      // congruent chance: word meaning = ink colour
+      var congruent = Math.random() < c.cong;
+      curInk = Math.floor(Math.random() * 4);
+      curWord = congruent ? curInk : Math.floor(Math.random() * 4);
+      if (rule === "word") $("stRule").textContent = "TAP THE WORD MEANING";
+      else $("stRule").textContent = "TAP THE INK COLOUR";
+      var w = $("stWord");
+      w.textContent = NAMES[curWord];
+      w.style.color = COLS[curInk];
+      var opts = [0, 1, 2, 3];
+      for (var i = opts.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = opts[i]; opts[i] = opts[j]; opts[j] = t; }
+      var el = $("stOpts");
+      el.innerHTML = "";
+      opts.forEach(function (o) {
+        var b = document.createElement("button");
+        b.className = "st-opt";
+        b.style.color = COLS[o];
+        b.textContent = NAMES[o];
+        b.addEventListener("click", function () { pick(o); });
+        el.appendChild(b);
+      });
+    }
+    function pick(o) {
+      if (!running) return;
+      var correct = rule === "ink" ? curInk : curWord;
+      if (o === correct) {
+        score++;
+        $("stScore").textContent = score;
+        beep(520, 0.04);
+        // rule flip chance on hard+
+        var c = DP.stroop[diff()];
+        if (c.wordRule > 0 && Math.random() < c.wordRule * 0.35) {
+          rule = rule === "ink" ? "word" : "ink";
+          beep(700, 0.08);
+        }
+        next();
+      } else {
+        timeLeft -= 2;
+        $("stTime").textContent = timeLeft;
+        beep(150, 0.15);
+        if (timeLeft <= 0) { end(); return; }
+        next();
+      }
+    }
+    function end() {
+      running = false;
+      if (timer) { clearInterval(timer); timer = null; }
+      var best = lsGet("gb_stroop_best_" + diff(), 0);
+      if (score > best) { best = score; lsSet("gb_stroop_best_" + diff(), best); }
+      banner($("stBanner"), "Time! Score: <b>" + score + "</b>");
+      $("stWord").textContent = "\u2014";
+      $("stOpts").innerHTML = "";
+      $("stStart").textContent = "Start";
+      beep(300, 0.2);
+    }
+    $("stStart").addEventListener("click", function () {
+      $("stStart").textContent = "Restart";
+      reset();
+    });
+    stopFns.stroop = function () { running = false; if (timer) { clearInterval(timer); timer = null; } };
+    $("stTime").textContent = DP.stroop[diff()].time;
+  })();
+
+  /* ============ 30. AIM TRAINER ============ */
+  (function () {
+    var W = 360, H = 480;
+    var canvas = $("amCanvas"), ctx = canvas.getContext("2d");
+    var target = null, hits = 0, timeLeft = 30, running = false, raf = null, spawnAt = 0;
+    var trails = [];
+
+    function cfg() { return DP.aim[diff()]; }
+    function reset() {
+      hits = 0; timeLeft = 30; running = false;
+      target = null; trails = [];
+      $("amHits").textContent = "0";
+      $("amBest").textContent = lsGet("gb_aim_best_" + diff(), 0);
+      hideBanner($("amBanner"));
+      draw();
+    }
+    function spawn() {
+      var c = cfg();
+      target = { x: 40 + Math.random() * (W - 80), y: 60 + Math.random() * (H - 140), r: c.r, r0: c.r, born: performance.now() };
+    }
+    function step(t) {
+      if (!running) { raf = null; return; }
+      var c = cfg();
+      if (!target) spawn();
+      // shrink
+      var age = t - target.born;
+      target.r = c.r * Math.max(0.25, 1 - age / c.life);
+      if (age > c.life) { trails.push({ x: target.x, y: target.y, t: t, miss: true }); spawn(); }
+      // drift on hard+
+      if (c.spd > 0) {
+        if (!target.dx) { target.dx = (Math.random() - 0.5) * c.spd; target.dy = (Math.random() - 0.5) * c.spd; }
+        target.x += target.dx; target.y += target.dy;
+        if (target.x < target.r + 6 || target.x > W - target.r - 6) target.dx *= -1;
+        if (target.y < target.r + 6 || target.y > H - target.r - 6) target.dy *= -1;
+      }
+      for (var i = trails.length - 1; i >= 0; i--) if (t - trails[i].t > 400) trails.splice(i, 1);
+      draw();
+      raf = requestAnimationFrame(step);
+    }
+    function draw() {
+      ctx.fillStyle = "#0b0f13";
+      ctx.fillRect(0, 0, W, H);
+      for (var i = 0; i < trails.length; i++) {
+        ctx.fillStyle = trails[i].miss ? "rgba(248,113,113,0.5)" : "rgba(74,222,128,0.5)";
+        ctx.beginPath();
+        ctx.arc(trails[i].x, trails[i].y, 6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      if (target) {
+        ctx.fillStyle = "#60a5fa";
+        ctx.beginPath();
+        ctx.arc(target.x, target.y, target.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#e8edf2";
+        ctx.beginPath();
+        ctx.arc(target.x, target.y, target.r * 0.55, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#f87171";
+        ctx.beginPath();
+        ctx.arc(target.x, target.y, target.r * 0.25, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      if (!running) {
+        ctx.fillStyle = "#8a97a5";
+        ctx.font = "16px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Tap Start to play", W / 2, H / 2);
+      }
+    }
+    function tapAt(clientX, clientY) {
+      if (!running || !target) return;
+      var r = canvas.getBoundingClientRect();
+      var x = (clientX - r.left) / r.width * W;
+      var y = (clientY - r.top) / r.height * H;
+      var d = Math.hypot(x - target.x, y - target.y);
+      if (d <= target.r) {
+        hits++;
+        $("amHits").textContent = hits;
+        trails.push({ x: target.x, y: target.y, t: performance.now(), miss: false });
+        beep(520, 0.05);
+        spawn();
+      } else {
+        timeLeft = Math.max(0, timeLeft - 1);
+        beep(150, 0.1);
+      }
+    }
+    function start() {
+      reset();
+      running = true;
+      var clock = setInterval(function () {
+        if (!running) { clearInterval(clock); return; }
+        timeLeft--;
+        if (timeLeft <= 0) {
+          running = false;
+          var best = lsGet("gb_aim_best_" + diff(), 0);
+          if (hits > best) { best = hits; lsSet("gb_aim_best_" + diff(), best); }
+          $("amBest").textContent = best;
+          banner($("amBanner"), "Time! You hit <b>" + hits + "</b> targets");
+          beep(300, 0.2);
+          draw();
+        }
+      }, 1000);
+      if (!raf) raf = requestAnimationFrame(step);
+    }
+    canvas.addEventListener("touchstart", function (e) {
+      e.preventDefault();
+      if (e.touches[0]) tapAt(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: false });
+    canvas.addEventListener("mousedown", function (e) { tapAt(e.clientX, e.clientY); });
+    $("amStart").addEventListener("click", start);
+    stopFns.aim = function () { running = false; if (raf) { cancelAnimationFrame(raf); raf = null; } };
+    $("amBest").textContent = lsGet("gb_aim_best_" + diff(), 0);
     reset();
   })();
 })();

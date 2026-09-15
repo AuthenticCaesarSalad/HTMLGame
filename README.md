@@ -1,6 +1,6 @@
 # GameBox — 15 Offline Games in 1 File
 
-GameBox is a single HTML file (`GameBox.html`) containing 20 complete games. No internet, no installs, no dependencies — open the file in any browser (phone or desktop) and play.
+GameBox is a single HTML file (`GameBox.html`) containing 30 complete games. No internet, no installs, no dependencies — open the file in any browser (phone or desktop) and play.
 
 ## How to Run
 
@@ -55,6 +55,10 @@ Highlights per level:
 - **Tetris** drop speed nearly triples, from 700ms to 230ms per row
 - **Space Invaders** fleet grows from 18 to 40 aliens, and you get 1 life
 - **Mastermind** code grows to 5 pegs from 8 colours in only 6 guesses
+- **Reversi** CPU goes from random blunderer to depth-3 minimax searcher
+- **RPS** AI levels up from coin-flip to a pattern-learner that counters your habits
+- **Stroop Test** on Hard+ randomly flips the rule mid-game between ink and word
+- **Aim Trainer** targets shrink faster, move, and live shorter on higher levels
 
 ---
 
@@ -283,11 +287,121 @@ Crack the hidden colour code. Each guess gets feedback: a black dot per peg that
 - Use "sacrifice rows" mid-game: a guess you know is wrong can still confirm exact positions via its black dots
 - Count dots before you guess: black+white can never exceed the code length, and duplicates in the code are possible (but not forced) — assume no duplicates until feedback contradicts you
 
+### 21. Reversi (Othello) ⚫⚪
+Classic Othello on an 8x8 board vs the CPU. Place a disc to flank a line of enemy discs — the whole line flips to your colour. Most discs when the board fills wins.
+
+**Controls:** tap any dotted cell (legal moves are marked).
+
+**Walkthrough:**
+- Corners are everything: a disc in a corner can never be flipped. Every move that gives the CPU a corner is a gift
+- Early game: fewer discs is often BETTER (fewer flipping targets). Don't greedily flip everything
+- Avoid the squares adjacent to corners (X-squares and C-squares) unless the corner is already taken or unplayable
+- Force passes: if the CPU has no legal move it must pass and you move again — hoard mobility (many legal moves) and starve theirs
+- On Impossible the CPU searches 3 moves deep — play the long game: mobility and edges over raw count
+
+### 22. Dots & Boxes ⬜
+Take turns drawing lines between dots. Complete a box to claim it and take another turn. Most boxes wins.
+
+**Controls:** tap any undrawn line.
+
+**Walkthrough:**
+- The core skill is the **chain rule**: never open a chain of 3+ boxes. Take free boxes, but leave the *last two* of a long chain (double-cross) — you sacrifice 2 boxes but hand the next chain to your opponent
+- Count chains late-game: if you can force the opponent to open every chain, you win. If you must open one, open the shortest
+- The CPU on Hard/Impossible knows the double-cross too — you must count along with it
+- Early game: draw edges that can't complete anything (third sides of boxes are safe; fourth sides are gifts)
+
+### 23. Battleship 🚢
+7x7 grids, hidden fleets of 4+3+3+2 cells. Fire at the enemy grid; sink all four ships before the CPU sinks yours.
+
+**Controls:** tap enemy cells to fire.
+
+**Walkthrough:**
+- Ships NEVER touch each other (not even diagonally) — every confirmed hit means the 8 surrounding cells are water. Mark them mentally as free misses
+- After a hit, fire adjacent cells to determine orientation; once you know the direction, finish the ship before hunting elsewhere
+- Hunt in a checkerboard pattern (every 2nd cell) — the smallest ship is 2 long, so a diagonal scan guarantees finding everything
+- On Hard+ the CPU fires parity shots too and hunts your wounded ships efficiently — spread your fleet out when placing (well, mentally: your fleet is auto-placed, but the CPU's parity hunting means don't rely on luck)
+
+### 24. Sokoban 📦
+Push crates onto gold goals. One level per difficulty, hand-designed and solver-verified.
+
+**Controls:** D-pad, swipe on the board, or arrow keys.
+
+**Walkthrough:**
+- The #1 rule: never push a crate into a corner — it can never leave. Before pushing, check the destination has an escape route
+- Think backwards from the goals: which crate goes where? Solve the farthest-from-goal crates first
+- If stuck, use New to reset — Sokoban states are rarely recoverable once a crate is parked wrong
+- Levels are solver-verified solvable (easy in 7 moves, medium 9, hard 24, impossible 20) — a solution always exists, count your moves against those targets
+
+### 25. Maze Escape 🌀
+A freshly generated perfect maze (exactly one path between any two cells) each time. Reach the gold exit square at the bottom-right.
+
+**Controls:** D-pad, swipe, or arrow keys.
+
+**Walkthrough:**
+- Perfect mazes = tree structure: the direct path is unique, so wall-following (always keep one hand on a wall) will always reach the exit eventually
+- Faster method: at each junction prefer the direction that still descends toward the bottom-right corner; backtrack when you hit a dead end (you'll feel the "wrong turn" as extra walls)
+- Grid sizes: 8x8 easy up to 20x20 impossible. On 20x20 the solution path is typically 30-60 cells — time and moves are both tracked, best time saved per size
+
+### 26. SameGame 🎨
+Tap groups of 2+ same-coloured tiles to remove them. Tiles fall down, columns close left. Bigger groups score exponentially: a group of n scores (n-2)².
+
+**Controls:** tap a group.
+
+**Walkthrough:**
+- Score math dominates: a group of 10 = 64 points, but two groups of 5 = 9+9. NEVER split big groups — build them first
+- To build: clear the "rubble" around a big cluster so it connects when columns shift
+- Plan for the endgame from move one: identical colours in the same column tend to merge when things fall — arrange columns to be single-coloured
+- Clearing the whole board is +1000 — on Impossible (12x12, 6 colours) perfect clears are rare; aim to leave under 10 tiles
+
+### 27. Word Scramble 🔤
+Unscramble words against the clock. Tap letters in order to fill the slots; tap a filled slot to return a letter. Skip costs 3 seconds.
+
+**Controls:** tap letters.
+
+**Walkthrough:**
+- Scan for common endings first: -ING, -TION, -ER, -ED. Slot them at the right side and work backwards
+- Vowel placement narrows everything: count vowels and imagine the consonant skeleton around them
+- Wrong full guesses are free (you can just re-tap), so commit to a hypothesis instead of staring
+- Word pools scale from 3-letter (Easy) to 9-letter adventures like XYLOPHONE (Impossible) — on the big ones, find the rare letters (X, Z, Q, V) first; they anchor the word
+
+### 28. Rock Paper Scissors ✊✋✌️
+Best-of-5 (first to 3) vs an AI that studies you.
+
+**Controls:** tap rock, paper, or scissors.
+
+**Walkthrough:**
+- Humans are terrible randomness generators: we avoid repeating, we favour certain throws, we "balance" patterns predictably. The AI exploits exactly this
+- Easy AI is near-random — just play. Impossible AI tracks your last-2-move patterns and counters your most likely next throw
+- To beat it: deliberately break your own habits. If you notice you throw rock after losing a round, do the opposite. Or truly randomize with an external anchor (e.g. alternate based on the second hand of a clock)
+- The counter chain: if it played paper last and you expect it to react to your rock... think one level deeper than feels natural, then stop — overthinking is also a pattern
+
+### 29. Stroop Test 👀
+A colour word (e.g. "RED") shown in a different ink colour. Normally you tap the INK colour — but on Hard+ the rule can flip to WORD MEANING without much warning. Watch the rule banner.
+
+**Controls:** tap the matching answer button.
+
+**Walkthrough:**
+- Reading is automatic; naming ink colour isn't. That lag is the whole test — don't try to "not read", you can't. Instead, defocus your eyes slightly and see the word as a coloured blob
+- On Hard+ read the rule banner with your peripheral vision BEFORE looking at the word — the flip is announced by the banner changing
+- When the rule is WORD, say the word silently and ignore the ink entirely; switching mental modes quickly is the actual skill
+- Wrong answers cost 2 seconds, so on Hard+ speed without verification is negative EV — half a second of rule-check beats a 2-second penalty
+
+### 30. Aim Trainer 🎯
+Tap the shrinking target. 30 seconds, targets get smaller/faster/shorter-lived as difficulty rises (they even move on Hard+).
+
+**Controls:** tap the target.
+
+**Walkthrough:**
+- Aim with your eyes: look AT the target centre, not at where your finger is. Finger follows eye
+- Don't chase the target's edge — the whole circle counts, so tap the moment your fingertip is anywhere inside
+- On Hard+, targets drift: lead them slightly, aiming where the centre will be at tap-time
+- Misses cost 1 second each — spam-tapping is punished. On Impossible (15px targets living 1s while moving) accuracy IS speed
+
 ---
 
 ## Tech Notes
 
-- Single file, zero dependencies, ~115KB. Works offline forever once downloaded
+- Single file, zero dependencies, ~180KB. Works offline forever once downloaded
 - Touch-first (mobile), with keyboard support on desktop (arrows/Space)
 - Best scores persist in localStorage per browser
 - Sounds are synthesized with the Web Audio API — no audio files
