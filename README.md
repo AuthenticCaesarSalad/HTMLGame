@@ -1,4 +1,4 @@
-# GameBox — 15 Offline Games in 1 File
+# GameBox — 35 Offline Games in 1 File
 
 GameBox is a single HTML file (`GameBox.html`) containing 30 complete games. No internet, no installs, no dependencies — open the file in any browser (phone or desktop) and play.
 
