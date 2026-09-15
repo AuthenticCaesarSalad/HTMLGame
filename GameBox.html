@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>GameBox - 10 Offline Games</title>
+<title>GameBox - 15 Offline Games</title>
 <style>
   :root {
     --bg: #101418;
@@ -196,6 +196,57 @@
   .hg-key.hit { background: #12351f; border-color: #1d5c33; opacity: 1; }
   .hg-key.miss { background: #3b1414; border-color: #7a2b2b; opacity: 1; }
 
+  /* ---------- Pong / Dodger (share .tall-canvas) ---------- */
+  #pgCanvas { touch-action: none; }
+  #dgCanvas { touch-action: none; }
+
+  /* ---------- Connect Four ---------- */
+  #c4Board {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 8px; touch-action: manipulation;
+  }
+  .c4-cell {
+    aspect-ratio: 1/1; border-radius: 50%; border: 1px solid var(--border);
+    background: #0b0f13; padding: 0; position: relative;
+  }
+  .c4-cell.p { background: var(--accent2); border-color: #7dd3fc; }
+  .c4-cell.c { background: var(--danger); border-color: #fca5a5; }
+  .c4-cell.win { box-shadow: 0 0 0 3px var(--gold); }
+  .c4-drop {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px;
+    padding: 0 9px; margin-bottom: 6px;
+  }
+  .c4-drop button {
+    background: var(--surface2); border: 1px solid var(--border); color: var(--muted);
+    border-radius: 8px; padding: 8px 0; font-size: 16px; font-weight: 700;
+  }
+  .c4-drop button:active { background: var(--accent); color: #08210f; }
+
+  /* ---------- Lights Out ---------- */
+  #loGrid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .lo-cell {
+    aspect-ratio: 1/1; border-radius: 12px; border: 1px solid var(--border);
+    background: var(--surface2); padding: 0;
+    transition: background 0.15s;
+  }
+  .lo-cell.on {
+    background: #64748b; border-color: #cbd5e1;
+    box-shadow: 0 0 12px rgba(148,163,184,0.45);
+  }
+
+  /* ---------- Reaction ---------- */
+  #rxPanel {
+    aspect-ratio: 3/4; border-radius: 14px; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: clamp(20px, 7vw, 30px); font-weight: 700; text-align: center;
+    padding: 16px; user-select: none; -webkit-user-select: none;
+    background: #1a2129; color: var(--muted); touch-action: manipulation;
+  }
+  #rxPanel.wait { background: #3b1414; color: #fecaca; }
+  #rxPanel.go { background: #14532d; color: #bbf7d0; }
+  #rxPanel.early { background: #3a2a10; color: #fde68a; }
+
   footer { text-align: center; color: var(--muted); font-size: 12px; padding: 10px 0 30px; }
 </style>
 </head>
@@ -209,7 +260,7 @@
 
 <!-- ================= MENU ================= -->
 <div id="menu" class="screen active">
-  <p class="sub">10 games, 1 file, 100% offline. Pick one:</p>
+  <p class="sub">15 games, 1 file, 100% offline. Pick one:</p>
   <div class="game-list">
     <button class="game-card" data-game="snake">
       <div class="icon" style="background:#14361f;color:#4ade80">S</div>
@@ -259,6 +310,31 @@
     <button class="game-card" data-game="hangman">
       <div class="icon" style="background:#38251a;color:#fdba74">H</div>
       <div class="meta"><div class="name">Hangman</div><div class="desc">Guess the word before the figure completes.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="pong">
+      <div class="icon" style="background:#0f2d33;color:#2dd4bf">P</div>
+      <div class="meta"><div class="name">Pong</div><div class="desc">Drag your paddle. First to 7 wins.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="connect4">
+      <div class="icon" style="background:#331a33;color:#e879f9">C4</div>
+      <div class="meta"><div class="name">Connect Four</div><div class="desc">Drop discs, line up 4 in a row.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="lightsout">
+      <div class="icon" style="background:#3b3410;color:#fde047">L</div>
+      <div class="meta"><div class="name">Lights Out</div><div class="desc">Tap lights to switch them all off.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="reaction">
+      <div class="icon" style="background:#3a1414;color:#fb7185">R</div>
+      <div class="meta"><div class="name">Reaction Test</div><div class="desc">Tap the red panel the moment it turns green.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="dodger">
+      <div class="icon" style="background:#14232e;color:#60a5fa">D</div>
+      <div class="meta"><div class="name">Dodger</div><div class="desc">Drag to dodge falling blocks.</div></div>
       <div class="arrow">&#8250;</div>
     </button>
   </div>
@@ -390,6 +466,65 @@
   <div id="hgWord"></div>
   <div id="hgKeys"></div>
   <div class="banner" id="hgBanner"></div>
+</div>
+
+<!-- ================= PONG ================= -->
+<div id="pong" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">You</div><div class="value" id="pgYou">0</div></div>
+    <div class="stat"><div class="label">CPU</div><div class="value" id="pgCpu">0</div></div>
+    <button class="btn" id="pgStart">Start</button>
+  </div>
+  <canvas id="pgCanvas" class="tall-canvas" width="360" height="480"></canvas>
+  <div class="banner" id="pgBanner"></div>
+  <p class="sub-hint">Drag on the board (or use arrow keys) to move your paddle.</p>
+</div>
+
+<!-- ================= CONNECT FOUR ================= -->
+<div id="connect4" class="screen">
+  <div class="hud">
+    <div class="stat" style="min-width:130px"><div class="label">Status</div><div class="value" id="c4Status" style="font-size:15px">Your turn</div></div>
+    <button class="btn" id="c4New">New</button>
+  </div>
+  <div id="c4Board"></div>
+  <div class="banner" id="c4Banner"></div>
+  <p class="sub-hint">Tap a column to drop your disc.</p>
+</div>
+
+<!-- ================= LIGHTS OUT ================= -->
+<div id="lightsout" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Moves</div><div class="value" id="loMoves">0</div></div>
+    <div class="stat"><div class="label">Best</div><div class="value" id="loBest">&#8734;</div></div>
+    <button class="btn" id="loNew">New</button>
+  </div>
+  <div id="loGrid"></div>
+  <div class="banner" id="loBanner"></div>
+  <p class="sub-hint">Tapping a light flips it and its neighbours. Turn them all off.</p>
+</div>
+
+<!-- ================= REACTION ================= -->
+<div id="reaction" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Best</div><div class="value" id="rxBest">&#8734;</div></div>
+    <div class="stat"><div class="label">Avg (5)</div><div class="value" id="rxAvg">&#8212;</div></div>
+    <button class="btn" id="rxReset">Reset</button>
+  </div>
+  <div id="rxPanel">Tap to begin</div>
+  <div class="banner" id="rxBanner"></div>
+  <p class="sub-hint">Wait for green, then tap as fast as you can. 5 runs per set.</p>
+</div>
+
+<!-- ================= DODGER ================= -->
+<div id="dodger" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Score</div><div class="value" id="dgScore">0</div></div>
+    <div class="stat"><div class="label">Best</div><div class="value" id="dgBest">0</div></div>
+    <button class="btn" id="dgStart">Start</button>
+  </div>
+  <canvas id="dgCanvas" class="tall-canvas" width="360" height="480"></canvas>
+  <div class="banner" id="dgBanner"></div>
+  <p class="sub-hint">Drag on the board to move. Blocks fall faster as you score.</p>
 </div>
 
 <script>
@@ -1321,6 +1456,425 @@
       if (wrong >= 6) { ctx.beginPath(); ctx.moveTo(120, 120); ctx.lineTo(140, 155); ctx.stroke(); }
     }
     $("hgNew").addEventListener("click", reset);
+    reset();
+  })();
+
+  /* ============ 11. PONG ============ */
+  (function () {
+    var W = 360, H = 480;
+    var canvas = $("pgCanvas"), ctx = canvas.getContext("2d");
+    var you = 0, cpu = 0, playing = false, raf = null;
+    var py = H / 2 - 35, cy = H / 2 - 35;          // paddle y (top), paddles 70 tall
+    var ball = { x: W / 2, y: H / 2, vx: 4, vy: 3, r: 7 };
+    var keys = {};
+
+    function drawBoard() {
+      ctx.fillStyle = "#0b0f13";
+      ctx.fillRect(0, 0, W, H);
+      ctx.strokeStyle = "#2c3743";
+      ctx.setLineDash([8, 10]);
+      ctx.beginPath(); ctx.moveTo(W / 2, 0); ctx.lineTo(W / 2, H); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    function draw() {
+      drawBoard();
+      ctx.fillStyle = "#38bdf8";
+      ctx.fillRect(8, py, 10, 70);
+      ctx.fillStyle = "#f87171";
+      ctx.fillRect(W - 18, cy, 10, 70);
+      ctx.fillStyle = "#e8edf2";
+      ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2); ctx.fill();
+    }
+    function resetBall(dir) {
+      ball.x = W / 2; ball.y = H / 2;
+      ball.vx = 4 * dir; ball.vy = (Math.random() * 4 - 2) || 2;
+    }
+    function point(who) {
+      if (who === "you") you++; else cpu++;
+      $("pgYou").textContent = you; $("pgCpu").textContent = cpu;
+      if (you >= 7 || cpu >= 7) {
+        playing = false;
+        banner($("pgBanner"), (you >= 7 ? "You win! <b>" + you + " - " + cpu + "</b>" : "CPU wins <b>" + cpu + " - " + you + "</b>"));
+      }
+      resetBall(who === "you" ? 1 : -1);
+    }
+    function step() {
+      if (!playing) { raf = null; return; }
+      if (keys.ArrowUp) py = Math.max(0, py - 7);
+      if (keys.ArrowDown) py = Math.min(H - 70, py + 7);
+      var centre = cy + 35;
+      if (centre < ball.y - 12) cy = Math.min(H - 70, cy + 4.4);
+      else if (centre > ball.y + 12) cy = Math.max(0, cy - 4.4);
+      ball.x += ball.vx; ball.y += ball.vy;
+      if (ball.y < ball.r) { ball.y = ball.r; ball.vy = -ball.vy; beep(220, 0.05); }
+      if (ball.y > H - ball.r) { ball.y = H - ball.r; ball.vy = -ball.vy; beep(220, 0.05); }
+      if (ball.vx < 0 && ball.x - ball.r < 18 && ball.x > 8 && ball.y > py - 8 && ball.y < py + 78) {
+        ball.vx = Math.min(9, -ball.vx * 1.06);
+        ball.vy += ((ball.y - (py + 35)) / 35) * 2.2;
+        beep(440, 0.06);
+      }
+      if (ball.vx > 0 && ball.x + ball.r > W - 18 && ball.x < W - 8 && ball.y > cy - 8 && ball.y < cy + 78) {
+        ball.vx = Math.max(-9, -ball.vx * 1.06);
+        ball.vy += ((ball.y - (cy + 35)) / 35) * 2.2;
+        beep(440, 0.06);
+      }
+      if (ball.x < -20) { beep(150, 0.2); point("cpu"); }
+      if (ball.x > W + 20) { beep(600, 0.15); point("you"); }
+      draw();
+      raf = requestAnimationFrame(step);
+    }
+    function start() {
+      you = 0; cpu = 0;
+      $("pgYou").textContent = "0"; $("pgCpu").textContent = "0";
+      hideBanner($("pgBanner"));
+      py = H / 2 - 35; cy = H / 2 - 35;
+      resetBall(Math.random() < 0.5 ? 1 : -1);
+      playing = true;
+      if (!raf) raf = requestAnimationFrame(step);
+    }
+    function pointerMove(clientY) {
+      var r = canvas.getBoundingClientRect();
+      py = Math.max(0, Math.min(H - 70, (clientY - r.top) / r.height * H - 35));
+    }
+    canvas.addEventListener("touchmove", function (e) {
+      e.preventDefault();
+      if (e.touches[0]) pointerMove(e.touches[0].clientY);
+    }, { passive: false });
+    canvas.addEventListener("touchstart", function (e) {
+      if (e.touches[0]) pointerMove(e.touches[0].clientY);
+    }, { passive: true });
+    canvas.addEventListener("mousemove", function (e) { pointerMove(e.clientY); });
+    document.addEventListener("keydown", function (e) { keys[e.key] = true; });
+    document.addEventListener("keyup", function (e) { keys[e.key] = false; });
+    $("pgStart").addEventListener("click", start);
+    stopFns.pong = function () { playing = false; if (raf) { cancelAnimationFrame(raf); raf = null; } };
+    drawBoard();
+  })();
+
+  /* ============ 12. CONNECT FOUR ============ */
+  (function () {
+    var ROWS = 6, COLS = 7;
+    var grid, over, moveCount;
+    var board = $("c4Board");
+
+    function reset() {
+      grid = [];
+      for (var r = 0; r < ROWS; r++) grid.push(new Array(COLS).fill(0));
+      over = false; moveCount = 0;
+      $("c4Status").textContent = "Your turn";
+      hideBanner($("c4Banner"));
+      build();
+    }
+    function build() {
+      board.innerHTML = "";
+      for (var r = 0; r < ROWS; r++) {
+        for (var c = 0; c < COLS; c++) {
+          var b = document.createElement("button");
+          b.className = "c4-cell";
+          b.setAttribute("data-r", r); b.setAttribute("data-c", c);
+          board.appendChild(b);
+        }
+      }
+    }
+    function render(winCells) {
+      var cells = board.children;
+      for (var i = 0; i < cells.length; i++) {
+        var r = +cells[i].getAttribute("data-r"), c = +cells[i].getAttribute("data-c");
+        cells[i].className = "c4-cell" + (grid[r][c] === 1 ? " p" : grid[r][c] === 2 ? " c" : "");
+        if (winCells) {
+          for (var w = 0; w < winCells.length; w++) {
+            if (winCells[w][0] === r && winCells[w][1] === c) cells[i].classList.add("win");
+          }
+        }
+      }
+    }
+    function drop(col, who) {
+      for (var r = ROWS - 1; r >= 0; r--) {
+        if (!grid[r][col]) { grid[r][col] = who; return r; }
+      }
+      return -1;
+    }
+    function findWin(who) {
+      var dirs = [[0, 1], [1, 0], [1, 1], [1, -1]];
+      for (var r = 0; r < ROWS; r++) {
+        for (var c = 0; c < COLS; c++) {
+          if (grid[r][c] !== who) continue;
+          for (var d = 0; d < dirs.length; d++) {
+            var cells = [[r, c]];
+            for (var k = 1; k < 4; k++) {
+              var rr = r + dirs[d][0] * k, cc = c + dirs[d][1] * k;
+              if (rr < 0 || rr >= ROWS || cc < 0 || cc >= COLS || grid[rr][cc] !== who) break;
+              cells.push([rr, cc]);
+            }
+            if (cells.length === 4) return cells;
+          }
+        }
+      }
+      return null;
+    }
+    function full(col) {
+      return grid[0][col] !== 0;
+    }
+    function playerMove(col) {
+      if (over || full(col)) return;
+      drop(col, 1); moveCount++;
+      beep(440, 0.06);
+      var win = findWin(1);
+      if (win) { over = true; render(win); $("c4Status").textContent = "You win!"; banner($("c4Banner"), "You win! <b>4 in a row</b>"); beep(700, 0.25); return; }
+      if (moveCount === 42) { over = true; render(); $("c4Status").textContent = "Draw"; banner($("c4Banner"), "Board full - <b>draw</b>"); return; }
+      render();
+      $("c4Status").textContent = "CPU thinking...";
+      setTimeout(cpuMove, 420);
+    }
+    function cpuMove() {
+      if (over) return;
+      var col = pickColumn();
+      if (col < 0) return;
+      drop(col, 2); moveCount++;
+      beep(300, 0.06);
+      var win = findWin(2);
+      if (win) { over = true; render(win); $("c4Status").textContent = "CPU wins"; banner($("c4Banner"), "CPU wins <b>" + win.length + " in a row</b>"); beep(150, 0.3); return; }
+      if (moveCount === 42) { over = true; render(); $("c4Status").textContent = "Draw"; banner($("c4Banner"), "Board full - <b>draw</b>"); return; }
+      render();
+      $("c4Status").textContent = "Your turn";
+    }
+    function pickColumn() {
+      // 1. win now  2. block player  3. centre-ish random
+      var i, c;
+      for (i = 0; i < COLS; i++) {
+        if (!full(i)) { drop(i, 2); var w = findWin(2); undrop(i); if (w) return i; }
+      }
+      for (i = 0; i < COLS; i++) {
+        if (!full(i)) { drop(i, 1); var w2 = findWin(1); undrop(i); if (w2) return i; }
+      }
+      var order = [3, 2, 4, 1, 5, 0, 6];
+      var open = [];
+      for (i = 0; i < order.length; i++) { c = order[i]; if (!full(c)) open.push(c); }
+      if (!open.length) return -1;
+      return open[Math.floor(Math.random() * Math.min(3, open.length))];
+    }
+    function undrop(col) {
+      for (var r = 0; r < ROWS; r++) {
+        if (grid[r][col]) { grid[r][col] = 0; return; }
+      }
+    }
+    board.addEventListener("click", function (e) {
+      var c = e.target.getAttribute("data-c");
+      if (c !== null) playerMove(+c);
+    });
+    $("c4New").addEventListener("click", reset);
+    reset();
+  })();
+
+  /* ============ 13. LIGHTS OUT ============ */
+  (function () {
+    var N = 5;
+    var grid, moves, done;
+    var gridEl = $("loGrid");
+
+    function reset() {
+      grid = [];
+      for (var r = 0; r < N; r++) grid.push(new Array(N).fill(false));
+      // generate by pressing random cells from an all-off board (guarantees solvable)
+      var presses = 8 + Math.floor(Math.random() * 7);
+      for (var p = 0; p < presses; p++) toggle(Math.floor(Math.random() * N), Math.floor(Math.random() * N));
+      moves = 0; done = false;
+      $("loMoves").textContent = "0";
+      hideBanner($("loBanner"));
+      render();
+    }
+    function toggle(r, c) {
+      var around = [[r, c], [r - 1, c], [r + 1, c], [r, c - 1], [r, c + 1]];
+      for (var i = 0; i < around.length; i++) {
+        var rr = around[i][0], cc = around[i][1];
+        if (rr >= 0 && rr < N && cc >= 0 && cc < N) grid[rr][cc] = !grid[rr][cc];
+      }
+    }
+    function render() {
+      gridEl.innerHTML = "";
+      for (var r = 0; r < N; r++) {
+        for (var c = 0; c < N; c++) {
+          (function (r, c) {
+            var b = document.createElement("button");
+            b.className = "lo-cell" + (grid[r][c] ? " on" : "");
+            b.addEventListener("click", function () { tap(r, c); });
+            gridEl.appendChild(b);
+          })(r, c);
+        }
+      }
+    }
+    function tap(r, c) {
+      if (done) return;
+      toggle(r, c);
+      moves++;
+      $("loMoves").textContent = moves;
+      render();
+      beep(grid[r][c] ? 520 : 330, 0.05);
+      var lit = 0;
+      for (var i = 0; i < N; i++) for (var j = 0; j < N; j++) if (grid[i][j]) lit++;
+      if (lit === 0) {
+        done = true;
+        var best = lsGet("loBest", null);
+        if (best === null || moves < best) { best = moves; lsSet("loBest", best); }
+        $("loBest").innerHTML = best;
+        banner($("loBanner"), "Lights out in <b>" + moves + "</b> moves!");
+        beep(700, 0.25);
+      }
+    }
+    $("loNew").addEventListener("click", reset);
+    $("loBest").innerHTML = lsGet("loBest", "\u221E");
+    reset();
+  })();
+
+  /* ============ 14. REACTION TEST ============ */
+  (function () {
+    var panel = $("rxPanel");
+    var state = "idle";        // idle | wait | go
+    var goTime = 0, times = [], to = null;
+
+    function setPanel(cls, text) {
+      panel.className = cls;
+      panel.textContent = text;
+    }
+    function clearTo() { if (to) { clearTimeout(to); to = null; } }
+    function next() {
+      state = "wait";
+      setPanel("wait", "Wait for green...");
+      clearTo();
+      to = setTimeout(function () {
+        state = "go";
+        goTime = performance.now();
+        setPanel("go", "TAP!");
+      }, 1200 + Math.random() * 2800);
+    }
+    function finishSet() {
+      var sum = 0;
+      for (var i = 0; i < times.length; i++) sum += times[i];
+      var avg = Math.round(sum / times.length);
+      $("rxAvg").textContent = avg + "ms";
+      banner($("rxBanner"), "Set done! Average: <b>" + avg + " ms</b>");
+      beep(700, 0.2);
+      state = "idle";
+      setPanel("", "Tap to begin");
+    }
+    panel.addEventListener("click", function () {
+      if (state === "idle") {
+        times = [];
+        $("rxAvg").textContent = "\u2014";
+        hideBanner($("rxBanner"));
+        next();
+      } else if (state === "wait") {
+        // too early
+        clearTo();
+        state = "idle";
+        setPanel("early", "Too early! Tap to retry");
+        beep(150, 0.25);
+      } else if (state === "go") {
+        var ms = Math.round(performance.now() - goTime);
+        times.push(ms);
+        beep(520, 0.06);
+        var best = lsGet("rxBest", null);
+        if (best === null || ms < best) { best = ms; lsSet("rxBest", best); }
+        $("rxBest").textContent = best + "ms";
+        if (times.length >= 5) finishSet();
+        else { state = "idle"; setPanel("", ms + " ms\nTap for run " + (times.length + 1) + "/5"); }
+      }
+    });
+    $("rxReset").addEventListener("click", function () {
+      clearTo();
+      state = "idle";
+      times = [];
+      $("rxAvg").textContent = "\u2014";
+      hideBanner($("rxBanner"));
+      setPanel("", "Tap to begin");
+    });
+    stopFns.reaction = clearTo;
+    var b = lsGet("rxBest", null);
+    if (b !== null) $("rxBest").textContent = b + "ms";
+  })();
+
+  /* ============ 15. DODGER ============ */
+  (function () {
+    var W = 360, H = 480;
+    var canvas = $("dgCanvas"), ctx = canvas.getContext("2d");
+    var playing = false, raf = null;
+    var px = W / 2 - 14, pw = 28, ph = 28;   // player box
+    var blocks = [], score = 0, spawnIn = 0;
+
+    function speed() { return 3 + Math.min(7, score / 8); }
+    function reset() {
+      blocks = []; score = 0; spawnIn = 0;
+      px = W / 2 - 14;
+      $("dgScore").textContent = "0";
+      draw();
+    }
+    function draw() {
+      ctx.fillStyle = "#0b0f13";
+      ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = "#60a5fa";
+      ctx.fillRect(px, H - 50, pw, ph);
+      ctx.fillStyle = "#f87171";
+      for (var i = 0; i < blocks.length; i++) {
+        ctx.fillRect(blocks[i].x, blocks[i].y, blocks[i].w, blocks[i].h);
+      }
+    }
+    function step() {
+      if (!playing) { raf = null; return; }
+      spawnIn--;
+      if (spawnIn <= 0) {
+        var bw = 40 + Math.random() * 70;
+        blocks.push({ x: Math.random() * (W - bw), y: -40, w: bw, h: 26 });
+        spawnIn = Math.max(22, 55 - score * 2);
+      }
+      var s = speed();
+      for (var i = blocks.length - 1; i >= 0; i--) {
+        var b = blocks[i];
+        b.y += s;
+        // collision with player at bottom
+        if (b.y + b.h > H - 50 && b.y < H - 50 + ph && b.x < px + pw && b.x + b.w > px) {
+          die();
+          return;
+        }
+        if (b.y > H) {
+          blocks.splice(i, 1);
+          score++;
+          $("dgScore").textContent = score;
+        }
+      }
+      draw();
+      raf = requestAnimationFrame(step);
+    }
+    function die() {
+      playing = false;
+      beep(150, 0.35);
+      var best = lsGet("dgBest", 0);
+      if (score > best) { best = score; lsSet("dgBest", best); }
+      $("dgBest").textContent = best;
+      banner($("dgBanner"), "Crashed! Score: <b>" + score + "</b>");
+      draw();
+    }
+    function start() {
+      hideBanner($("dgBanner"));
+      reset();
+      playing = true;
+      if (!raf) raf = requestAnimationFrame(step);
+    }
+    function pointerMove(clientX) {
+      var r = canvas.getBoundingClientRect();
+      px = Math.max(0, Math.min(W - pw, (clientX - r.left) / r.width * W - pw / 2));
+      if (!playing) draw();
+    }
+    canvas.addEventListener("touchmove", function (e) {
+      e.preventDefault();
+      if (e.touches[0]) pointerMove(e.touches[0].clientX);
+    }, { passive: false });
+    canvas.addEventListener("touchstart", function (e) {
+      if (e.touches[0]) pointerMove(e.touches[0].clientX);
+    }, { passive: true });
+    canvas.addEventListener("mousemove", function (e) { pointerMove(e.clientX); });
+    $("dgStart").addEventListener("click", start);
+    stopFns.dodger = function () { playing = false; if (raf) { cancelAnimationFrame(raf); raf = null; } };
+    $("dgBest").textContent = lsGet("dgBest", 0);
     reset();
   })();
 })();
