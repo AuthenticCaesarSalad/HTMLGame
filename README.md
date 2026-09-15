@@ -1,6 +1,6 @@
 # GameBox — 15 Offline Games in 1 File
 
-GameBox is a single HTML file (`GameBox.html`) containing 15 complete games. No internet, no installs, no dependencies — open the file in any browser (phone or desktop) and play.
+GameBox is a single HTML file (`GameBox.html`) containing 20 complete games. No internet, no installs, no dependencies — open the file in any browser (phone or desktop) and play.
 
 ## How to Run
 
@@ -28,8 +28,13 @@ Highlights per level:
 - **Minesweeper** grows from 9x9 with 8 mines to 11x11 with 24 mines
 - **Hangman** on Impossible draws from evil words (RHYTHM, SYNDROME, SPHINX...) and allows only 4 misses
 - **Reaction Test** on Hard+ : tapping too early fails the entire set
+- **Tetris** drop speed nearly triples, from 700ms to 230ms per row
+- **Space Invaders** fleet grows from 18 to 40 aliens, and you get 1 life
+- **Mastermind** code grows to 5 pegs from 8 colours in only 6 guesses
 
 ---
+
+## The New Five (Games 16-20)
 
 ## The Games
 
@@ -199,11 +204,66 @@ Drag your block to dodge falling red blocks. Every block that passes scores. Spe
 - Move early and small — late large movements trap you between spawns
 - On Impossible (5.5 base speed) the safe window is tiny; prioritize distance from all blocks over ideal position
 
+### 16. Tetris 🧱
+The classic: rotate and place falling pieces, fill rows to clear them. Pieces come from a 7-bag (fair random), speed ramps every 10 lines, and the scoring ladder is 100/300/500/800 for 1/2/3/4-line clears.
+
+**Controls:** the 5 on-screen buttons, or arrow keys (Up = rotate, Down = soft drop, Space = hard drop).
+
+**Walkthrough:**
+- Keep the stack FLAT — height is danger, holes are death. A single hole in the middle of your stack can take 20+ pieces to fix
+- Save the I-piece (cyan) for 4-line clears ("Tetris"): keep one column open at the wall and drop the I vertically into it for 800 points
+- Hard-drop (Space) for speed points, but only when the placement is certain — 2 points per row is nothing compared to a misdrop
+- On Impossible (230ms base drop) use hard drop almost exclusively; there's no time for soft adjustments after row 30
+
+### 17. Sliding Puzzle 🔢
+Slide tiles into numerical order, 1 to N². The grid grows with difficulty: 3x3 (8-puzzle) up to 6x6 (35-puzzle).
+
+**Controls:** tap any tile adjacent to the gap.
+
+**Walkthrough:**
+- Solve row by row, then column by column: position tiles 1..N of the top row, then the first column of what remains, and recurse on the smaller grid
+- The classic trap: the last two tiles of a row can end up swapped. Fix it by parking them in the NEXT row's corner slots and rotating them in together
+- 3x3 is solvable in under 31 moves always; if you're stuck, re-solve the top row from scratch rather than shuffling randomly
+- On Impossible (6x6, 35 tiles) expect hundreds of moves — solve the top row and left column completely before touching the interior
+
+### 18. Math Blitz ➕
+60 seconds (45 on Impossible), one sum at a time, 4 answer buttons. Wrong answers cost time.
+
+**Controls:** tap the correct answer.
+
+**Walkthrough:**
+- Read the OPERATOR first, then the numbers — under time pressure your brain defaults to addition
+- For subtraction, check the options: if the answer feels >10 away, you misread the operator
+- On Hard+, multiplication up to 12x12 and division appear — know your squares cold (they cover most of the table)
+- Impossible adds ÷ with two-digit operands (it's always exact) and a 5-second penalty per miss: accuracy beats raw speed there
+
+### 19. Space Invaders 👾
+Drag your ship (auto-firing) and clear alien waves. The fleet marches faster as it shrinks and as waves advance. Aliens reaching the bottom, or losing all lives, ends the run.
+
+**Controls:** drag on the board, or arrow keys.
+
+**Walkthrough:**
+- Kill from the EDGES of the fleet first — fewer aliens at the wall means slower marching (the fleet speeds up as it shrinks)
+- Never sit directly under the fleet's center: that's where bomb density is highest. Patrol under the edge columns
+- Waves start lower each time (up to a limit), so clear fast in early waves to bank lives
+- On Impossible (40 aliens, 1 life, bombs every 450ms) play the margins exclusively and let auto-fire do the work — every extra second under the fleet is a coin flip
+
+### 20. Mastermind 🎨
+Crack the hidden colour code. Each guess gets feedback: a black dot per peg that's the right colour in the right spot, a white dot per right colour in the wrong spot. Code lengths, colour counts, and allowed guesses scale with difficulty (up to 5 pegs / 8 colours / 6 guesses).
+
+**Controls:** tap a hole to cycle its colour, then Check.
+
+**Walkthrough:**
+- Open with a two-colour guess (e.g. A A B B). The black+white total tells you how many of those two colours are in the code — maximum information per guess
+- Track eliminations religiously: every peg you know is NOT in the code removes candidates from every position
+- Use "sacrifice rows" mid-game: a guess you know is wrong can still confirm exact positions via its black dots
+- Count dots before you guess: black+white can never exceed the code length, and duplicates in the code are possible (but not forced) — assume no duplicates until feedback contradicts you
+
 ---
 
 ## Tech Notes
 
-- Single file, zero dependencies, ~85KB. Works offline forever once downloaded
+- Single file, zero dependencies, ~115KB. Works offline forever once downloaded
 - Touch-first (mobile), with keyboard support on desktop (arrows/Space)
 - Best scores persist in localStorage per browser
 - Sounds are synthesized with the Web Audio API — no audio files
