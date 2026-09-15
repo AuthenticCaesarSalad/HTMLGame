@@ -10,6 +10,30 @@ GameBox is a single HTML file (`GameBox.html`) containing 20 complete games. No 
 
 Everything runs locally. Best scores are saved in your browser's localStorage.
 
+## Device & Browser Compatibility
+
+Yes — GameBox is playable on essentially any device with a modern browser. It is one self-contained HTML file: no installation, no app store, no internet connection after downloading, no external libraries, fonts, or images. Every game is touch-first (phones/tablets) with full keyboard support (desktops).
+
+**Confirmed working on:**
+
+| Device | Browser requirement | Notes |
+|---|---|---|
+| Android phones & tablets | Chrome 88+ (2021), Firefox 89+, Samsung Internet 14+ | Touch controls: tap, drag, swipe, long-press (Minesweeper flags) |
+| iPhone & iPad | Safari 15+ (iOS 15, 2021), Chrome/Edge on iOS 15+ | Same touch controls; sound plays after the first tap (iOS autoplay policy) |
+| Windows / macOS / Linux desktops | Chrome, Edge, Firefox, Safari — any 2021+ version | Arrow keys move (Snake, Tetris, Pong, Breakout, Invaders), Space flaps/hard-drops |
+| Any device with a USB or on-screen keyboard | — | Every touch control has a keyboard equivalent |
+
+**Why 2021+ browsers:** the newest feature the file uses is the CSS `aspect-ratio` property (supported everywhere since early 2021) for the game boards. The JavaScript itself is written in ES5 style — no arrow functions, no modules — so the logic runs on even older engines; only the board layout needs a current browser.
+
+**Graceful degradations:**
+- **Private/incognito mode** (or cookies blocked): games all run normally — best scores just won't be saved between sessions
+- **No sound support**: audio is synthesized with the Web Audio API and wrapped in error handling; if the browser blocks it, games play silently
+- **Offline**: after downloading the file, zero network access is ever needed — no CDN, no fonts, no analytics
+
+**Not supported:** Internet Explorer (all versions) and pre-2021 browsers without `aspect-ratio` support — the game boards will render with collapsed/incorrect sizing. Very old smart TVs and console browsers generally fall in this category too.
+
+**Installing it like an app:** on Android, open the file in Chrome → menu → "Add to Home screen"; on iOS, open in Safari → Share → "Add to Home Screen". It then launches fullscreen like a native game collection.
+
 ## Difficulty Modes
 
 There are 4 difficulty levels — **Easy, Medium, Hard, and Impossible** — selectable in the header at any time. The setting is saved and applies to every game. Switch it in the menu, then hit Start/New on a game.
