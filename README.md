@@ -1,6 +1,6 @@
-# GameBox — 35 Offline Games in 1 File
+# GameBox — 40 Offline Games in 1 File
 
-GameBox is a single HTML file (`GameBox.html`) containing 30 complete games. No internet, no installs, no dependencies — open the file in any browser (phone or desktop) and play.
+GameBox is a single HTML file (`GameBox.html`) containing 40 complete games. No internet, no installs, no dependencies — open the file in any browser (phone or desktop) and play.
 
 ## How to Run
 
@@ -59,10 +59,11 @@ Highlights per level:
 - **RPS** AI levels up from coin-flip to a pattern-learner that counters your habits
 - **Stroop Test** on Hard+ randomly flips the rule mid-game between ink and word
 - **Aim Trainer** targets shrink faster, move, and live shorter on higher levels
+- **Sudoku**, **Flood-It** and **Match Three** don't use clocks — they scale grid size, colour counts and move budgets instead
+- **Gomoku** grows to 13x13, and its CPU loses its noise (and its mistakes) on Impossible
+- **Hopper** doubles traffic density and drops you to 2 lives; **Dash Runner** and **Block Stacker** simply get faster
 
 ---
-
-## The New Five (Games 16-20)
 
 ## The Games
 
@@ -397,11 +398,121 @@ Tap the shrinking target. 30 seconds, targets get smaller/faster/shorter-lived a
 - On Hard+, targets drift: lead them slightly, aiming where the centre will be at tap-time
 - Misses cost 1 second each — spam-tapping is punished. On Impossible (15px targets living 1s while moving) accuracy IS speed
 
+### 31. Flood-It 🌊
+The top-left region is yours. Tap colours to flood it across the board before the move counter runs out.
+
+**Controls:** tap a colour swatch.
+
+**Walkthrough:**
+- Count tiles, not vibes: each move should grow your region by the largest blob touching your frontier
+- Never waste a move on a colour that touches a single thin edge — you have fewer moves than colours on Hard+
+- The endgame is usually forced: alternate between the two biggest remaining blobs
+- 6x6 with 3 colours on Easy; 12x12 with 6 colours in 32 moves on Impossible
+
+### 32. Sudoku
+The classic 9x9 logic grid. Every puzzle is machine-verified to have exactly one solution.
+
+**Controls:** tap a cell, then tap a digit to place it. ⌫ clears the selected cell (given digits can't be changed).
+
+**Walkthrough:**
+- Start with 'singles': cells where only one digit fits. Then scanning: a digit that has only one legal box in a row or column
+- Red digits mark conflicts — fix them immediately, they snowball
+- When stuck, don't guess: re-scan every box for a digit that appears only once in that box's row or column
+- Easy gives 41 starting digits; Impossible only 24, and best time is tracked per level
+
+### 33. Hanoi Towers
+Restack every disk on the right peg. One disk at a time, and a bigger disk can never sit on a smaller one.
+
+**Controls:** tap a peg to lift its top disk, tap another to drop it. Tap the same peg again to cancel.
+
+**Walkthrough:**
+- Think recursively: to move n disks to the right peg, first move the top n-1 out of the way to the middle, then the big disk, then bring the n-1 on top
+- Minimum moves is 2^n − 1: 7 for 3 disks (Easy) up to 63 for 6 (Impossible)
+- An illegal drop buzzes and refuses — this game never lets you break the rules
+- Best move count is saved per disk count; matching 2^n − 1 gets you "PERFECT!"
+
+### 34. Pipe Flow
+Tap pipes to rotate them. Build a continuous path from the green source (top-left) to the gold drain (bottom-right).
+
+**Controls:** tap a pipe.
+
+**Walkthrough:**
+- Only pipes connected to the source glow green — build outwards and trust the glow
+- Work from the source toward the drain; solving from both ends at once creates dead ends
+- A pipe pointing into the border or into a wall can never be part of the path — rotate it away
+- Grids grow from 5x5 to 8x8; best (fewest) turn count is saved per size
+
+### 35. Gomoku
+Five stones in a row — horizontal, vertical or diagonal — beats the CPU. You're blue, it's red.
+
+**Controls:** tap any empty cell to place your stone.
+
+**Walkthrough:**
+- The winning pattern is a double threat: two open lines of three that can't both be blocked
+- Answer every CPU open three immediately; single lines are how games get lost
+- Build around the centre early; edge lines have fewer directions to grow
+- On Impossible the CPU plays a clean, tireless evaluation — beat it with double threats, never single threats
+
+### 36. Blackjack
+Beat the dealer to 21 without going over. Deal pays out, Hit takes a card, Stand passes. Blackjack pays 15.
+
+**Controls:** Deal / Hit / Stand buttons.
+
+**Walkthrough:**
+- Basic strategy: stand on 12-16 when the dealer shows 2-6, hit everything else below 17, and always hit 11 or less
+- The dealer must draw to 17 (and hits soft 17 on Hard+) — that's why standing on a bad hand is often right
+- Chips carry across rounds; if you drop below 10, press New to rebuy at the difficulty's starting stack
+- Best chip count is saved per difficulty — Easy starts you with 200, Impossible with 20
+
+### 37. Dash Runner
+Endless sprint. Tap to jump the blocks; the track speeds up with distance.
+
+**Controls:** tap the track, or Space / ↑.
+
+**Walkthrough:**
+- Jump late: clipping a block by a pixel counts as clear, and landing sooner means jumping again sooner
+- Watch the track a third of the way ahead of the runner, not the runner itself
+- There's no duck — a single clean jump beats a panic double-tap every time
+- Speed ramps on every level; Impossible starts fast and doesn't stop getting faster
+
+### 38. Hopper
+Cross the traffic to the top row, then do it again — and again, faster each time.
+
+**Controls:** D-pad, swipe on the board, or arrow keys.
+
+**Walkthrough:**
+- Never stand still in a lane: move in the gaps, scan two lanes ahead
+- The median rows have no traffic — they're your only safe squares mid-board
+- Each crossing speeds the cars up; build a rhythm of dash-to-median, wait, dash
+- Impossible gives you 2 lives and doubles the traffic density
+
+### 39. Block Stacker
+A block slides back and forth over the tower. Drop it — anything hanging over the edge gets sliced off.
+
+**Controls:** tap the board, or Space.
+
+**Walkthrough:**
+- Judge the block's left edge against the stack's left edge, not the middle — wide blocks hide the centre
+- A perfect drop keeps the full width; chain a few and the tower stays generous
+- When the block gets narrow, a small error slices a big fraction — aim with the near edge, not the centre
+- Every new block moves faster than the last one — re-learn the timing each drop
+
+### 40. Match Three
+Swap neighbouring gems to line up 3 or more. Cascades chain for multiplied score. You only get so many moves.
+
+**Controls:** tap two neighbouring gems to swap — only swaps that create a match are kept.
+
+**Walkthrough:**
+- Hunt 'one-move setups': two gems in a row with a matching third gem adjacent to either end
+- Cascades multiply points per chain step — a board dense in one colour near the bottom is a jackpot
+- Play the low rows: gravity refills from the top and often lines up new matches for you
+- The board reshuffles itself when no move exists; your real clock is the move budget (25 on Easy, 15 on Impossible)
+
 ---
 
 ## Tech Notes
 
-- Single file, zero dependencies, ~180KB. Works offline forever once downloaded
+- Single file, zero dependencies, ~240KB. Works offline forever once downloaded
 - Touch-first (mobile), with keyboard support on desktop (arrows/Space)
 - Best scores persist in localStorage per browser
 - Sounds are synthesized with the Web Audio API — no audio files

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>GameBox - 30 Offline Games</title>
+<title>GameBox - 40 Offline Games</title>
 <style>
   :root {
     --bg: #101418;
@@ -371,6 +371,71 @@
   #stOpts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .st-opt { background: var(--surface2); border: 1px solid var(--border); color: var(--ink); border-radius: 12px; padding: 16px 0; font-size: 18px; font-weight: 700; }
 
+  /* ---------- Flood-It ---------- */
+  #flGrid { display: grid; gap: 4px; touch-action: manipulation; }
+  .fl-cell { aspect-ratio: 1/1; border-radius: 6px; border: 1px solid rgba(0,0,0,0.3); }
+  #flPal { display: flex; gap: 10px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
+  .fl-btn { width: 52px; height: 44px; border-radius: 10px; border: 2px solid var(--border); }
+
+  /* ---------- Sudoku ---------- */
+  #sdGrid { display: grid; grid-template-columns: repeat(9, 1fr); gap: 2px; }
+  .sd-cell {
+    aspect-ratio: 1/1; border-radius: 4px; border: 1px solid var(--border);
+    background: var(--surface2); color: var(--ink); padding: 0;
+    font-size: clamp(13px, 4vw, 19px); font-weight: 700;
+  }
+  .sd-cell.given { background: #141a21; color: var(--muted); }
+  .sd-cell.sel { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+  .sd-cell.bad { color: var(--danger); }
+  .sd-cell.bedge-r { border-right: 2px solid #3d4a57; }
+  .sd-cell.bedge-b { border-bottom: 2px solid #3d4a57; }
+  #sdPad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 14px; }
+  .sd-num {
+    background: var(--surface2); border: 1px solid var(--border); color: var(--ink);
+    border-radius: 10px; padding: 12px 0; font-size: 18px; font-weight: 700;
+  }
+  .sd-num:active { background: var(--accent); color: #08210f; }
+
+  /* ---------- Hanoi Towers ---------- */
+  #hnPegs { display: flex; gap: 12px; margin-top: 8px; }
+  .hn-peg {
+    flex: 1; min-height: 200px; display: flex; flex-direction: column-reverse;
+    align-items: center; justify-content: flex-start; gap: 4px;
+    padding: 0 4px 4px; border-bottom: 6px solid #3d4a57; border-radius: 6px;
+  }
+  .hn-peg.sel { background: rgba(74,222,128,0.08); border-bottom-color: var(--accent); }
+  .hn-disk { height: 22px; border-radius: 6px; border: 1px solid rgba(0,0,0,0.35); }
+
+  /* ---------- Gomoku ---------- */
+  #gkBoard {
+    display: grid; gap: 2px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 12px; padding: 6px;
+    touch-action: manipulation;
+  }
+  .gk-cell { aspect-ratio: 1/1; border-radius: 3px; border: 1px solid var(--border); background: #141a21; padding: 0; position: relative; }
+  .gk-cell.p::after, .gk-cell.c::after { content: ""; position: absolute; inset: 12%; border-radius: 50%; }
+  .gk-cell.p::after { background: var(--accent2); }
+  .gk-cell.c::after { background: var(--danger); }
+  .gk-cell.win { box-shadow: 0 0 0 3px var(--gold); }
+
+  /* ---------- Blackjack ---------- */
+  .bj-hand { display: flex; gap: 8px; min-height: 68px; flex-wrap: wrap; }
+  .bj-card {
+    width: 46px; height: 66px; border-radius: 8px; background: #f2f2f2; color: #101418;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 14px; border: 1px solid #cbd5e1;
+  }
+  .bj-card.red { color: #b91c1c; }
+  .bj-card.back { background: repeating-linear-gradient(45deg, #2c3743, #2c3743 6px, #232c37 6px, #232c37 12px); border-color: var(--border); }
+  #bjMsg { text-align: center; font-size: 16px; min-height: 24px; margin: 14px 0; }
+  #bjBtns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .btn:disabled { opacity: 0.35; }
+
+  /* ---------- Match Three ---------- */
+  #m3Grid { display: grid; gap: 3px; touch-action: manipulation; }
+  .m3-cell { aspect-ratio: 1/1; border-radius: 7px; border: 1px solid rgba(0,0,0,0.25); padding: 0; }
+  .m3-cell.sel { box-shadow: 0 0 0 3px var(--accent); }
+
   footer { text-align: center; color: var(--muted); font-size: 12px; padding: 10px 0 30px; }
 </style>
 </head>
@@ -393,7 +458,7 @@
 
 <!-- ================= MENU ================= -->
 <div id="menu" class="screen active">
-  <p class="sub">30 games, 1 file, 100% offline. Set difficulty up top, then pick a game:</p>
+  <p class="sub">40 games, 1 file, 100% offline. Set difficulty up top, then pick a game:</p>
   <div class="game-list">
     <button class="game-card" data-game="snake">
       <div class="icon" style="background:#14361f;color:#4ade80">S</div>
@@ -543,6 +608,56 @@
     <button class="game-card" data-game="aim">
       <div class="icon" style="background:#14232e;color:#60a5fa">&#127919;</div>
       <div class="meta"><div class="name">Aim Trainer</div><div class="desc">Tap targets before they shrink away.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="flood">
+      <div class="icon" style="background:#123038;color:#22d3ee">&#127754;</div>
+      <div class="meta"><div class="name">Flood-It</div><div class="desc">Tap colours to flood the board from the corner.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="sudoku">
+      <div class="icon" style="background:#331a33;color:#e879f9">9</div>
+      <div class="meta"><div class="name">Sudoku</div><div class="desc">Fill every row, column and box with 1-9.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="hanoi">
+      <div class="icon" style="background:#3b2a14;color:#fdba74">&#8801;</div>
+      <div class="meta"><div class="name">Hanoi Towers</div><div class="desc">Restack the disks. Bigger never sits on smaller.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="pipes">
+      <div class="icon" style="background:#0f2d33;color:#2dd4bf">&#8596;</div>
+      <div class="meta"><div class="name">Pipe Flow</div><div class="desc">Rotate pipes to connect source to drain.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="gomoku">
+      <div class="icon" style="background:#3a1a2b;color:#f472b6">5</div>
+      <div class="meta"><div class="name">Gomoku</div><div class="desc">Five in a row on a big board vs the CPU.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="blackjack">
+      <div class="icon" style="background:#3b1414;color:#f87171">&#9824;</div>
+      <div class="meta"><div class="name">Blackjack</div><div class="desc">Beat the dealer to 21. Hit or stand.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="runner">
+      <div class="icon" style="background:#14232e;color:#60a5fa">&#127939;</div>
+      <div class="meta"><div class="name">Dash Runner</div><div class="desc">Endless sprint. Jump the blocks, go far.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="hopper">
+      <div class="icon" style="background:#14361f;color:#4ade80">&#128056;</div>
+      <div class="meta"><div class="name">Hopper</div><div class="desc">Cross the traffic lanes. Don&#39;t get run over.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="stacker">
+      <div class="icon" style="background:#332014;color:#fb923c">&#129521;</div>
+      <div class="meta"><div class="name">Block Stacker</div><div class="desc">Drop blocks true. Perfect stacks don&#39;t shrink.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="match3">
+      <div class="icon" style="background:#3b3410;color:#fde047">&#128142;</div>
+      <div class="meta"><div class="name">Match Three</div><div class="desc">Swap gems, line up 3, clear the board.</div></div>
       <div class="arrow">&#8250;</div>
     </button>
   </div>
@@ -954,6 +1069,146 @@
   <p class="sub-hint">Tap the target before it shrinks away. 30 seconds.</p>
 </div>
 
+<!-- ================= FLOOD-IT ================= -->
+<div id="flood" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Moves</div><div class="value" id="flMoves">0</div></div>
+    <div class="stat"><div class="label">Best</div><div class="value" id="flBest">&#8734;</div></div>
+    <button class="btn" id="flNew">New</button>
+  </div>
+  <div id="flGrid"></div>
+  <div id="flPal"></div>
+  <div class="banner" id="flBanner"></div>
+  <p class="sub-hint">Tap a colour button to flood the top-left region. One colour everywhere before Moves hits 0.</p>
+</div>
+
+<!-- ================= SUDOKU ================= -->
+<div id="sudoku" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Time</div><div class="value" id="sdTime">0:00</div></div>
+    <div class="stat"><div class="label">Best</div><div class="value" id="sdBest">&#8212;</div></div>
+    <button class="btn" id="sdNew">New</button>
+  </div>
+  <div id="sdGrid"></div>
+  <div id="sdPad"></div>
+  <div class="banner" id="sdBanner"></div>
+  <p class="sub-hint">Tap a cell, then a number. Red digits conflict. Every puzzle has exactly one solution.</p>
+</div>
+
+<!-- ================= HANOI ================= -->
+<div id="hanoi" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Moves</div><div class="value" id="hnMoves">0</div></div>
+    <div class="stat"><div class="label">Best</div><div class="value" id="hnBest">&#8734;</div></div>
+    <button class="btn" id="hnNew">New</button>
+  </div>
+  <div id="hnPegs"></div>
+  <div class="banner" id="hnBanner"></div>
+  <p class="sub-hint">Tap a stack to lift its top disk, tap another to drop it. Get every disk to the right stack.</p>
+</div>
+
+<!-- ================= PIPES ================= -->
+<div id="pipes" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Turns</div><div class="value" id="ppMoves">0</div></div>
+    <div class="stat"><div class="label">Best</div><div class="value" id="ppBest">&#8734;</div></div>
+    <button class="btn" id="ppNew">New</button>
+  </div>
+  <canvas id="ppCanvas" class="sq-canvas" width="360" height="360"></canvas>
+  <div class="banner" id="ppBanner"></div>
+  <p class="sub-hint">Tap a pipe to rotate it. Connect the green source (top-left) to the gold drain (bottom-right).</p>
+</div>
+
+<!-- ================= GOMOKU ================= -->
+<div id="gomoku" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">You</div><div class="value" id="gkYou">0</div></div>
+    <div class="stat"><div class="label">Draws</div><div class="value" id="gkDraw">0</div></div>
+    <div class="stat"><div class="label">CPU</div><div class="value" id="gkCpu">0</div></div>
+    <button class="btn" id="gkNew">New</button>
+  </div>
+  <div id="gkStatus" class="sub-hint" style="text-align:left;margin:0 0 10px">Your turn</div>
+  <div id="gkBoard"></div>
+  <div class="banner" id="gkBanner"></div>
+  <p class="sub-hint">Five in a row, any direction, wins. You are blue.</p>
+</div>
+
+<!-- ================= BLACKJACK ================= -->
+<div id="blackjack" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Chips</div><div class="value" id="bjChips">100</div></div>
+    <div class="stat"><div class="label">Best</div><div class="value" id="bjBest">0</div></div>
+    <button class="btn" id="bjNew">New</button>
+  </div>
+  <p class="sub-hint" style="text-align:left;margin:0 0 6px">Dealer &#183; <span id="bjDealerScore">?</span></p>
+  <div class="bj-hand" id="bjDealer"></div>
+  <p class="sub-hint" style="text-align:left;margin:14px 0 6px">You &#183; <span id="bjYouScore">0</span></p>
+  <div class="bj-hand" id="bjYou"></div>
+  <div id="bjMsg">Press Deal. Bet: 10 per round.</div>
+  <div id="bjBtns">
+    <button class="btn" id="bjDeal">Deal</button>
+    <button class="btn secondary" id="bjHit">Hit</button>
+    <button class="btn secondary" id="bjStand">Stand</button>
+  </div>
+  <div class="banner" id="bjBanner"></div>
+  <p class="sub-hint">Closest to 21 wins. Blackjack pays 15. On Hard+ the dealer hits soft 17.</p>
+</div>
+
+<!-- ================= RUNNER ================= -->
+<div id="runner" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Distance</div><div class="value" id="rnScore">0</div></div>
+    <div class="stat"><div class="label">Best</div><div class="value" id="rnBest">0</div></div>
+    <button class="btn" id="rnStart">Start</button>
+  </div>
+  <canvas id="rnCanvas" class="tall-canvas" width="360" height="480"></canvas>
+  <div class="banner" id="rnBanner"></div>
+  <p class="sub-hint">Tap the track (or Space) to jump. It gets faster. So do the blocks.</p>
+</div>
+
+<!-- ================= HOPPER ================= -->
+<div id="hopper" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Crossings</div><div class="value" id="hpScore">0</div></div>
+    <div class="stat"><div class="label">Lives</div><div class="value" id="hpLives">3</div></div>
+    <div class="stat"><div class="label">Best</div><div class="value" id="hpBest">0</div></div>
+    <button class="btn" id="hpStart">Start</button>
+  </div>
+  <canvas id="hpCanvas" class="sq-canvas" width="360" height="360"></canvas>
+  <div class="banner" id="hpBanner"></div>
+  <div class="dpad">
+    <div class="blank"></div><button data-mv="up">&#9650;</button><div class="blank"></div>
+    <button data-mv="left">&#9664;</button><div class="blank"></div><button data-mv="right">&#9654;</button>
+    <div class="blank"></div><button data-mv="down">&#9660;</button><div class="blank"></div>
+  </div>
+  <p class="sub-hint">D-pad, swipe, or arrow keys. Reach the top row to score, then do it again &#8212; faster.</p>
+</div>
+
+<!-- ================= STACKER ================= -->
+<div id="stacker" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Height</div><div class="value" id="tkScore">0</div></div>
+    <div class="stat"><div class="label">Best</div><div class="value" id="tkBest">0</div></div>
+    <button class="btn" id="tkStart">Start</button>
+  </div>
+  <canvas id="tkCanvas" class="tall-canvas" width="360" height="480"></canvas>
+  <div class="banner" id="tkBanner"></div>
+  <p class="sub-hint">Tap (or Space) to drop the block. Overhang is cut off &#8212; land it true to keep your width.</p>
+</div>
+
+<!-- ================= MATCH THREE ================= -->
+<div id="match3" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Score</div><div class="value" id="m3Score">0</div></div>
+    <div class="stat"><div class="label">Moves</div><div class="value" id="m3Moves">0</div></div>
+    <div class="stat"><div class="label">Best</div><div class="value" id="m3Best">0</div></div>
+    <button class="btn" id="m3New">New</button>
+  </div>
+  <div id="m3Grid"></div>
+  <div class="banner" id="m3Banner"></div>
+  <p class="sub-hint">Tap two neighbouring gems to swap them. Line up 3+ to clear. Cascades score more.</p>
+</div>
+
 <script>
 (function () {
   "use strict";
@@ -1017,7 +1272,17 @@
     scramble:  { easy:{pool:0, time:90}, medium:{pool:1, time:75}, hard:{pool:2, time:60}, impossible:{pool:3, time:40} },
     rps:       { easy:{ai:0}, medium:{ai:1}, hard:{ai:2}, impossible:{ai:3} },
     stroop:    { easy:{time:40, wordRule:0, cong:0.6}, medium:{time:30, wordRule:0.1, cong:0.3}, hard:{time:25, wordRule:0.25, cong:0.1}, impossible:{time:20, wordRule:0.45, cong:0} },
-    aim:       { easy:{r:34, life:2400, spd:0}, medium:{r:26, life:1700, spd:0}, hard:{r:20, life:1300, spd:2}, impossible:{r:15, life:1000, spd:3} }
+    aim:       { easy:{r:34, life:2400, spd:0}, medium:{r:26, life:1700, spd:0}, hard:{r:20, life:1300, spd:2}, impossible:{r:15, life:1000, spd:3} },
+    flood:     { easy:{n:6,colors:3,moves:22}, medium:{n:8,colors:4,moves:26}, hard:{n:10,colors:5,moves:28}, impossible:{n:12,colors:6,moves:32} },
+    sudoku:    { easy:{given:40}, medium:{given:32}, hard:{given:27}, impossible:{given:24} },
+    hanoi:     { easy:{disks:3}, medium:{disks:4}, hard:{disks:5}, impossible:{disks:6} },
+    pipes:     { easy:{n:5}, medium:{n:6}, hard:{n:7}, impossible:{n:8} },
+    gomoku:    { easy:{n:9,lvl:0}, medium:{n:11,lvl:1}, hard:{n:13,lvl:2}, impossible:{n:13,lvl:3} },
+    blackjack: { easy:{chips:200,soft17:0}, medium:{chips:100,soft17:0}, hard:{chips:50,soft17:1}, impossible:{chips:20,soft17:1} },
+    runner:    { easy:{spd:3.4}, medium:{spd:4.4}, hard:{spd:5.6}, impossible:{spd:6.8} },
+    hopper:    { easy:{spd:1.1,lives:3,perLane:1}, medium:{spd:1.6,lives:3,perLane:1}, hard:{spd:2.1,lives:3,perLane:2}, impossible:{spd:2.7,lives:2,perLane:2} },
+    stacker:   { easy:{spd:2.2}, medium:{spd:3.2}, hard:{spd:4.4}, impossible:{spd:5.6} },
+    match3:    { easy:{n:8,colors:4,moves:25}, medium:{n:8,colors:5,moves:20}, hard:{n:9,colors:5,moves:18}, impossible:{n:9,colors:6,moves:15} }
   };
   (function () {
     var btns = $("diffBar").querySelectorAll("button");
@@ -4428,6 +4693,1204 @@
     $("amStart").addEventListener("click", start);
     stopFns.aim = function () { running = false; if (raf) { cancelAnimationFrame(raf); raf = null; } };
     $("amBest").textContent = lsGet("gb_aim_best_" + diff(), 0);
+    reset();
+  })();
+
+  /* ============ 31. FLOOD-IT ============ */
+  (function () {
+    var n, colors, grid, movesLeft, used, done;
+    var PAL = ["#f87171", "#fbbf24", "#4ade80", "#38bdf8", "#a78bfa", "#fb923c"];
+
+    function cfg() { return DP.flood[diff()]; }
+    function reset() {
+      var c = cfg();
+      n = c.n; colors = c.colors; movesLeft = c.moves; used = 0; done = false;
+      grid = [];
+      for (var r = 0; r < n; r++) {
+        grid.push([]);
+        for (var k = 0; k < n; k++) grid[r].push(Math.floor(Math.random() * colors));
+      }
+      $("flMoves").textContent = movesLeft;
+      $("flBest").textContent = lsGet("gb_flood_best_" + diff(), 0) || "\u221E";
+      hideBanner($("flBanner"));
+      buildPal();
+      render();
+    }
+    function buildPal() {
+      var el = $("flPal");
+      el.innerHTML = "";
+      for (var i = 0; i < colors; i++) {
+        (function (i) {
+          var b = document.createElement("button");
+          b.className = "fl-btn";
+          b.style.background = PAL[i];
+          b.setAttribute("aria-label", "colour " + (i + 1));
+          b.addEventListener("click", function () { pick(i); });
+          el.appendChild(b);
+        })(i);
+      }
+    }
+    function render() {
+      var el = $("flGrid");
+      el.style.gridTemplateColumns = "repeat(" + n + ", 1fr)";
+      el.innerHTML = "";
+      for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) {
+        var b = document.createElement("div");
+        b.className = "fl-cell";
+        b.style.background = PAL[grid[r][c]];
+        el.appendChild(b);
+      }
+    }
+    function pick(col) {
+      if (done || grid[0][0] === col) return;
+      var from = grid[0][0];
+      var stack = [[0, 0]], seen = { "0,0": true };
+      while (stack.length) {
+        var cur = stack.pop();
+        grid[cur[0]][cur[1]] = col;
+        var nb = [[cur[0] - 1, cur[1]], [cur[0] + 1, cur[1]], [cur[0], cur[1] - 1], [cur[0], cur[1] + 1]];
+        for (var i = 0; i < 4; i++) {
+          var rr = nb[i][0], cc = nb[i][1];
+          if (rr >= 0 && rr < n && cc >= 0 && cc < n && !seen[rr + "," + cc] && grid[rr][cc] === from) {
+            seen[rr + "," + cc] = true;
+            stack.push([rr, cc]);
+          }
+        }
+      }
+      used++; movesLeft--;
+      $("flMoves").textContent = movesLeft;
+      beep(420, 0.05);
+      render();
+      if (filled()) finish(true);
+      else if (movesLeft <= 0) finish(false);
+    }
+    function filled() {
+      var v = grid[0][0];
+      for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (grid[r][c] !== v) return false;
+      return true;
+    }
+    function finish(won) {
+      done = true;
+      if (won) {
+        var best = lsGet("gb_flood_best_" + diff(), 0);
+        if (!best || used < best) { best = used; lsSet("gb_flood_best_" + diff(), best); }
+        $("flBest").textContent = best;
+        banner($("flBanner"), "Flooded in <b>" + used + "</b> moves!");
+        beep(700, 0.25);
+      } else {
+        var left = 0, v = grid[0][0];
+        for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (grid[r][c] !== v) left++;
+        banner($("flBanner"), "Out of moves &#8212; " + left + " tiles left. Try again!");
+        beep(200, 0.25);
+      }
+    }
+    $("flNew").addEventListener("click", reset);
+    reset();
+  })();
+
+  /* ============ 32. SUDOKU ============ */
+  (function () {
+    var sol, cells, given, sel, done, t0, timer = null;
+
+    function cfg() { return DP.sudoku[diff()]; }
+    function rowOf(i) { return Math.floor(i / 9); }
+    function colOf(i) { return i % 9; }
+    function boxOf(i) { return Math.floor(rowOf(i) / 3) * 3 + Math.floor(colOf(i) / 3); }
+    function valid(g, i, v) {
+      var r = rowOf(i), c = colOf(i), b = boxOf(i);
+      for (var k = 0; k < 81; k++) {
+        if (k === i || g[k] !== v) continue;
+        if (rowOf(k) === r || colOf(k) === c || boxOf(k) === b) return false;
+      }
+      return true;
+    }
+    function fill(g) {
+      var i = -1;
+      for (var k = 0; k < 81; k++) if (g[k] === 0) { i = k; break; }
+      if (i < 0) return true;
+      var order = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+      for (var s = 8; s > 0; s--) { var j = Math.floor(Math.random() * (s + 1)); var t = order[s]; order[s] = order[j]; order[j] = t; }
+      for (var d = 0; d < 9; d++) {
+        if (!valid(g, i, order[d])) continue;
+        g[i] = order[d];
+        if (fill(g)) return true;
+        g[i] = 0;
+      }
+      return false;
+    }
+    function count2(g) {
+      var i = -1;
+      for (var k = 0; k < 81; k++) if (g[k] === 0) { i = k; break; }
+      if (i < 0) return 1;
+      var total = 0;
+      for (var v = 1; v <= 9; v++) {
+        if (!valid(g, i, v)) continue;
+        g[i] = v;
+        total += count2(g);
+        g[i] = 0;
+        if (total >= 2) return total;
+      }
+      return total;
+    }
+    function fmt(s) {
+      var m = Math.floor(s / 60), r = s % 60;
+      return m + ":" + (r < 10 ? "0" : "") + r;
+    }
+    function reset() {
+      var g = [], k;
+      for (k = 0; k < 81; k++) g.push(0);
+      fill(g);
+      sol = g.slice();
+      var order = [], work = g.slice();
+      for (k = 0; k < 81; k++) order.push(k);
+      for (var s = order.length - 1; s > 0; s--) { var j = Math.floor(Math.random() * (s + 1)); var t = order[s]; order[s] = order[j]; order[j] = t; }
+      var target = 81 - cfg().given, removed = 0;
+      for (var o = 0; o < order.length && removed < target; o++) {
+        var i = order[o], v = work[i];
+        work[i] = 0;
+        if (count2(work) === 1) removed++;
+        else work[i] = v;
+      }
+      cells = work; given = []; sel = -1; done = false;
+      for (k = 0; k < 81; k++) given.push(work[k] !== 0);
+      var best = lsGet("gb_sudoku_best_" + diff(), 0);
+      $("sdBest").textContent = best ? fmt(best) : "\u2014";
+      $("sdTime").textContent = "0:00";
+      hideBanner($("sdBanner"));
+      if (timer) { clearInterval(timer); timer = null; }
+      t0 = Date.now();
+      timer = setInterval(function () {
+        if (!done) $("sdTime").textContent = fmt(Math.floor((Date.now() - t0) / 1000));
+      }, 1000);
+      render();
+    }
+    function conflicts() {
+      var bad = [];
+      for (var i = 0; i < 81; i++) bad.push(false);
+      for (var a = 0; a < 81; a++) {
+        if (!cells[a]) continue;
+        for (var k = 0; k < 81; k++) {
+          if (k === a || cells[k] !== cells[a]) continue;
+          if (rowOf(k) === rowOf(a) || colOf(k) === colOf(a) || boxOf(k) === boxOf(a)) { bad[a] = true; bad[k] = true; }
+        }
+      }
+      return bad;
+    }
+    function render() {
+      var el = $("sdGrid"), bad = conflicts();
+      el.style.gridTemplateColumns = "repeat(9, 1fr)";
+      el.innerHTML = "";
+      for (var i = 0; i < 81; i++) {
+        (function (i) {
+          var b = document.createElement("button");
+          b.className = "sd-cell";
+          if (given[i]) b.className += " given";
+          if (i === sel) b.className += " sel";
+          if (bad[i]) b.className += " bad";
+          if (colOf(i) === 2 || colOf(i) === 5) b.className += " bedge-r";
+          if (rowOf(i) === 2 || rowOf(i) === 5) b.className += " bedge-b";
+          b.textContent = cells[i] ? cells[i] : "";
+          b.addEventListener("click", function () { select(i); });
+          el.appendChild(b);
+        })(i);
+      }
+    }
+    function select(i) { if (done) return; sel = i; render(); }
+    function place(v) {
+      if (done || sel < 0 || given[sel]) return;
+      cells[sel] = v;
+      render();
+      beep(v ? 500 : 280, 0.04);
+      checkWin();
+    }
+    function checkWin() {
+      for (var i = 0; i < 81; i++) if (cells[i] !== sol[i]) return;
+      done = true;
+      if (timer) { clearInterval(timer); timer = null; }
+      var secs = Math.floor((Date.now() - t0) / 1000);
+      var best = lsGet("gb_sudoku_best_" + diff(), 0);
+      if (!best || secs < best) { best = secs; lsSet("gb_sudoku_best_" + diff(), best); }
+      $("sdBest").textContent = fmt(best);
+      $("sdTime").textContent = fmt(secs);
+      banner($("sdBanner"), "Solved in <b>" + fmt(secs) + "</b>!");
+      beep(750, 0.3);
+    }
+    (function () {
+      var pad = $("sdPad");
+      for (var v = 1; v <= 9; v++) {
+        (function (v) {
+          var b = document.createElement("button");
+          b.className = "sd-num";
+          b.textContent = v;
+          b.addEventListener("click", function () { place(v); });
+          pad.appendChild(b);
+        })(v);
+      }
+      var er = document.createElement("button");
+      er.className = "sd-num";
+      er.textContent = "\u232B";
+      er.addEventListener("click", function () { place(0); });
+      pad.appendChild(er);
+    })();
+    stopFns.sudoku = function () { if (timer) { clearInterval(timer); timer = null; } };
+    $("sdNew").addEventListener("click", reset);
+    reset();
+  })();
+
+  /* ============ 33. HANOI TOWERS ============ */
+  (function () {
+    var pegs, sel, moves, disks, done;
+    var PAL = ["#38bdf8", "#4ade80", "#fbbf24", "#f87171", "#a78bfa", "#fb923c"];
+
+    function cfg() { return DP.hanoi[diff()]; }
+    function reset() {
+      disks = cfg().disks;
+      pegs = [[], [], []];
+      for (var d = disks; d >= 1; d--) pegs[0].push(d);
+      sel = -1; moves = 0; done = false;
+      $("hnMoves").textContent = "0";
+      $("hnBest").textContent = lsGet("gb_hanoi_best_" + disks, 0) || "\u221E";
+      hideBanner($("hnBanner"));
+      render();
+    }
+    function render() {
+      var el = $("hnPegs");
+      el.innerHTML = "";
+      for (var p = 0; p < 3; p++) {
+        (function (p) {
+          var peg = document.createElement("div");
+          peg.className = "hn-peg" + (p === sel ? " sel" : "");
+          for (var k = 0; k < pegs[p].length; k++) {
+            var size = pegs[p][k];
+            var d = document.createElement("div");
+            d.className = "hn-disk";
+            d.style.width = (36 + size * 10) + "%";
+            d.style.background = PAL[size - 1];
+            if (p === sel && k === pegs[p].length - 1) d.style.opacity = "0.6";
+            peg.appendChild(d);
+          }
+          peg.addEventListener("click", function () { tap(p); });
+          el.appendChild(peg);
+        })(p);
+      }
+    }
+    function tap(p) {
+      if (done) return;
+      if (sel === -1) {
+        if (!pegs[p].length) return;
+        sel = p;
+        render();
+        beep(360, 0.04);
+        return;
+      }
+      if (sel === p) { sel = -1; render(); return; }
+      var moving = pegs[sel][pegs[sel].length - 1];
+      var target = pegs[p].length ? pegs[p][pegs[p].length - 1] : 999;
+      if (moving > target) { beep(150, 0.12); return; }
+      pegs[sel].pop();
+      pegs[p].push(moving);
+      sel = -1;
+      moves++;
+      $("hnMoves").textContent = moves;
+      beep(440, 0.05);
+      render();
+      if (pegs[2].length === disks) {
+        done = true;
+        var best = lsGet("gb_hanoi_best_" + disks, 0);
+        if (!best || moves < best) { best = moves; lsSet("gb_hanoi_best_" + disks, best); }
+        $("hnBest").textContent = best;
+        var opt = Math.pow(2, disks) - 1;
+        banner($("hnBanner"), "Solved in <b>" + moves + "</b> moves" + (moves === opt ? " &#8212; PERFECT!" : " (optimal: " + opt + ")"));
+        beep(720, 0.3);
+      }
+    }
+    $("hnNew").addEventListener("click", reset);
+    reset();
+  })();
+
+  /* ============ 34. PIPE FLOW ============ */
+  (function () {
+    var canvas = $("ppCanvas"), ctx = canvas.getContext("2d");
+    var n, base, rot, moves, done;
+    var DR = [-1, 0, 1, 0], DC = [0, 1, 0, -1];
+
+    function cfg() { return DP.pipes[diff()]; }
+    function reset() {
+      n = cfg().n;
+      base = []; rot = []; moves = 0; done = false;
+      for (var r = 0; r < n; r++) { base.push([]); rot.push([]); for (var c = 0; c < n; c++) { base[r].push(0); rot[r].push(0); } }
+      var v = { "0,0": true }, stack = [[0, 0]];
+      while (stack.length) {
+        var cur = stack[stack.length - 1], nb = [];
+        for (var d = 0; d < 4; d++) {
+          var rr = cur[0] + DR[d], cc = cur[1] + DC[d];
+          if (rr >= 0 && rr < n && cc >= 0 && cc < n && !v[rr + "," + cc]) nb.push([rr, cc, d]);
+        }
+        if (!nb.length) { stack.pop(); continue; }
+        var p = nb[Math.floor(Math.random() * nb.length)];
+        base[cur[0]][cur[1]] |= 1 << p[2];
+        base[p[0]][p[1]] |= 1 << ((p[2] + 2) % 4);
+        v[p[0] + "," + p[1]] = true;
+        stack.push([p[0], p[1]]);
+      }
+      var tries = 0;
+      do {
+        for (r = 0; r < n; r++) for (var c2 = 0; c2 < n; c2++) rot[r][c2] = Math.floor(Math.random() * 4);
+        tries++;
+      } while (solved() && tries < 60);
+      $("ppMoves").textContent = "0";
+      $("ppBest").textContent = lsGet("gb_pipes_best_" + n, 0) || "\u221E";
+      hideBanner($("ppBanner"));
+      draw();
+    }
+    function sides(r, c) {
+      var out = [], m = base[r][c], ro = rot[r][c];
+      for (var dir = 0; dir < 4; dir++) if (m & (1 << ((dir - ro + 4) % 4))) out.push(dir);
+      return out;
+    }
+    function linked(r, c, d) {
+      var rr = r + DR[d], cc = c + DC[d];
+      if (rr < 0 || rr >= n || cc < 0 || cc >= n) return false;
+      var back = (d + 2) % 4, s = sides(rr, cc);
+      for (var i = 0; i < s.length; i++) if (s[i] === back) return true;
+      return false;
+    }
+    function powered() {
+      var seen = { "0,0": true }, stack = [[0, 0]];
+      while (stack.length) {
+        var cur = stack.pop(), s = sides(cur[0], cur[1]);
+        for (var i = 0; i < s.length; i++) {
+          var d = s[i], rr = cur[0] + DR[d], cc = cur[1] + DC[d];
+          if (rr < 0 || rr >= n || cc < 0 || cc >= n || seen[rr + "," + cc]) continue;
+          if (linked(cur[0], cur[1], d)) { seen[rr + "," + cc] = true; stack.push([rr, cc]); }
+        }
+      }
+      return seen;
+    }
+    function solved() { return !!powered()[(n - 1) + "," + (n - 1)]; }
+    function geom() {
+      var W = canvas.width, H = canvas.height;
+      var cs = Math.floor(Math.min(W / n, H / n));
+      return { cs: cs, ox: (W - cs * n) / 2, oy: (H - cs * n) / 2 };
+    }
+    function draw() {
+      var g = geom(), cs = g.cs, ox = g.ox, oy = g.oy;
+      ctx.fillStyle = "#0b0f13";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      var pw = powered();
+      for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) {
+        var x = ox + c * cs, y = oy + r * cs;
+        var on = r === 0 && c === 0 ? true : !!pw[r + "," + c];
+        var cx = x + cs / 2, cy = y + cs / 2;
+        var s = sides(r, c);
+        ctx.strokeStyle = on ? "#4ade80" : "#3d4a57";
+        ctx.lineWidth = Math.max(3, cs * 0.14);
+        ctx.beginPath();
+        for (var i = 0; i < s.length; i++) {
+          ctx.moveTo(cx, cy);
+          ctx.lineTo(cx + DC[s[i]] * cs / 2, cy + DR[s[i]] * cs / 2);
+        }
+        ctx.stroke();
+        ctx.fillStyle = on ? "#4ade80" : "#3d4a57";
+        ctx.beginPath();
+        ctx.arc(cx, cy, Math.max(2, cs * 0.12), 0, Math.PI * 2);
+        ctx.fill();
+        if ((r === 0 && c === 0) || (r === n - 1 && c === n - 1)) {
+          ctx.strokeStyle = "#fbbf24";
+          ctx.lineWidth = 3;
+          ctx.strokeRect(x + 3, y + 3, cs - 6, cs - 6);
+        }
+      }
+    }
+    function tapAt(clientX, clientY) {
+      if (done) return;
+      var g = geom(), rv = canvas.getBoundingClientRect();
+      var x = (clientX - rv.left) / rv.width * canvas.width;
+      var y = (clientY - rv.top) / rv.height * canvas.height;
+      var c = Math.floor((x - g.ox) / g.cs), r = Math.floor((y - g.oy) / g.cs);
+      if (r < 0 || r >= n || c < 0 || c >= n) return;
+      rot[r][c] = (rot[r][c] + 1) % 4;
+      moves++;
+      $("ppMoves").textContent = moves;
+      beep(320, 0.03);
+      draw();
+      if (solved()) {
+        done = true;
+        var best = lsGet("gb_pipes_best_" + n, 0);
+        if (!best || moves < best) { best = moves; lsSet("gb_pipes_best_" + n, best); }
+        $("ppBest").textContent = best;
+        banner($("ppBanner"), "Flow complete in <b>" + moves + "</b> turns!");
+        beep(720, 0.3);
+      }
+    }
+    canvas.addEventListener("touchstart", function (e) {
+      e.preventDefault();
+      if (e.touches[0]) tapAt(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: false });
+    canvas.addEventListener("mousedown", function (e) { tapAt(e.clientX, e.clientY); });
+    $("ppNew").addEventListener("click", reset);
+    reset();
+  })();
+
+  /* ============ 35. GOMOKU ============ */
+  (function () {
+    var n, board, over, you = 0, cpu = 0, draws = 0, winCells = null;
+    var DIRS = [[0, 1], [1, 0], [1, 1], [1, -1]];
+
+    function cfg() { return DP.gomoku[diff()]; }
+    function reset() {
+      n = cfg().n;
+      board = [];
+      for (var i = 0; i < n * n; i++) board.push(0);
+      over = false; winCells = null;
+      $("gkStatus").textContent = "Your turn";
+      hideBanner($("gkBanner"));
+      render();
+    }
+    function show() {
+      $("gkYou").textContent = you;
+      $("gkCpu").textContent = cpu;
+      $("gkDraw").textContent = draws;
+    }
+    function render() {
+      var el = $("gkBoard");
+      el.style.gridTemplateColumns = "repeat(" + n + ", 1fr)";
+      el.innerHTML = "";
+      for (var i = 0; i < n * n; i++) {
+        (function (i) {
+          var b = document.createElement("button");
+          b.className = "gk-cell";
+          if (board[i] === 1) b.className += " p";
+          if (board[i] === 2) b.className += " c";
+          if (winCells && winCells.indexOf(i) >= 0) b.className += " win";
+          b.addEventListener("click", function () { play(i); });
+          el.appendChild(b);
+        })(i);
+      }
+    }
+    function lineInfo(i, who) {
+      var r = Math.floor(i / n), c = i % n, total = 0;
+      for (var d = 0; d < 4; d++) {
+        var dr = DIRS[d][0], dc = DIRS[d][1];
+        var cnt = 1, openA = false, openB = false;
+        var rr = r + dr, cc = c + dc;
+        while (rr >= 0 && rr < n && cc >= 0 && cc < n && board[rr * n + cc] === who) { cnt++; rr += dr; cc += dc; }
+        if (rr >= 0 && rr < n && cc >= 0 && cc < n && board[rr * n + cc] === 0) openA = true;
+        rr = r - dr; cc = c - dc;
+        while (rr >= 0 && rr < n && cc >= 0 && cc < n && board[rr * n + cc] === who) { cnt++; rr -= dr; cc -= dc; }
+        if (rr >= 0 && rr < n && cc >= 0 && cc < n && board[rr * n + cc] === 0) openB = true;
+        var opens = (openA ? 1 : 0) + (openB ? 1 : 0);
+        if (cnt >= 5) total += 1000000;
+        else if (cnt === 4) total += opens === 2 ? 50000 : (opens === 1 ? 12000 : 0);
+        else if (cnt === 3) total += opens === 2 ? 4000 : (opens === 1 ? 400 : 0);
+        else if (cnt === 2) total += opens === 2 ? 200 : (opens === 1 ? 30 : 0);
+        else total += opens === 2 ? 8 : 2;
+      }
+      return total;
+    }
+    function nearby(i) {
+      var r = Math.floor(i / n), c = i % n;
+      for (var rr = Math.max(0, r - 2); rr <= Math.min(n - 1, r + 2); rr++)
+        for (var cc = Math.max(0, c - 2); cc <= Math.min(n - 1, c + 2); cc++)
+          if (board[rr * n + cc] !== 0) return true;
+      return false;
+    }
+    function aiMove() {
+      var lvl = cfg().lvl, i;
+      var cand = [];
+      for (i = 0; i < n * n; i++) if (board[i] === 0 && nearby(i)) cand.push(i);
+      if (!cand.length) return -1;
+      var pick = -1, top = 0;
+      for (i = 0; i < cand.length; i++) {
+        var a = lineInfo(cand[i], 2);
+        if (a > top) { top = a; pick = cand[i]; }
+      }
+      if (top >= 1000000) return pick;
+      pick = -1; top = 0;
+      for (i = 0; i < cand.length; i++) {
+        var d = lineInfo(cand[i], 1);
+        if (d > top) { top = d; pick = cand[i]; }
+      }
+      if (top >= 1000000) return pick;
+      var def = [0.55, 0.85, 1, 1][lvl], noise = [0.4, 0.2, 0.07, 0][lvl];
+      var best = -1, bestScore = -Infinity;
+      for (i = 0; i < cand.length; i++) {
+        var idx = cand[i];
+        var sc = lineInfo(idx, 2) + lineInfo(idx, 1) * def + Math.random() * noise * (lineInfo(idx, 2) + lineInfo(idx, 1) + 100);
+        if (sc > bestScore) { bestScore = sc; best = idx; }
+      }
+      return best;
+    }
+    function winAt(i, who) {
+      var r = Math.floor(i / n), c = i % n;
+      for (var d = 0; d < 4; d++) {
+        var dr = DIRS[d][0], dc = DIRS[d][1];
+        var line = [i];
+        var rr = r + dr, cc = c + dc;
+        while (rr >= 0 && rr < n && cc >= 0 && cc < n && board[rr * n + cc] === who) { line.push(rr * n + cc); rr += dr; cc += dc; }
+        rr = r - dr; cc = c - dc;
+        while (rr >= 0 && rr < n && cc >= 0 && cc < n && board[rr * n + cc] === who) { line.unshift(rr * n + cc); rr -= dr; cc -= dc; }
+        if (line.length >= 5) return line;
+      }
+      return null;
+    }
+    function full() {
+      for (var i = 0; i < n * n; i++) if (board[i] === 0) return false;
+      return true;
+    }
+    function endRound(title) {
+      over = true;
+      $("gkStatus").textContent = title;
+      highlight();
+      render();
+      show();
+    }
+    function highlight() {
+      for (var i = 0; i < n * n; i++) {
+        if (board[i] !== 1 && board[i] !== 2) continue;
+        var line = winAt(i, board[i]);
+        if (line) { winCells = line; return; }
+      }
+    }
+    function play(i) {
+      if (over || board[i] !== 0) return;
+      board[i] = 1;
+      render();
+      beep(480, 0.05);
+      if (winAt(i, 1)) { you++; render(); endRound("You win!"); banner($("gkBanner"), "You got five! Score: <b>" + you + "</b>"); beep(740, 0.3); return; }
+      if (full()) { draws++; render(); endRound("Draw."); return; }
+      $("gkStatus").textContent = "CPU thinking...";
+      var mv = aiMove();
+      if (mv < 0) { draws++; endRound("Draw."); return; }
+      board[mv] = 2;
+      render();
+      beep(360, 0.05);
+      if (winAt(mv, 2)) { cpu++; render(); endRound("CPU wins."); banner($("gkBanner"), "CPU lined up five. You " + you + " &#8212; CPU " + cpu); beep(200, 0.3); return; }
+      if (full()) { draws++; render(); endRound("Draw."); return; }
+      $("gkStatus").textContent = "Your turn";
+    }
+    $("gkNew").addEventListener("click", reset);
+    show();
+    reset();
+  })();
+
+  /* ============ 36. BLACKJACK ============ */
+  (function () {
+    var SUITS = ["\u2660", "\u2665", "\u2666", "\u2663"];
+    var deck, you, cpuHand, chips, phase;
+
+    function cfg() { return DP.blackjack[diff()]; }
+    function rank(v) {
+      if (v === 1) return "A";
+      if (v === 11) return "J";
+      if (v === 12) return "Q";
+      if (v === 13) return "K";
+      return String(v);
+    }
+    function newDeck() {
+      var d = [];
+      for (var s = 0; s < 4; s++) for (var v = 1; v <= 13; v++) d.push({ v: v, s: s });
+      for (var i = d.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = d[i]; d[i] = d[j]; d[j] = t; }
+      return d;
+    }
+    function handVal(hand) {
+      var total = 0, aces = 0;
+      for (var i = 0; i < hand.length; i++) {
+        var v = hand[i].v;
+        if (v === 1) { aces++; total += 11; }
+        else total += v > 10 ? 10 : v;
+      }
+      while (total > 21 && aces > 0) { total -= 10; aces--; }
+      return { total: total, soft: aces > 0 };
+    }
+    function cardHTML(card, hidden) {
+      if (hidden) return '<div class="bj-card back"></div>';
+      var red = card.s === 1 || card.s === 2;
+      return '<div class="bj-card' + (red ? " red" : "") + '">' + rank(card.v) + SUITS[card.s] + "</div>";
+    }
+    function renderHands(reveal) {
+      var h = "", i;
+      for (i = 0; i < cpuHand.length; i++) h += cardHTML(cpuHand[i], !reveal && i === 1);
+      $("bjDealer").innerHTML = h;
+      h = "";
+      for (i = 0; i < you.length; i++) h += cardHTML(you[i], false);
+      $("bjYou").innerHTML = h;
+      $("bjDealerScore").textContent = reveal && cpuHand.length ? handVal(cpuHand).total : "?";
+      $("bjYouScore").textContent = you.length ? handVal(you).total : 0;
+    }
+    function setButtons(dealOn, hitOn, standOn) {
+      $("bjDeal").disabled = !dealOn;
+      $("bjHit").disabled = !hitOn;
+      $("bjStand").disabled = !standOn;
+    }
+    function updateBest() {
+      var c = cfg(), best = lsGet("gb_blackjack_best_" + diff(), c.chips);
+      if (chips > best) { best = chips; lsSet("gb_blackjack_best_" + diff(), best); }
+      $("bjBest").textContent = best;
+    }
+    function reset() {
+      var c = cfg();
+      chips = c.chips; phase = "idle";
+      you = []; cpuHand = []; deck = newDeck();
+      $("bjChips").textContent = chips;
+      $("bjBest").textContent = lsGet("gb_blackjack_best_" + diff(), c.chips);
+      $("bjMsg").textContent = "Press Deal. Bet: 10 per round.";
+      hideBanner($("bjBanner"));
+      renderHands(false);
+      setButtons(true, false, false);
+    }
+    function deal() {
+      if (phase === "play") return;
+      if (chips < 10) { $("bjMsg").textContent = "Out of chips \u2014 press New to rebuy."; return; }
+      if (deck.length < 20) deck = newDeck();
+      you = [deck.pop(), deck.pop()];
+      cpuHand = [deck.pop(), deck.pop()];
+      chips -= 10;
+      phase = "play";
+      $("bjChips").textContent = chips;
+      $("bjMsg").textContent = "Hit or stand?";
+      hideBanner($("bjBanner"));
+      renderHands(false);
+      setButtons(false, true, true);
+      beep(460, 0.05);
+      if (handVal(you).total === 21) stand();
+    }
+    function bust() {
+      phase = "done";
+      $("bjMsg").textContent = "Bust! You went over 21.";
+      banner($("bjBanner"), "Bust with " + handVal(you).total + ". Dealer takes the 10.");
+      beep(180, 0.25);
+      updateBest();
+      setButtons(chips >= 10, false, false);
+      if (chips < 10) $("bjMsg").textContent = "Bust! Out of chips \u2014 press New to rebuy.";
+    }
+    function hit() {
+      if (phase !== "play") return;
+      you.push(deck.pop());
+      renderHands(false);
+      beep(520, 0.05);
+      if (handVal(you).total > 21) { bust(); return; }
+      if (handVal(you).total === 21) stand();
+    }
+    function stand() {
+      if (phase !== "play") return;
+      phase = "done";
+      var rule = cfg().soft17, guard = 0, dv;
+      while (guard < 20) {
+        guard++;
+        dv = handVal(cpuHand);
+        if (dv.total < 17 || (dv.total === 17 && dv.soft && rule)) { cpuHand.push(deck.pop()); continue; }
+        break;
+      }
+      dv = handVal(cpuHand);
+      renderHands(true);
+      var pv = handVal(you);
+      var pBJ = you.length === 2 && pv.total === 21;
+      var dBJ = cpuHand.length === 2 && dv.total === 21;
+      var payout = 0, msg;
+      if (pBJ && !dBJ) { payout = 25; msg = "BLACKJACK! Dealer pays 15."; }
+      else if (dBJ && !pBJ) { msg = "Dealer blackjack. You lose the 10."; }
+      else if (pv.total > dv.total) { payout = 20; msg = "You win! Dealer pays 10."; }
+      else if (pv.total < dv.total) { msg = "Dealer wins " + dv.total + " to " + pv.total + "."; }
+      else { payout = 10; msg = "Push at " + pv.total + " \u2014 bet returned."; }
+      chips += payout;
+      $("bjChips").textContent = chips;
+      updateBest();
+      banner($("bjBanner"), msg + " Chips: <b>" + chips + "</b>");
+      beep(payout >= 20 ? 740 : payout === 10 ? 520 : 220, 0.2);
+      setButtons(chips >= 10, false, false);
+      $("bjMsg").textContent = chips >= 10 ? "Round over. Deal again?" : "Out of chips \u2014 press New to rebuy.";
+    }
+    $("bjDeal").addEventListener("click", deal);
+    $("bjHit").addEventListener("click", hit);
+    $("bjStand").addEventListener("click", stand);
+    $("bjNew").addEventListener("click", reset);
+    reset();
+  })();
+
+  /* ============ 37. DASH RUNNER ============ */
+  (function () {
+    var W = 360, H = 480, GROUND = H - 70, PX = 46, PW = 26, PH = 34;
+    var canvas = $("rnCanvas"), ctx = canvas.getContext("2d");
+    var py, vy, obstacles, dist, score, running, raf = null, nextSpawn, best;
+
+    function cfg() { return DP.runner[diff()]; }
+    function speed() { return cfg().spd + Math.min(4, score / 15); }
+    function reset() {
+      py = GROUND; vy = 0; obstacles = []; dist = 0; score = 0; running = false; nextSpawn = 40;
+      best = lsGet("gb_runner_best_" + diff(), 0);
+      $("rnScore").textContent = "0";
+      $("rnBest").textContent = best;
+      hideBanner($("rnBanner"));
+      draw();
+    }
+    function jump() {
+      if (!running || py < GROUND - 0.5) return;
+      vy = -13;
+      beep(520, 0.05);
+    }
+    function spawn() {
+      obstacles.push({ x: W + 10, w: 18 + Math.random() * 16, h: 20 + Math.random() * 24 });
+    }
+    function die() {
+      running = false;
+      if (raf) { cancelAnimationFrame(raf); raf = null; }
+      if (score > best) { best = score; lsSet("gb_runner_best_" + diff(), best); }
+      $("rnBest").textContent = best;
+      banner($("rnBanner"), "Crashed at <b>" + score + "</b> m. Best: " + best);
+      beep(180, 0.3);
+      draw();
+    }
+    function step() {
+      if (!running) { raf = null; return; }
+      var spd = speed();
+      vy += 0.75;
+      py += vy;
+      if (py > GROUND) { py = GROUND; vy = 0; }
+      dist += spd;
+      score = Math.floor(dist / 12);
+      $("rnScore").textContent = score;
+      nextSpawn--;
+      if (nextSpawn <= 0) { spawn(); nextSpawn = 42 + Math.floor(Math.random() * 26); }
+      for (var i = obstacles.length - 1; i >= 0; i--) {
+        var o = obstacles[i];
+        o.x -= spd;
+        if (o.x + o.w < -10) { obstacles.splice(i, 1); continue; }
+        if (o.x < PX + PW - 4 && o.x + o.w > PX + 4 && py > GROUND - o.h + 4) { die(); return; }
+      }
+      draw();
+      raf = requestAnimationFrame(step);
+    }
+    function draw() {
+      ctx.fillStyle = "#0b0f13";
+      ctx.fillRect(0, 0, W, H);
+      ctx.strokeStyle = "#2c3743";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, GROUND + 1);
+      ctx.lineTo(W, GROUND + 1);
+      ctx.stroke();
+      for (var i = 0; i < obstacles.length; i++) {
+        var o = obstacles[i];
+        ctx.fillStyle = "#f87171";
+        ctx.fillRect(o.x, GROUND - o.h, o.w, o.h);
+      }
+      ctx.fillStyle = "#38bdf8";
+      ctx.fillRect(PX, py - PH, PW, PH);
+      if (!running) {
+        ctx.fillStyle = "#8a97a5";
+        ctx.font = "16px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Tap Start to run", W / 2, H / 2);
+      }
+    }
+    function start() {
+      reset();
+      running = true;
+      if (!raf) raf = requestAnimationFrame(step);
+    }
+    canvas.addEventListener("touchstart", function (e) {
+      e.preventDefault();
+      jump();
+    }, { passive: false });
+    canvas.addEventListener("mousedown", function () { jump(); });
+    document.addEventListener("keydown", function (e) {
+      if (current !== "runner") return;
+      if (e.key === " " || e.key === "ArrowUp") { e.preventDefault(); jump(); }
+    });
+    $("rnStart").addEventListener("click", start);
+    stopFns.runner = function () { running = false; if (raf) { cancelAnimationFrame(raf); raf = null; } };
+    reset();
+  })();
+
+  /* ============ 38. HOPPER ============ */
+  (function () {
+    var W = 360, CELL = 40, ROWS = 9, LANES = [1, 3, 5, 7];
+    var canvas = $("hpCanvas"), ctx = canvas.getContext("2d");
+    var px, prow, lives, crossings, cars, level, running, raf = null, best;
+
+    function cfg() { return DP.hopper[diff()]; }
+    function laneSpeed() {
+      var s = cfg().spd * (1 + (level - 1) * 0.15);
+      return Math.min(s, cfg().spd * 2.5);
+    }
+    function reset() {
+      px = 4; prow = 8; lives = cfg().lives; crossings = 0; level = 1;
+      running = false; best = lsGet("gb_hopper_best_" + diff(), 0);
+      $("hpScore").textContent = "0";
+      $("hpLives").textContent = lives;
+      $("hpBest").textContent = best;
+      hideBanner($("hpBanner"));
+      makeCars();
+      draw();
+    }
+    function makeCars() {
+      cars = [];
+      var spd = laneSpeed(), per = Math.min(3, cfg().perLane + Math.floor((level - 1) / 2));
+      for (var i = 0; i < LANES.length; i++) {
+        for (var k = 0; k < per; k++) {
+          var dir = i % 2 === 0 ? 1 : -1;
+          cars.push({
+            row: LANES[i],
+            x: Math.random() * W,
+            w: 46 + Math.random() * 34,
+            spd: dir * spd * (0.8 + Math.random() * 0.4)
+          });
+        }
+      }
+    }
+    function gameOver() {
+      running = false;
+      if (raf) { cancelAnimationFrame(raf); raf = null; }
+      if (crossings > best) { best = crossings; lsSet("gb_hopper_best_" + diff(), best); }
+      $("hpBest").textContent = best;
+      banner($("hpBanner"), "Squashed! Crossings: <b>" + crossings + "</b>. Best: " + best);
+      beep(170, 0.3);
+      draw();
+    }
+    function hit() {
+      lives--;
+      $("hpLives").textContent = lives;
+      beep(200, 0.15);
+      if (lives <= 0) { gameOver(); return; }
+      prow = 8; px = 4;
+    }
+    function reachGoal() {
+      crossings++; level++;
+      $("hpScore").textContent = crossings;
+      beep(720, 0.12);
+      prow = 8; px = 4;
+      makeCars();
+    }
+    function move(dr, dc) {
+      if (!running) return;
+      var nr = prow + dr, nc = px + dc;
+      if (nr < 0 || nr >= ROWS || nc < 0 || nc >= 9) return;
+      prow = nr; px = nc;
+      beep(300, 0.02);
+      if (prow === 0) reachGoal();
+      draw();
+    }
+    function step() {
+      if (!running) { raf = null; return; }
+      for (var i = 0; i < cars.length; i++) {
+        var c = cars[i];
+        c.x += c.spd;
+        if (c.spd > 0 && c.x > W + 30) c.x = -c.w - 30;
+        if (c.spd < 0 && c.x + c.w < -30) c.x = W + 30;
+      }
+      for (i = 0; i < cars.length; i++) {
+        if (cars[i].row !== prow) continue;
+        var x0 = px * CELL + 6, x1 = (px + 1) * CELL - 6;
+        if (cars[i].x < x1 && cars[i].x + cars[i].w > x0) { hit(); break; }
+      }
+      draw();
+      raf = requestAnimationFrame(step);
+    }
+    function draw() {
+      ctx.fillStyle = "#0b0f13";
+      ctx.fillRect(0, 0, W, W);
+      var PAL = ["#f87171", "#fbbf24", "#38bdf8", "#a78bfa", "#fb923c", "#4ade80"];
+      for (var r = 0; r < ROWS; r++) {
+        var road = false;
+        for (var i = 0; i < LANES.length; i++) if (LANES[i] === r) road = true;
+        ctx.fillStyle = r === 0 ? "#2a2313" : r === 8 ? "#12351f" : road ? "#1c232b" : "#16202a";
+        ctx.fillRect(0, r * CELL, W, CELL);
+      }
+      for (i = 0; i < cars.length; i++) {
+        ctx.fillStyle = PAL[i % PAL.length];
+        ctx.fillRect(cars[i].x, cars[i].row * CELL + 9, cars[i].w, CELL - 18);
+      }
+      ctx.fillStyle = "#4ade80";
+      ctx.fillRect(px * CELL + 7, prow * CELL + 7, CELL - 14, CELL - 14);
+      if (!running) {
+        ctx.fillStyle = "#8a97a5";
+        ctx.font = "16px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Tap Start to cross", W / 2, W / 2);
+      }
+    }
+    function start() {
+      reset();
+      running = true;
+      if (!raf) raf = requestAnimationFrame(step);
+    }
+    var mvBtns = document.querySelectorAll("#hopper .dpad button");
+    for (var i = 0; i < mvBtns.length; i++) {
+      (function (btn) {
+        btn.addEventListener("click", function () {
+          var mv = btn.getAttribute("data-mv");
+          if (mv === "up") move(-1, 0);
+          else if (mv === "down") move(1, 0);
+          else if (mv === "left") move(0, -1);
+          else if (mv === "right") move(0, 1);
+        });
+      })(mvBtns[i]);
+    }
+    var tsx = 0, tsy = 0;
+    canvas.addEventListener("touchstart", function (e) { tsx = e.touches[0].clientX; tsy = e.touches[0].clientY; }, { passive: true });
+    canvas.addEventListener("touchend", function (e) {
+      var dx = e.changedTouches[0].clientX - tsx, dy = e.changedTouches[0].clientY - tsy;
+      if (Math.abs(dx) < 24 && Math.abs(dy) < 24) return;
+      if (Math.abs(dx) > Math.abs(dy)) move(0, dx > 0 ? 1 : -1);
+      else move(dy > 0 ? 1 : -1, 0);
+    }, { passive: true });
+    document.addEventListener("keydown", function (e) {
+      if (current !== "hopper") return;
+      var map = { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] };
+      if (map[e.key]) { e.preventDefault(); move(map[e.key][0], map[e.key][1]); }
+    });
+    $("hpStart").addEventListener("click", start);
+    stopFns.hopper = function () { running = false; if (raf) { cancelAnimationFrame(raf); raf = null; } };
+    reset();
+  })();
+
+  /* ============ 39. BLOCK STACKER ============ */
+  (function () {
+    var W = 360, H = 480, BLOCK_H = 26;
+    var canvas = $("tkCanvas"), ctx = canvas.getContext("2d");
+    var stack, cur, vx, running, raf = null, score, best;
+
+    function cfg() { return DP.stacker[diff()]; }
+    function reset() {
+      stack = [{ x: W / 2 - 55, w: 110 }];
+      score = 0; running = false;
+      best = lsGet("gb_stacker_best_" + diff(), 0);
+      $("tkScore").textContent = "0";
+      $("tkBest").textContent = best;
+      hideBanner($("tkBanner"));
+      newCur();
+      draw();
+    }
+    function newCur() {
+      var top = stack[stack.length - 1];
+      var fromLeft = stack.length % 2 === 1;
+      var mag = Math.abs(cfg().spd) + stack.length * 0.08;
+      cur = { x: fromLeft ? 0 : W - top.w, w: top.w };
+      vx = fromLeft ? mag : -mag;
+    }
+    function drop() {
+      if (!running || !cur) return;
+      var top = stack[stack.length - 1];
+      var l = Math.max(top.x, cur.x), r = Math.min(top.x + top.w, cur.x + cur.w);
+      var w = r - l;
+      if (w <= 0) { die(); return; }
+      var perfect = Math.abs(cur.x - top.x) <= 2.5;
+      if (perfect) { l = top.x; w = top.w; }
+      stack.push({ x: l, w: w });
+      score++;
+      $("tkScore").textContent = score;
+      beep(perfect ? 660 : 420, 0.05);
+      newCur();
+      draw();
+    }
+    function die() {
+      running = false;
+      if (raf) { cancelAnimationFrame(raf); raf = null; }
+      if (score > best) { best = score; lsSet("gb_stacker_best_" + diff(), best); }
+      $("tkBest").textContent = best;
+      banner($("tkBanner"), "Tower <b>" + score + "</b> high. Best: " + best);
+      beep(180, 0.3);
+    }
+    function step() {
+      if (!running) { raf = null; return; }
+      if (cur) {
+        cur.x += vx;
+        if (cur.x <= 0) { cur.x = 0; vx = Math.abs(vx); }
+        if (cur.x + cur.w >= W) { cur.x = W - cur.w; vx = -Math.abs(vx); }
+      }
+      draw();
+      raf = requestAnimationFrame(step);
+    }
+    function draw() {
+      ctx.fillStyle = "#0b0f13";
+      ctx.fillRect(0, 0, W, H);
+      var start = Math.max(0, stack.length - 13);
+      var baseY = H - 60;
+      for (var i = start; i < stack.length; i++) {
+        var y = baseY - (i - start) * BLOCK_H;
+        ctx.fillStyle = i % 2 === 0 ? "#33414f" : "#3d4a57";
+        ctx.fillRect(stack[i].x, y - BLOCK_H, stack[i].w, BLOCK_H - 2);
+      }
+      if (cur) {
+        var topY = baseY - (stack.length - start) * BLOCK_H;
+        ctx.fillStyle = "#38bdf8";
+        ctx.fillRect(cur.x, topY - BLOCK_H, cur.w, BLOCK_H - 2);
+      }
+      if (!running) {
+        ctx.fillStyle = "#8a97a5";
+        ctx.font = "16px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Tap Start to stack", W / 2, 80);
+      }
+    }
+    function start() {
+      reset();
+      running = true;
+      if (!raf) raf = requestAnimationFrame(step);
+    }
+    canvas.addEventListener("touchstart", function (e) {
+      e.preventDefault();
+      drop();
+    }, { passive: false });
+    canvas.addEventListener("mousedown", function () { drop(); });
+    document.addEventListener("keydown", function (e) {
+      if (current !== "stacker") return;
+      if (e.key === " ") { e.preventDefault(); drop(); }
+    });
+    $("tkStart").addEventListener("click", start);
+    stopFns.stacker = function () { running = false; if (raf) { cancelAnimationFrame(raf); raf = null; } };
+    reset();
+  })();
+
+  /* ============ 40. MATCH THREE ============ */
+  (function () {
+    var n, colors, board, sel, moves, score, done;
+    var PAL = ["#f87171", "#fbbf24", "#4ade80", "#38bdf8", "#a78bfa", "#fb923c"];
+
+    function cfg() { return DP.match3[diff()]; }
+    function idx(r, c) { return r * n + c; }
+    function reset() {
+      var c = cfg();
+      n = c.n; colors = c.colors; moves = c.moves; score = 0; sel = -1; done = false;
+      var guard = 0;
+      do { genBoard(); guard++; } while (guard < 60 && (findMatches().length > 0 || !hasMove()));
+      $("m3Score").textContent = "0";
+      $("m3Moves").textContent = moves;
+      $("m3Best").textContent = lsGet("gb_match3_best_" + diff(), 0) || 0;
+      hideBanner($("m3Banner"));
+      render();
+    }
+    function genBoard() {
+      board = [];
+      for (var i = 0; i < n * n; i++) board.push(Math.floor(Math.random() * colors));
+    }
+    function findMatches() {
+      var hits = {}, r, c, run;
+      for (r = 0; r < n; r++) {
+        run = 1;
+        for (c = 1; c <= n; c++) {
+          if (c < n && board[idx(r, c)] === board[idx(r, c - 1)]) run++;
+          else {
+            if (run >= 3) for (var k = c - run; k < c; k++) hits[idx(r, k)] = true;
+            run = 1;
+          }
+        }
+      }
+      for (c = 0; c < n; c++) {
+        run = 1;
+        for (r = 1; r <= n; r++) {
+          if (r < n && board[idx(r, c)] === board[idx(r - 1, c)]) run++;
+          else {
+            if (run >= 3) for (var k2 = r - run; k2 < r; k2++) hits[idx(k2, c)] = true;
+            run = 1;
+          }
+        }
+      }
+      var out = [];
+      for (var key in hits) out.push(+key);
+      return out;
+    }
+    function hasMove() {
+      for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) {
+        if (c + 1 < n) {
+          var a = board[idx(r, c)];
+          board[idx(r, c)] = board[idx(r, c + 1)];
+          board[idx(r, c + 1)] = a;
+          var ok = findMatches().length > 0;
+          a = board[idx(r, c)];
+          board[idx(r, c)] = board[idx(r, c + 1)];
+          board[idx(r, c + 1)] = a;
+          if (ok) return true;
+        }
+        if (r + 1 < n) {
+          var b = board[idx(r, c)];
+          board[idx(r, c)] = board[idx(r + 1, c)];
+          board[idx(r + 1, c)] = b;
+          var ok2 = findMatches().length > 0;
+          b = board[idx(r, c)];
+          board[idx(r, c)] = board[idx(r + 1, c)];
+          board[idx(r + 1, c)] = b;
+          if (ok2) return true;
+        }
+      }
+      return false;
+    }
+    function gravity() {
+      for (var c = 0; c < n; c++) {
+        var write = n - 1;
+        for (var r = n - 1; r >= 0; r--) {
+          if (board[idx(r, c)] >= 0) { board[idx(write, c)] = board[idx(r, c)]; write--; }
+        }
+        for (var r2 = write; r2 >= 0; r2--) board[idx(r2, c)] = Math.floor(Math.random() * colors);
+      }
+    }
+    function resolve() {
+      var total = 0, chain = 1, m;
+      while (true) {
+        m = findMatches();
+        if (!m.length) break;
+        for (var i = 0; i < m.length; i++) board[m[i]] = -1;
+        total += 10 * m.length * chain;
+        beep(380 + chain * 60, 0.06);
+        gravity();
+        chain++;
+      }
+      return total;
+    }
+    function render() {
+      var el = $("m3Grid");
+      el.style.gridTemplateColumns = "repeat(" + n + ", 1fr)";
+      el.innerHTML = "";
+      for (var i = 0; i < n * n; i++) {
+        (function (i) {
+          var b = document.createElement("button");
+          b.className = "m3-cell" + (i === sel ? " sel" : "");
+          b.style.background = PAL[board[i]];
+          b.addEventListener("click", function () { tap(i); });
+          el.appendChild(b);
+        })(i);
+      }
+    }
+    function adjacent(a, b) {
+      var r1 = Math.floor(a / n), c1 = a % n, r2 = Math.floor(b / n), c2 = b % n;
+      return Math.abs(r1 - r2) + Math.abs(c1 - c2) === 1;
+    }
+    function tap(i) {
+      if (done) return;
+      if (sel === -1 || sel === i || !adjacent(sel, i)) {
+        sel = sel === i ? -1 : i;
+        render();
+        return;
+      }
+      var a = board[sel], b = board[i];
+      board[sel] = b; board[i] = a;
+      if (!findMatches().length) {
+        board[sel] = a; board[i] = b;
+        beep(160, 0.08);
+        sel = -1;
+        render();
+        return;
+      }
+      sel = -1;
+      moves--;
+      $("m3Moves").textContent = moves;
+      score += resolve();
+      $("m3Score").textContent = score;
+      var guard = 0;
+      while (!hasMove() && guard < 60) { genBoard(); guard++; }
+      render();
+      if (moves <= 0) finish();
+    }
+    function finish() {
+      done = true;
+      var best = lsGet("gb_match3_best_" + diff(), 0);
+      if (score > best) { best = score; lsSet("gb_match3_best_" + diff(), best); }
+      $("m3Best").textContent = best;
+      banner($("m3Banner"), "Out of moves! Score: <b>" + score + "</b>");
+      beep(650, 0.25);
+    }
+    $("m3New").addEventListener("click", reset);
     reset();
   })();
 })();
