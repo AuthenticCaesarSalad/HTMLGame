@@ -1,6 +1,6 @@
-# GameBox — 40 Offline Games in 1 File
+# GameBox — 50 Offline Games in 1 File
 
-GameBox is a single HTML file (`GameBox.html`) containing 40 complete games. No internet, no installs, no dependencies — open the file in any browser (phone or desktop) and play.
+GameBox is a single HTML file (`GameBox.html`) containing 50 complete games. No internet, no installs, no dependencies — open the file in any browser (phone or desktop) and play.
 
 ## How to Run
 
@@ -62,6 +62,16 @@ Highlights per level:
 - **Sudoku**, **Flood-It** and **Match Three** don't use clocks — they scale grid size, colour counts and move budgets instead
 - **Gomoku** grows to 13x13, and its CPU loses its noise (and its mistakes) on Impossible
 - **Hopper** doubles traffic density and drops you to 2 lives; **Dash Runner** and **Block Stacker** simply get faster
+- **Nonogram** grows from 5x5 to 10x10 grids
+- **Wordle** words grow from 4 to 7 letters and guesses shrink from 6 to 4
+- **Checkers** CPU searches 1 to 4 moves deep
+- **Mancala** CPU goes from random to a 4-ply lookahead
+- **Flow Free** grows from 4x4 with 3 pairs to 7x7 with 6 pairs
+- **Typing Test** shrinks from 60s to 20s and uses longer words
+- **Air Hockey** CPU paddle speeds up from 3.2 to 6.4 px/frame
+- **Slots** starts you with fewer coins and pays out less
+- **Quiz** shrinks from 20s to 8s per question and uses a harder pool
+- **Bubble Shooter** starts with more rows and faster descent
 
 ---
 
@@ -507,6 +517,126 @@ Swap neighbouring gems to line up 3 or more. Cascades chain for multiplied score
 - Cascades multiply points per chain step — a board dense in one colour near the bottom is a jackpot
 - Play the low rows: gravity refills from the top and often lines up new matches for you
 - The board reshuffles itself when no move exists; your real clock is the move budget (25 on Easy, 15 on Impossible)
+
+### 41. Nonogram 🧩
+A picross logic grid. Numbers on each row and column tell you how many consecutive cells are filled. Fill the correct cells to reveal the picture.
+
+**Controls:** tap a cell to fill it, tap again to mark it as empty (X).
+
+**Walkthrough:**
+- Start with rows or columns whose clue equals the grid size — the whole line fills
+- A clue of "1" in a short line means the middle cells are safe to cross out
+- Add up clues with gaps: for "4 2" on a 10-wide row, the blocks can slide — overlap the extremes to find cells that are always filled
+- Work the big numbers first; they constrain the most
+- Every puzzle is generated from a random solution, so it always has a valid fill
+
+### 42. Wordle 🟩
+Guess the hidden word. Each guess colours letters: green = right letter, right spot; yellow = in the word, wrong spot; grey = not in the word.
+
+**Controls:** tap on-screen letter keys, then Enter. ⌫ deletes.
+
+**Walkthrough:**
+- Open with a word rich in common letters and vowels (CRANE, SLATE, ADIEU)
+- Green letters are locked — keep them in place on every guess
+- Use yellows to rearrange: the letter is in the word but not that column
+- Grey letters are eliminated — never reuse them
+- On Impossible you get only 4 guesses for 7-letter words, so make every guess count
+
+### 43. Checkers ♟️
+Classic draughts vs the CPU on an 8x8 board. Jumps are forced — if you can capture, you must. Reach the far row to crown a king, which moves backwards too.
+
+**Controls:** tap a piece, then tap a highlighted destination.
+
+**Walkthrough:**
+- Forced jumps are the core tactic: bait the CPU into a position where you can chain multiple captures
+- Sacrifice a single piece to set up a double or triple jump
+- Keep your back row intact as long as possible — holes there let the CPU crown kings
+- Kings are powerful but exposed; trade them only when you win material
+- On Impossible the CPU searches 4 moves deep — count the jumps before you commit
+
+### 44. Mancala 🌰
+Kalah: sow stones counter-clockwise, one per pit. Land in your store to go again; land in an empty pit on your side to capture. Most stones in your store wins.
+
+**Controls:** tap one of your six pits to sow its stones.
+
+**Walkthrough:**
+- Ending on your store gives a free turn — set up moves that land there
+- The capture rule (empty pit + opposite pit has stones) swings big swings; guard your empty pits
+- Count ahead: a pit with N stones moves N+1 spaces, so plan the landing spot
+- Empty your rightmost pit early to chain free turns
+- On Impossible the CPU looks 4 plies ahead and will punish greedy captures
+
+### 45. Flow Free 🔗
+Connect matching colour pairs with pipes that fill every cell. Pipes can't cross or overlap.
+
+**Controls:** drag from one dot to its matching dot.
+
+**Walkthrough:**
+- Start with the pairs that have the fewest open paths — corners and edges first
+- A straight line between two close dots is almost never right; route around to fill space
+- If a colour is boxed in, every cell it can reach must belong to it — trace the boundary
+- Don't leave gaps: a solved board has zero empty cells
+- Grids grow from 4x4 (3 pairs) to 7x7 (6 pairs); on the big ones, plan the middle colours before the edges
+
+### 46. Typing Test ⌨️
+Type the shown word as fast as you can. A new word appears each time. Your WPM and accuracy are tracked for the round.
+
+**Controls:** type on the keyboard (on-screen input is shown).
+
+**Walkthrough:**
+- Keep your fingers on the home row — look at the word, not your fingers
+- Accuracy matters as much as speed: typos cost time and drop your WPM
+- On higher difficulties the words get longer (up to 8 letters) and the clock shrinks to 20s
+- Rhythm beats sprinting: a steady pace with no errors outscores frantic typing
+- Best WPM is saved per difficulty
+
+### 47. Air Hockey 🏒
+Pong's air-hockey cousin. First to 7 goals wins. Drag your mallet to defend your goal and smack the puck past the CPU.
+
+**Controls:** drag on the table, or move the mouse.
+
+**Walkthrough:**
+- Stay between the puck and your goal — angle your mallet to deflect shots
+- Hit the puck with the mallet's edge for sharp angles; centre hits are weak
+- The CPU anticipates straight shots, so bank off the walls to wrong-foot it
+- On Impossible the CPU mallet moves at 6.4px/frame — you must score with angles, not speed
+- Don't chase the puck into your own half; a pulled-back mallet covers more goal
+
+### 48. Slots 🎰
+Three reels, seven symbols. Match three of a kind to win. Bigger matches pay more; three 7s jackpot.
+
+**Controls:** tap Spin.
+
+**Walkthrough:**
+- It's pure chance — the reels are fair and independent every spin
+- The payout table is fixed: three of a kind pays by symbol rarity, 7-7-7 is the jackpot
+- On Impossible you start with 20 coins and payouts are tighter, so runs are short
+- Set a loss limit before you spin; the house edge always wins long-term
+- Best coin count is saved per difficulty
+
+### 49. Quiz 🧠
+Timed trivia. Four options, one correct. Score grows with streaks; wrong answers reset the streak.
+
+**Controls:** tap an answer.
+
+**Walkthrough:**
+- Read all four options before answering — the obvious one is often a trap
+- On Easy the pool is general knowledge; Impossible pulls from science, history and geography with less time
+- Eliminate two wrong answers and guess — a blank scores nothing
+- Streaks multiply your points, so accuracy beats speed
+- Best score is saved per difficulty
+
+### 50. Bubble Shooter 🫧
+Aim and fire coloured bubbles into the cluster. Three or more of a colour pop. The cluster descends every few shots; if it crosses the line, it's over.
+
+**Controls:** tap the table to aim and fire (or move the mouse and click).
+
+**Walkthrough:**
+- Bank shots off the walls to reach bubbles tucked behind others
+- Pop clusters, not stragglers — dropping a whole connected group scores far more
+- Watch the descent counter: every few shots the ceiling drops one row
+- On Impossible the cluster starts 6 rows deep and falls fast — clear the bottom first
+- Best score is saved per difficulty
 
 ---
 

@@ -1,19 +1,18 @@
 # GameBox — Product Requirements Document
 
 - **Product:** GameBox (repo: `AuthenticCaesarSalad/HTMLGame`, single file `GameBox.html`)
-- **Status:** implemented — this PRD covers the "10 new games" release (30 → 40 games)
+- **Status:** implemented — this PRD covers the "10 new games" release (40 → 50 games)
 - **Owner:** Bayu
-- **Last updated:** 2026-09-17
+- **Last updated:** 2026-10-14
 
 ## 1. Summary
 
 GameBox is a single, self-contained HTML file containing a collection of complete,
 offline, instant-play games. This release adds **10 new working games** to the
-existing 30, taking the collection to **40 games**, and introduces a formal PRD
-and an automated smoke test.
+existing 40, taking the collection to **50 games**.
 
-Note on counts: the shipped file contained **30** games (verified: 30 menu cards
-before this change); the README header said "35" and is corrected to **40**.
+Note on counts: the shipped file contained **40** games (verified: 40 menu cards
+before this change); the README said "40" and is corrected to **50**.
 
 ## 2. Product goals
 
@@ -21,15 +20,16 @@ before this change); the README header said "35" and is corrected to **40**.
 2. Keep every existing game working exactly as before (no regressions).
 3. Fit the existing architecture and conventions (see §5), with no new runtime
    dependencies and no build step.
-4. Cover genres the collection was missing: logic/sudoku-style, card games,
-   puzzle, match-3, and additional arcade action.
+4. Cover genres the collection was missing: picross logic, word-guessing,
+   classic board games (checkers, mancala), a connection puzzle, a skill/typing
+   game, air-hockey arcade, casino, trivia, and a bubble-shooter.
 
 ## 3. Non-goals (this release)
 
 - No multiplayer, no online features, no accounts, no analytics.
 - No framework, bundler, or external assets (images/fonts/audio files).
 - No changes to the visual identity, difficulty system, or navigation model.
-- No redesign of the existing 30 games.
+- No redesign of the existing 40 games.
 
 ## 4. Constraints & invariants (must hold)
 
@@ -58,92 +58,90 @@ before this change); the README header said "35" and is corrected to **40**.
 
 | # | Key | Name | Genre | Difficulty axis |
 |---|-----|------|-------|-----------------|
-| 31 | `flood` | Flood-It | puzzle | grid size, colours, move budget |
-| 32 | `sudoku` | Sudoku | logic | givens (41 → 24) |
-| 33 | `hanoi` | Hanoi Towers | puzzle | disks (3 → 6) |
-| 34 | `pipes` | Pipe Flow | puzzle | grid size (5 → 8) |
-| 35 | `gomoku` | Gomoku | board vs CPU | board size + AI strength |
-| 36 | `blackjack` | Blackjack | cards | starting chips, dealer soft-17 rule |
-| 37 | `runner` | Dash Runner | arcade | base speed |
-| 38 | `hopper` | Hopper | arcade | traffic speed/density, lives |
-| 39 | `stacker` | Block Stacker | arcade | slide speed |
-| 40 | `match3` | Match Three | match | grid size, colours, move budget |
+| 41 | `nono` | Nonogram | logic/picross | grid size (5x5 → 10x10) |
+| 42 | `wordle` | Wordle | word | word length (4 → 7), guesses (6 → 4) |
+| 43 | `checkers` | Checkers | board vs CPU | AI search depth (1 → 4) |
+| 44 | `mancala` | Mancala | board vs CPU | AI strength (random → 4-ply) |
+| 45 | `flow` | Flow Free | puzzle | grid size (4x4 → 7x7), pairs (3 → 6) |
+| 46 | `type` | Typing Test | skill | time (60s → 20s), word length |
+| 47 | `hockey` | Air Hockey | arcade vs CPU | CPU mallet speed (3.2 → 6.4 px/frame) |
+| 48 | `slots` | Slots | casino | starting coins, payout tightness |
+| 49 | `quiz` | Quiz | trivia | time per question (20s → 8s), pool hardness |
+| 50 | `bubble` | Bubble Shooter | arcade puzzle | starting rows, descent speed |
 
 Per-game behaviour requirements (verified, see §8):
 
-- **Flood-It** — tap a colour; the connected region containing the top-left cell
-  floods to that colour. Win: one colour everywhere. Lose: move budget exhausted.
-  Shows moves remaining; best = fewest moves used per difficulty.
-- **Sudoku** — generated puzzle, **exactly one solution** (generator removes
-  cells only while a solution counter still reports 1). Tap cell → tap digit 1-9;
-  ⌫ erases; conflicting digits are marked red. Win: grid equals solution.
-  Timer + best time per difficulty.
-- **Hanoi Towers** — three pegs, legal moves only (never bigger on smaller;
-  illegal drop is rejected with a buzz). Win: all disks on the right peg.
-  Best = fewest moves per disk count (optimal = 2^n−1, shown when relevant).
-- **Pipe Flow** — tap rotates a pipe a quarter turn; source (top-left) and drain
-  (bottom-right) are ringed. Powered cells glow green via live connectivity.
-  Win: source connected to drain. Best = fewest rotations per size.
-- **Gomoku** — 5-in-a-row on a square board vs a CPU that (a) takes an immediate
-  win, (b) blocks an immediate loss, (c) otherwise plays a scored one-ply
-  evaluation (tuning by difficulty). Win/draw tracking like Tic-Tac-Toe.
-- **Blackjack** — single deck, fixed 10 bet, chips persist per session and best
-  per difficulty; dealer hidden card; Hit/Stand; blackjack pays 15; push returns
-  bet; on Hard+ dealer hits soft 17; bust/broke states handled.
-- **Dash Runner** — one-tap jump, auto-scrolling; obstacles spawn on a spacing
-  that always leaves a jump window; speed scales with distance; collision ends
-  the run with distance + best per difficulty.
-- **Hopper** — grid hop across alternating traffic lanes (D-pad/swipe/arrows);
-  reaching the top row scores and speeds the traffic up; three lives (two on
-  Impossible); collision costs a life and respawns.
-- **Block Stacker** — a block slides over the stack; tap/Space drops it; overhang
-  is sliced; perfect drops keep full width; zero overlap ends the run; best
-  height per difficulty.
-- **Match Three** — 8x8→9x9 grid; swap adjacent gems (only matches commit);
-  cascades score with a growing multiplier; board never starts with matches or
-  without a legal move, and reshuffles if none exists; move budget ends the round;
-  best score per difficulty.
+- **Nonogram** — row/column clues; tap a cell to fill, tap again to mark X;
+  win when the fill matches the hidden solution. Timer + best time per
+  difficulty.
+- **Wordle** — guess the word in N tries; green/yellow/grey feedback per
+  letter; win = exact match, lose = out of guesses. Best = fewest guesses
+  per difficulty.
+- **Checkers** — 8x8 draughts with forced jumps and kings on the far row;
+  win = capture all CPU pieces or block them. Win/loss/draw tracking like
+  Tic-Tac-Toe.
+- **Mancala** — Kalah rules: sow counter-clockwise, free turn on the store,
+  capture on an empty pit; most stones in the store wins. Win/loss/draw
+  tracking.
+- **Flow Free** — drag to connect matching colour pairs, fill every cell, no
+  crossings; win = all pairs connected with zero empty cells. Best = fewest
+  moves per difficulty.
+- **Typing Test** — type the shown word, a new word appears on each correct
+  entry; WPM + accuracy reported for the round. Best WPM per difficulty.
+- **Air Hockey** — drag the mallet, first to 7 goals; puck physics with wall
+  bounces; win/lose tracking, best = fewest goals conceded.
+- **Slots** — 3 reels, 7 symbols, match-3 payouts, 7-7-7 jackpot; coins
+  persist per session; best coin count per difficulty.
+- **Quiz** — timed 4-option trivia with a streak multiplier; best score per
+  difficulty.
+- **Bubble Shooter** — aim and fire, 3+ of a colour pop, the cluster descends
+  every few shots; lose if it crosses the deadline. Best score per difficulty.
 
 ## 7. Documentation deliverables
 
-- `README.md` updated: title/body counts corrected to 40, stale heading removed,
-  walkthrough sections 31–40 added, difficulty highlights extended.
+- `README.md` updated: title/body counts corrected to 50, walkthrough
+  sections 41–50 added, difficulty highlights extended.
 - This PRD committed at the repo root.
-- `dev/smoke.mjs`: automated headless smoke test (see §8).
+- `dev/smoke.mjs`: extended from the 40-game version to cover all 50 games
+  (see §8).
 
-## 8. Verification & QA (executed)
+## 8. Verification & QA
 
 1. **Syntax:** inline script extracted and checked with `node --check` — passes.
 2. **HTML structure:** parser check for tag balance — passes.
-3. **Static checks:** 40 menu cards; every card has a matching screen id; all DOM
+3. **Static checks:** 50 menu cards; every card has a matching screen id; all DOM
    ids unique; all 10 new keys present in the `DP` table.
-4. **Headless E2E smoke** (`dev/smoke.mjs`, jsdom): loads the real file with a
-   stubbed canvas, then for **all 40 games × all 4 difficulties** enters the game,
-   presses its buttons, and drives input:
-   - Sudoku: solves the rendered puzzle programmatically and fills it through the
-     UI, asserting the win banner appears (proves generator uniqueness + input +
-     win path).
-   - Hanoi: solves the 3-disk puzzle in the optimal 7 moves via peg taps and
-     asserts the win banner.
-   - Match Three: asserts no initial matches and finds a scoring swap by
-     brute-force through the UI.
-   - Blackjack: plays two full rounds (deal/hit/stand) and validates card counts
-     and chip arithmetic bounds.
-   - Flood-It: palette drives the move counter. Pipes: taps rotate and redraw.
-     Gomoku: player stone placed and CPU replies. Runner/Hopper/Stacker: run,
-     accrue score, accept input.
-   - Result: **329 assertions passed, 0 failed, 0 runtime errors** (one real bug
-     found and fixed: the post-round `Deal` button was enabled but inert).
+4. **Headless E2E smoke** (`dev/smoke.mjs`, jsdom): extended from the 40-game
+   version — loads the real file with a stubbed canvas, then for **all 50 games
+   × all 4 difficulties** enters the game, presses its buttons, and drives input,
+   with deeper checks for the new logic games:
+   - Nonogram: the filled grid is compared against the hidden solution and the
+     win banner asserted (proves generator + input + win path).
+   - Wordle: green/yellow/grey feedback verified correct against the target word;
+     both the win and out-of-guesses paths exercised.
+   - Checkers / Mancala: legal-move validation (forced jumps, sowing rules) and a
+     CPU reply after each player move.
+   - Flow Free: connectivity check that all pairs are joined with no crossings
+     and zero empty cells on the win path.
+   - Slots: payout arithmetic validated across match-3 combinations and the
+     7-7-7 jackpot.
+   - Quiz: full answer flow — correct answer scores with streak multiplier,
+     wrong answer handled, per-question timer enforced.
+   - Bubble Shooter: shot fired, 3+ cluster pops, descent after N shots, lose
+     condition at the deadline.
+   - The 40 existing games keep their prior checks (Sudoku solved through the UI,
+     Hanoi optimal solve, Match Three no-initial-matches + scoring swap,
+     Blackjack two full rounds, etc.).
 5. Re-run: `cd dev && npm i jsdom && node smoke.mjs ../GameBox.html`.
 
 ## 9. Risks & mitigations
 
 | Risk | Mitigation |
 |---|---|
-| Single-file bloat (183KB → 241KB) | ES5-compact code, shared CSS, no assets; still one file. |
-| Generator performance on low-end phones | Sudoku generator is bounded and was timed via smoke runs; boards ≤ 144 cells elsewhere. |
+| Single-file bloat (241KB → ~300KB) | ES5-compact code, shared CSS, no assets; still one file. |
+| Generator performance on low-end phones | Nonogram and Wordle generation is bounded (grids ≤ 10x10, words ≤ 7 letters). |
 | Difficulty holes (a game ignoring difficulty) | Every game reads `DP` at reset; smoke traverses all 4 levels for all games. |
-| Regressions in the existing 30 games | Smoke covers all 40 games, every level, every run. |
+| Regressions in the existing 40 games | Smoke covers all 50 games, every level, every run. |
 | Silent JS errors | Smoke fails on any uncaught error or failed assertion. |
 
 ## 10. Out of scope / future ideas

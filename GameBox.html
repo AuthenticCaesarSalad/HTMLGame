@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>GameBox - 40 Offline Games</title>
+  <title>GameBox - 50 Offline Games</title>
 <style>
   :root {
     --bg: #101418;
@@ -436,6 +436,156 @@
   .m3-cell { aspect-ratio: 1/1; border-radius: 7px; border: 1px solid rgba(0,0,0,0.25); padding: 0; }
   .m3-cell.sel { box-shadow: 0 0 0 3px var(--accent); }
 
+  /* ---------- Nonogram ---------- */
+  #noWrap { display: grid; gap: 2px; touch-action: manipulation; }
+  .no-clue {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: clamp(9px, 2.6vw, 13px); font-weight: 700;
+    font-variant-numeric: tabular-nums; padding: 2px;
+  }
+  .no-clue.col { flex-direction: column; justify-content: flex-end; line-height: 1.15; }
+  .no-clue.col span { display: block; }
+  .no-clue.row { justify-content: flex-end; flex-wrap: wrap; padding-right: 5px; }
+  .no-cell {
+    aspect-ratio: 1/1; border-radius: 3px; border: 1px solid var(--border);
+    background: var(--surface2); padding: 0;
+  }
+  .no-cell.fill { background: var(--ink); border-color: var(--ink); }
+  .no-cell.cross { color: var(--muted); font-size: clamp(10px, 3vw, 16px); }
+  .no-cell.bad { border-color: var(--danger); }
+
+  /* ---------- Wordle ---------- */
+  #wlGrid { display: flex; flex-direction: column; gap: 6px; margin: 16px auto; max-width: 300px; }
+  .wl-row { display: flex; gap: 6px; justify-content: center; }
+  .wl-tile {
+    width: clamp(40px, 11vw, 54px); height: clamp(40px, 11vw, 54px);
+    border: 2px solid var(--border); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: clamp(18px, 5vw, 26px); font-weight: 800; text-transform: uppercase;
+    color: var(--ink); background: var(--surface);
+  }
+  .wl-tile.correct { background: #14532d; border-color: #22c55e; color: #fff; }
+  .wl-tile.present { background: #6b4d0a; border-color: #fbbf24; color: #fff; }
+  .wl-tile.absent { background: #2c3743; border-color: #2c3743; color: var(--muted); }
+  #wlKeys { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+  .wl-krow { display: flex; gap: 5px; justify-content: center; }
+  .wl-key {
+    flex: 1; max-width: 46px; height: 52px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--surface2); color: var(--ink);
+    font-size: 15px; font-weight: 700; padding: 0;
+  }
+  .wl-key.wide { max-width: 62px; font-size: 12px; }
+  .wl-key.correct { background: #14532d; border-color: #22c55e; }
+  .wl-key.present { background: #6b4d0a; border-color: #fbbf24; }
+  .wl-key.absent { background: #2c3743; border-color: #2c3743; color: var(--muted); }
+  #wlMsg { text-align: center; min-height: 22px; color: var(--muted); font-size: 14px; margin-top: 10px; }
+
+  /* ---------- Checkers ---------- */
+  #ckBoard {
+    display: grid; grid-template-columns: repeat(8, 1fr); gap: 0;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 6px; touch-action: manipulation;
+  }
+  .ck-cell { aspect-ratio: 1/1; border-radius: 3px; padding: 0; position: relative; border: 1px solid transparent; }
+  .ck-cell.light { background: #e8dcc3; }
+  .ck-cell.dark { background: #7a5230; }
+  .ck-cell.dark::after {
+    content: ""; position: absolute; inset: 12%; border-radius: 50%;
+    background: transparent;
+  }
+  .ck-cell.p1::after { background: var(--accent2); border: 2px solid #0e7490; }
+  .ck-cell.p2::after { background: var(--danger); border: 2px solid #b91c1c; }
+  .ck-cell.king::before {
+    content: "&#9819;"; position: absolute; inset: 0; z-index: 2;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: clamp(12px, 4vw, 20px); font-weight: 800;
+  }
+  .ck-cell.sel { box-shadow: 0 0 0 3px var(--gold); }
+  .ck-cell.hint::after { background: rgba(251,191,36,0.55) !important; border-color: var(--gold); }
+  #ckMsg { text-align: center; min-height: 22px; color: var(--muted); font-size: 14px; margin: 10px 0 0; }
+
+  /* ---------- Mancala ---------- */
+  #mcBoard {
+    display: grid; grid-template-columns: 52px repeat(6, 1fr) 52px; gap: 6px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px; touch-action: manipulation;
+  }
+  .mc-store {
+    grid-row: 1 / 3; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--surface2); display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 800; color: var(--ink); padding: 0; min-height: 120px;
+  }
+  .mc-store.you { border-color: var(--accent2); }
+  .mc-store.cpu { border-color: var(--danger); }
+  .mc-pit {
+    aspect-ratio: 1/1; border-radius: 50%; border: 1px solid var(--border);
+    background: var(--surface2); display: flex; align-items: center; justify-content: center;
+    font-size: clamp(14px, 4vw, 20px); font-weight: 800; color: var(--ink); padding: 0;
+  }
+  .mc-pit.mine { border-color: #3d4a57; }
+  .mc-pit.mine.sel { box-shadow: 0 0 0 3px var(--gold); }
+  .mc-pit.empty { opacity: 0.5; }
+  #mcMsg { text-align: center; min-height: 22px; color: var(--muted); font-size: 14px; margin: 10px 0 0; }
+
+  /* ---------- Flow Free ---------- */
+  #fwGrid { display: grid; gap: 3px; touch-action: none; }
+  .fw-cell {
+    aspect-ratio: 1/1; border-radius: 5px; border: 1px solid var(--border);
+    background: var(--surface2); position: relative; padding: 0;
+  }
+  .fw-cell.pipe { border-color: rgba(0,0,0,0.3); }
+  .fw-cell.dot::after {
+    content: ""; position: absolute; inset: 18%; border-radius: 50%;
+    border: 2px solid rgba(0,0,0,0.35);
+  }
+  #fwMovesRow { display: flex; gap: 10px; justify-content: center; margin-top: 12px; }
+
+  /* ---------- Typing Test ---------- */
+  #tyWord {
+    text-align: center; font-size: clamp(30px, 10vw, 52px); font-weight: 800;
+    margin: 30px 0 18px; min-height: 64px; letter-spacing: 2px;
+  }
+  #tyInput {
+    display: block; margin: 0 auto; width: min(320px, 90%);
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 10px;
+    color: var(--ink); font-size: 20px; padding: 12px 14px; text-align: center;
+    outline: none; font-family: inherit;
+  }
+  #tyInput:focus { border-color: var(--accent); }
+  #tyStats { display: flex; gap: 10px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+
+  /* ---------- Air Hockey ---------- */
+  #hkCanvas { touch-action: none; }
+
+  /* ---------- Slots ---------- */
+  #scReels { display: flex; gap: 10px; justify-content: center; margin: 24px 0; }
+  .sc-reel {
+    width: 96px; height: 96px; border-radius: 14px; border: 2px solid var(--border);
+    background: #0b0f13; display: flex; align-items: center; justify-content: center;
+    font-size: 52px; overflow: hidden;
+  }
+  .sc-reel.spin { animation: scspin 0.5s linear; }
+  @keyframes scspin { 0% { transform: translateY(-100%); } 100% { transform: translateY(0); } }
+  #scMsg { text-align: center; min-height: 24px; font-size: 16px; margin: 12px 0; }
+  #scBtns { display: flex; gap: 10px; justify-content: center; }
+
+  /* ---------- Quiz ---------- */
+  #qzQ {
+    text-align: center; font-size: clamp(17px, 5vw, 22px); font-weight: 600;
+    margin: 22px 0 18px; min-height: 60px; line-height: 1.4;
+  }
+  #qzOpts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .qz-opt {
+    background: var(--surface2); border: 1px solid var(--border); color: var(--ink);
+    border-radius: 12px; padding: 16px 12px; font-size: 15px; font-weight: 600; text-align: left;
+  }
+  .qz-opt.good { background: #14532d; border-color: #22c55e; }
+  .qz-opt.bad { background: #3b1414; border-color: #7a2b2b; opacity: 0.6; }
+  .qz-opt:disabled { cursor: default; }
+
+  /* ---------- Bubble Shooter ---------- */
+  #bbCanvas { touch-action: none; }
+
   footer { text-align: center; color: var(--muted); font-size: 12px; padding: 10px 0 30px; }
 </style>
 </head>
@@ -458,7 +608,7 @@
 
 <!-- ================= MENU ================= -->
 <div id="menu" class="screen active">
-  <p class="sub">40 games, 1 file, 100% offline. Set difficulty up top, then pick a game:</p>
+  <p class="sub">50 games, 1 file, 100% offline. Set difficulty up top, then pick a game:</p>
   <div class="game-list">
     <button class="game-card" data-game="snake">
       <div class="icon" style="background:#14361f;color:#4ade80">S</div>
@@ -658,6 +808,56 @@
     <button class="game-card" data-game="match3">
       <div class="icon" style="background:#3b3410;color:#fde047">&#128142;</div>
       <div class="meta"><div class="name">Match Three</div><div class="desc">Swap gems, line up 3, clear the board.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="nono">
+      <div class="icon" style="background:#123038;color:#22d3ee">No</div>
+      <div class="meta"><div class="name">Nonogram</div><div class="desc">Fill the grid from the number clues.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="wordle">
+      <div class="icon" style="background:#14361f;color:#4ade80">W</div>
+      <div class="meta"><div class="name">Wordle</div><div class="desc">Guess the word. Green, yellow, grey.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="checkers">
+      <div class="icon" style="background:#3b2a14;color:#fdba74">&#9822;</div>
+      <div class="meta"><div class="name">Checkers</div><div class="desc">Draughts vs the CPU. Jumps are forced.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="mancala">
+      <div class="icon" style="background:#2b1f3a;color:#a78bfa">&#9679;</div>
+      <div class="meta"><div class="name">Mancala</div><div class="desc">Sow stones, capture, fill your store.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="flow">
+      <div class="icon" style="background:#0f2d33;color:#2dd4bf">&#128279;</div>
+      <div class="meta"><div class="name">Flow Free</div><div class="desc">Connect the matching colour pairs.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="type">
+      <div class="icon" style="background:#331a33;color:#e879f9">Ty</div>
+      <div class="meta"><div class="name">Typing Test</div><div class="desc">Type the words. Chase your WPM.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="hockey">
+      <div class="icon" style="background:#14232e;color:#60a5fa">&#9935;</div>
+      <div class="meta"><div class="name">Air Hockey</div><div class="desc">First to 7 goals vs the CPU.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="slots">
+      <div class="icon" style="background:#3b3410;color:#fde047">&#9733;</div>
+      <div class="meta"><div class="name">Slots</div><div class="desc">Spin the reels. Match three to win.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="quiz">
+      <div class="icon" style="background:#3a1414;color:#fb7185">&#10067;</div>
+      <div class="meta"><div class="name">Quiz</div><div class="desc">Timed trivia. Build your streak.</div></div>
+      <div class="arrow">&#8250;</div>
+    </button>
+    <button class="game-card" data-game="bubble">
+      <div class="icon" style="background:#3a3214;color:#facc15">&#128371;</div>
+      <div class="meta"><div class="name">Bubble Shooter</div><div class="desc">Aim and pop clusters of three.</div></div>
       <div class="arrow">&#8250;</div>
     </button>
   </div>
@@ -1209,6 +1409,144 @@
   <p class="sub-hint">Tap two neighbouring gems to swap them. Line up 3+ to clear. Cascades score more.</p>
 </div>
 
+<!-- ================= NONOGRAM ================= -->
+<div id="nono" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Time</div><div class="value" id="noTime">0:00</div></div>
+    <div class="stat"><div class="label">Best</div><div class="value" id="noBest">&#8212;</div></div>
+    <button class="btn" id="noNew">New</button>
+  </div>
+  <div id="noWrap"></div>
+  <div class="banner" id="noBanner"></div>
+  <p class="sub-hint">Tap a cell to fill it, tap again to cross it out. Match the hidden picture.</p>
+</div>
+
+<!-- ================= WORDLE ================= -->
+<div id="wordle" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Guesses</div><div class="value" id="wlLeft">6</div></div>
+    <div class="stat"><div class="label">Best</div><div class="value" id="wlBest">&#8212;</div></div>
+    <button class="btn" id="wlNew">New</button>
+  </div>
+  <div id="wlGrid"></div>
+  <div id="wlKeys"></div>
+  <div id="wlMsg"></div>
+  <div class="banner" id="wlBanner"></div>
+  <p class="sub-hint">Guess the word. Green = right spot, yellow = in word, grey = not in word.</p>
+</div>
+
+<!-- ================= CHECKERS ================= -->
+<div id="checkers" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">You</div><div class="value" id="ckYou">0</div></div>
+    <div class="stat"><div class="label">Draws</div><div class="value" id="ckDraw">0</div></div>
+    <div class="stat"><div class="label">CPU</div><div class="value" id="ckCpu">0</div></div>
+    <button class="btn" id="ckNew">New</button>
+  </div>
+  <div id="ckMsg">Your turn &#8212; blue moves first.</div>
+  <div id="ckBoard"></div>
+  <div class="banner" id="ckBanner"></div>
+  <p class="sub-hint">Tap a blue piece, then a highlighted square. Jumps are forced. Reach the far row to crown a king.</p>
+</div>
+
+<!-- ================= MANCALA ================= -->
+<div id="mancala" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">You</div><div class="value" id="mcYou">0</div></div>
+    <div class="stat"><div class="label">Draws</div><div class="value" id="mcDraw">0</div></div>
+    <div class="stat"><div class="label">CPU</div><div class="value" id="mcCpu">0</div></div>
+    <button class="btn" id="mcNew">New</button>
+  </div>
+  <div id="mcMsg">Your turn &#8212; tap one of your pits.</div>
+  <div id="mcBoard"></div>
+  <div class="banner" id="mcBanner"></div>
+  <p class="sub-hint">Sow stones counter-clockwise. Land in your store for a free turn; land in an empty pit to capture.</p>
+</div>
+
+<!-- ================= FLOW FREE ================= -->
+<div id="flow" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Moves</div><div class="value" id="fwMoves">0</div></div>
+    <div class="stat"><div class="label">Best</div><div class="value" id="fwBest">&#8734;</div></div>
+    <button class="btn" id="fwNew">New</button>
+  </div>
+  <div id="fwGrid"></div>
+  <div class="banner" id="fwBanner"></div>
+  <p class="sub-hint">Drag from a dot to its matching dot. Fill every cell &#8212; pipes can&#39;t cross.</p>
+</div>
+
+<!-- ================= TYPING TEST ================= -->
+<div id="type" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">WPM</div><div class="value" id="tyWpm">0</div></div>
+    <div class="stat"><div class="label">Time</div><div class="value" id="tyTime">60</div></div>
+    <div class="stat"><div class="label">Best</div><div class="value" id="tyBest">0</div></div>
+    <button class="btn" id="tyNew">New</button>
+  </div>
+  <div id="tyWord"></div>
+  <input id="tyInput" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Type here&#8230;">
+  <div class="banner" id="tyBanner"></div>
+  <p class="sub-hint">Type the word exactly. A new word appears each time. Best WPM is saved.</p>
+</div>
+
+<!-- ================= AIR HOCKEY ================= -->
+<div id="hockey" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">You</div><div class="value" id="hkYou">0</div></div>
+    <div class="stat"><div class="label">CPU</div><div class="value" id="hkCpu">0</div></div>
+    <button class="btn" id="hkStart">Start</button>
+  </div>
+  <canvas id="hkCanvas" class="sq-canvas" width="360" height="360"></canvas>
+  <div class="banner" id="hkBanner"></div>
+  <p class="sub-hint">Drag your mallet. First to 7 goals wins. Bank off the walls to beat the CPU.</p>
+</div>
+
+<!-- ================= SLOTS ================= -->
+<div id="slots" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Coins</div><div class="value" id="scCoins">100</div></div>
+    <div class="stat"><div class="label">Best</div><div class="value" id="scBest">0</div></div>
+    <button class="btn" id="scNew">New</button>
+  </div>
+  <div id="scReels">
+    <div class="sc-reel" id="scR0">&#9733;</div>
+    <div class="sc-reel" id="scR1">&#9733;</div>
+    <div class="sc-reel" id="scR2">&#9733;</div>
+  </div>
+  <div id="scMsg">Match three of a kind to win. 7-7-7 is the jackpot.</div>
+  <div id="scBtns">
+    <button class="btn" id="scSpin">Spin (10)</button>
+  </div>
+  <div class="banner" id="scBanner"></div>
+  <p class="sub-hint">Three of a kind pays by symbol rarity. Three 7s jackpot. Coins persist per session.</p>
+</div>
+
+<!-- ================= QUIZ ================= -->
+<div id="quiz" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Score</div><div class="value" id="qzScore">0</div></div>
+    <div class="stat"><div class="label">Time</div><div class="value" id="qzTime">20</div></div>
+    <div class="stat"><div class="label">Best</div><div class="value" id="qzBest">0</div></div>
+    <button class="btn" id="qzNew">New</button>
+  </div>
+  <div id="qzQ"></div>
+  <div id="qzOpts"></div>
+  <div class="banner" id="qzBanner"></div>
+  <p class="sub-hint">Tap the right answer before the clock runs out. Streaks multiply your score.</p>
+</div>
+
+<!-- ================= BUBBLE SHOOTER ================= -->
+<div id="bubble" class="screen">
+  <div class="hud">
+    <div class="stat"><div class="label">Score</div><div class="value" id="bbScore">0</div></div>
+    <div class="stat"><div class="label">Best</div><div class="value" id="bbBest">0</div></div>
+    <button class="btn" id="bbStart">Start</button>
+  </div>
+  <canvas id="bbCanvas" class="sq-canvas" width="360" height="360"></canvas>
+  <div class="banner" id="bbBanner"></div>
+  <p class="sub-hint">Tap to aim and fire. Match 3+ of a colour to pop. Don&#39;t let the cluster cross the line.</p>
+</div>
+
 <script>
 (function () {
   "use strict";
@@ -1282,7 +1620,17 @@
     runner:    { easy:{spd:3.4}, medium:{spd:4.4}, hard:{spd:5.6}, impossible:{spd:6.8} },
     hopper:    { easy:{spd:1.1,lives:3,perLane:1}, medium:{spd:1.6,lives:3,perLane:1}, hard:{spd:2.1,lives:3,perLane:2}, impossible:{spd:2.7,lives:2,perLane:2} },
     stacker:   { easy:{spd:2.2}, medium:{spd:3.2}, hard:{spd:4.4}, impossible:{spd:5.6} },
-    match3:    { easy:{n:8,colors:4,moves:25}, medium:{n:8,colors:5,moves:20}, hard:{n:9,colors:5,moves:18}, impossible:{n:9,colors:6,moves:15} }
+    match3:    { easy:{n:8,colors:4,moves:25}, medium:{n:8,colors:5,moves:20}, hard:{n:9,colors:5,moves:18}, impossible:{n:9,colors:6,moves:15} },
+    nono:      { easy:{n:5}, medium:{n:7}, hard:{n:8}, impossible:{n:10} },
+    wordle:    { easy:{len:4,guesses:6}, medium:{len:5,guesses:6}, hard:{len:6,guesses:5}, impossible:{len:7,guesses:4} },
+    checkers:  { easy:{depth:1}, medium:{depth:2}, hard:{depth:3}, impossible:{depth:4} },
+    mancala:   { easy:{depth:1}, medium:{depth:2}, hard:{depth:3}, impossible:{depth:4} },
+    flow:      { easy:{n:4,pairs:3}, medium:{n:5,pairs:4}, hard:{n:6,pairs:5}, impossible:{n:7,pairs:6} },
+    type:      { easy:{time:60,maxlen:5}, medium:{time:45,maxlen:6}, hard:{time:30,maxlen:7}, impossible:{time:20,maxlen:8} },
+    hockey:    { easy:{cpu:3.2}, medium:{cpu:4.4}, hard:{cpu:5.4}, impossible:{cpu:6.4} },
+    slots:     { easy:{coins:200,mult:1}, medium:{coins:100,mult:0.8}, hard:{coins:50,mult:0.6}, impossible:{coins:20,mult:0.4} },
+    quiz:      { easy:{time:20,pool:0}, medium:{time:15,pool:1}, hard:{time:12,pool:2}, impossible:{time:8,pool:3} },
+    bubble:    { easy:{rows:3,spd:1}, medium:{rows:4,spd:1.4}, hard:{rows:5,spd:1.8}, impossible:{rows:6,spd:2.2} }
   };
   (function () {
     var btns = $("diffBar").querySelectorAll("button");
@@ -5893,6 +6241,2180 @@
     $("m3New").addEventListener("click", reset);
     reset();
   })();
+  /* ============ 41. NONOGRAM ============ */
+  (function () {
+    var n, sol, cluesR, cluesC, grid, done, t0, timer = null;
+    function cfg() { return DP.nono[diff()]; }
+    function runs(line) {
+      var out = [], run = 0;
+      for (var i = 0; i < line.length; i++) {
+        if (line[i] === 1) run++;
+        else if (run > 0) { out.push(run); run = 0; }
+      }
+      if (run > 0) out.push(run);
+      return out;
+    }
+    function gen() {
+      n = cfg().n;
+      sol = [];
+      for (var r = 0; r < n; r++) {
+        sol.push([]);
+        for (var c = 0; c < n; c++) sol[r].push(Math.random() < 0.52 ? 1 : 0);
+      }
+      for (var r2 = 0; r2 < n; r2++) {
+        var empty = true;
+        for (var c2 = 0; c2 < n; c2++) if (sol[r2][c2]) { empty = false; break; }
+        if (empty) sol[r2][Math.floor(Math.random() * n)] = 1;
+      }
+      for (var c3 = 0; c3 < n; c3++) {
+        var empty2 = true;
+        for (var r3 = 0; r3 < n; r3++) if (sol[r3][c3]) { empty2 = false; break; }
+        if (empty2) sol[Math.floor(Math.random() * n)][c3] = 1;
+      }
+      cluesR = []; cluesC = [];
+      for (var r4 = 0; r4 < n; r4++) cluesR.push(runs(sol[r4]));
+      for (var c4 = 0; c4 < n; c4++) {
+        var col = [];
+        for (var r5 = 0; r5 < n; r5++) col.push(sol[r5][c4]);
+        cluesC.push(runs(col));
+      }
+    }
+    function fmt(s) { var m = Math.floor(s / 60), r = s % 60; return m + ":" + (r < 10 ? "0" : "") + r; }
+    function clueSpans(cl) {
+      var s = "";
+      for (var i = 0; i < cl.length; i++) s += "<span>" + cl[i] + "</span>";
+      return s || "<span>0</span>";
+    }
+    function reset() {
+      gen();
+      grid = [];
+      for (var r = 0; r < n; r++) { grid.push([]); for (var c = 0; c < n; c++) grid[r].push(0); }
+      done = false;
+      var best = lsGet("gb_nono_best_" + diff(), 0);
+      $("noBest").textContent = best ? fmt(best) : "\u2014";
+      $("noTime").textContent = "0:00";
+      hideBanner($("noBanner"));
+      if (timer) { clearInterval(timer); timer = null; }
+      t0 = Date.now();
+      timer = setInterval(function () {
+        if (!done) $("noTime").textContent = fmt(Math.floor((Date.now() - t0) / 1000));
+      }, 1000);
+      render();
+    }
+    function render() {
+      var el = $("noWrap");
+      el.style.gridTemplateColumns = "auto repeat(" + n + ", 1fr)";
+      el.innerHTML = "";
+      var corner = document.createElement("div");
+      corner.className = "no-clue";
+      el.appendChild(corner);
+      for (var c = 0; c < n; c++) {
+        (function (c) {
+          var d = document.createElement("div");
+          d.className = "no-clue col";
+          d.innerHTML = clueSpans(cluesC[c]);
+          el.appendChild(d);
+        })(c);
+      }
+      for (var r = 0; r < n; r++) {
+        (function (r) {
+          var rc = document.createElement("div");
+          rc.className = "no-clue row";
+          rc.innerHTML = clueSpans(cluesR[r]);
+          el.appendChild(rc);
+          for (var c = 0; c < n; c++) {
+            (function (r, c) {
+              var b = document.createElement("button");
+              b.className = "no-cell";
+              if (grid[r][c] === 1) b.className += " fill";
+              else if (grid[r][c] === 2) { b.className += " cross"; b.textContent = "\u00D7"; }
+              b.addEventListener("click", function () { tap(r, c); });
+              el.appendChild(b);
+            })(r, c);
+          }
+        })(r);
+      }
+    }
+    function tap(r, c) {
+      if (done) return;
+      grid[r][c] = (grid[r][c] + 1) % 3;
+      beep(grid[r][c] === 1 ? 500 : 300, 0.04);
+      render();
+      checkWin();
+    }
+    function lineMatches(line, clue) {
+      var rr = runs(line);
+      if (rr.length !== clue.length) return false;
+      for (var k = 0; k < rr.length; k++) if (rr[k] !== clue[k]) return false;
+      return true;
+    }
+    function checkWin() {
+      for (var r = 0; r < n; r++) {
+        var line = [];
+        for (var c = 0; c < n; c++) line.push(grid[r][c] === 1 ? 1 : 0);
+        if (!lineMatches(line, cluesR[r])) return;
+      }
+      for (var c2 = 0; c2 < n; c2++) {
+        var col = [];
+        for (var r2 = 0; r2 < n; r2++) col.push(grid[r2][c2] === 1 ? 1 : 0);
+        if (!lineMatches(col, cluesC[c2])) return;
+      }
+      done = true;
+      if (timer) { clearInterval(timer); timer = null; }
+      var secs = Math.floor((Date.now() - t0) / 1000);
+      var best = lsGet("gb_nono_best_" + diff(), 0);
+      if (!best || secs < best) { best = secs; lsSet("gb_nono_best_" + diff(), best); }
+      $("noBest").textContent = fmt(best);
+      $("noTime").textContent = fmt(secs);
+      banner($("noBanner"), "Solved in <b>" + fmt(secs) + "</b>!");
+      beep(750, 0.3);
+    }
+    stopFns.nono = function () { if (timer) { clearInterval(timer); timer = null; } };
+    $("noNew").addEventListener("click", reset);
+    reset();
+  })();
+
+  /* ============ 42. WORDLE ============ */
+  (function () {
+    var POOLS = {
+      4: ["COLD","WARM","GAME","PLAY","CODE","TREE","FISH","BIRD","CAKE","RAIN","SNOW","WIND","FIRE","STAR","MOON","ROCK","LEAF","WOLF","BEAR","LION","GOLD","SILK","SHIP","DOOR","BOOK","SONG","HAND","FOOT","RING","COIN"],
+      5: ["CRANE","SLATE","ADIEU","ROAST","PLANT","STONE","BREAD","CLOUD","DREAM","EAGLE","FLAME","GRASS","HOUSE","LIGHT","MUSIC","NIGHT","OCEAN","PIANO","QUEEN","RIVER","SNAKE","TIGER","WATER","WORLD","YOUTH","ZEBRA","APPLE","BEACH","CHAIR","DANCE"],
+      6: ["PLANET","BRIDGE","CASTLE","DRAGON","ENGINE","FOREST","GARDEN","HAMMER","ISLAND","JUNGLE","KNIGHT","LADDER","MAGNET","NICKEL","ORANGE","PENCIL","QUARTZ","ROCKET","SILVER","TEMPLE","WALNUT","YELLOW","ZIGZAG","BANANA","CAMERA","DANGER","EFFORT","FLOWER","GOBLIN","HELMET"],
+      7: ["RAINBOW","PYRAMID","VOLCANO","DOLPHIN","PENGUIN","GIRAFFE","MACHINE","BALLOON","CABINET","DIAMOND","EMPEROR","FURNACE","HAMMOCK","ICEBERG","JOURNEY","KINGDOM","LANTERN","OCTOPUS","PIONEER","QUALITY","TRIBUTE","UNICORN","VILLAGE","WHISPER","FANTASY","JUSTICE","LIBERTY","MYSTERY","PASTIME","QUICKLY"]
+    };
+    var KEYROWS = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
+    var target, len, guesses, row, cur, done, keyState;
+    function cfg() { return DP.wordle[diff()]; }
+    function reset() {
+      len = cfg().len; guesses = cfg().guesses;
+      var pool = POOLS[len];
+      target = pool[Math.floor(Math.random() * pool.length)];
+      row = 0; cur = ""; done = false; keyState = {};
+      var best = lsGet("gb_wordle_best_" + diff(), 0);
+      $("wlBest").textContent = best || "\u2014";
+      $("wlLeft").textContent = guesses;
+      $("wlMsg").textContent = "Guess the " + len + "-letter word.";
+      hideBanner($("wlBanner"));
+      renderGrid();
+      renderKeys();
+    }
+    function renderGrid() {
+      var el = $("wlGrid");
+      el.innerHTML = "";
+      for (var r = 0; r < guesses; r++) {
+        var rd = document.createElement("div");
+        rd.className = "wl-row";
+        for (var c = 0; c < len; c++) {
+          var t = document.createElement("div");
+          t.className = "wl-tile";
+          t.id = "wl-t-" + r + "-" + c;
+          rd.appendChild(t);
+        }
+        el.appendChild(rd);
+      }
+    }
+    function renderKeys() {
+      var el = $("wlKeys");
+      el.innerHTML = "";
+      for (var i = 0; i < KEYROWS.length; i++) {
+        (function (i) {
+          var rd = document.createElement("div");
+          rd.className = "wl-krow";
+          var rowStr = KEYROWS[i];
+          for (var k = 0; k < rowStr.length; k++) {
+            (function (ch) {
+              var b = document.createElement("button");
+              b.className = "wl-key";
+              b.id = "wl-k-" + ch;
+              b.textContent = ch;
+              b.addEventListener("click", function () { input(ch); });
+              rd.appendChild(b);
+            })(rowStr[k]);
+          }
+          if (i === 2) {
+            var enter = document.createElement("button");
+            enter.className = "wl-key wide";
+            enter.textContent = "ENTER";
+            enter.addEventListener("click", function () { submit(); });
+            rd.appendChild(enter);
+            var del = document.createElement("button");
+            del.className = "wl-key wide";
+            del.textContent = "\u232B";
+            del.addEventListener("click", function () { input("\u232B"); });
+            rd.appendChild(del);
+          }
+          el.appendChild(rd);
+        })(i);
+      }
+    }
+    function paintTile(r, c, letter, state) {
+      var t = $("wl-t-" + r + "-" + c);
+      t.textContent = letter;
+      t.className = "wl-tile " + state;
+    }
+    function setKeyState(ch, state) {
+      var rank = { absent: 1, present: 2, correct: 3 };
+      if (!keyState[ch] || rank[state] > rank[keyState[ch]]) {
+        keyState[ch] = state;
+        var k = $("wl-k-" + ch);
+        if (k) k.className = "wl-key " + state;
+      }
+    }
+    function input(ch) {
+      if (done) return;
+      if (ch === "\u232B") { cur = cur.slice(0, -1); paintRow(); return; }
+      if (cur.length < len) { cur += ch; paintRow(); beep(440, 0.03); }
+    }
+    function paintRow() {
+      for (var c = 0; c < len; c++) {
+        var t = $("wl-t-" + row + "-" + c);
+        t.textContent = cur[c] || "";
+        t.className = "wl-tile";
+      }
+    }
+    function submit() {
+      if (done) return;
+      if (cur.length < len) { $("wlMsg").textContent = "Not enough letters."; beep(180, 0.1); return; }
+      var pool = POOLS[len];
+      if (pool.indexOf(cur) === -1) { $("wlMsg").textContent = "Not in word list."; beep(180, 0.1); return; }
+      var res = evaluate(cur);
+      for (var c = 0; c < len; c++) {
+        paintTile(row, c, cur[c], res[c]);
+        setKeyState(cur[c], res[c]);
+      }
+      var allCorrect = true;
+      for (var c2 = 0; c2 < len; c2++) if (res[c2] !== "correct") allCorrect = false;
+      if (allCorrect) { win(row + 1); return; }
+      row++;
+      cur = "";
+      $("wlLeft").textContent = guesses - row;
+      if (row >= guesses) { lose(); return; }
+      $("wlMsg").textContent = "Guess " + (row + 1) + " of " + guesses + ".";
+    }
+    function evaluate(guess) {
+      var res = [], i;
+      for (i = 0; i < len; i++) res.push("absent");
+      var remaining = {};
+      for (i = 0; i < len; i++) {
+        if (guess[i] === target[i]) res[i] = "correct";
+        else remaining[target[i]] = (remaining[target[i]] || 0) + 1;
+      }
+      for (i = 0; i < len; i++) {
+        if (res[i] === "correct") continue;
+        var ch = guess[i];
+        if (remaining[ch] > 0) { res[i] = "present"; remaining[ch]--; }
+      }
+      return res;
+    }
+    function win(used) {
+      done = true;
+      var best = lsGet("gb_wordle_best_" + diff(), 0);
+      if (!best || used < best) { best = used; lsSet("gb_wordle_best_" + diff(), best); }
+      $("wlBest").textContent = best;
+      $("wlMsg").textContent = "You got it in " + used + "!";
+      banner($("wlBanner"), "Solved in <b>" + used + "</b> guess" + (used === 1 ? "" : "es") + "!");
+      beep(750, 0.3);
+    }
+    function lose() {
+      done = true;
+      $("wlMsg").textContent = "The word was " + target + ".";
+      banner($("wlBanner"), "Out of guesses! It was <b>" + target + "</b>.");
+      beep(200, 0.3);
+    }
+    document.addEventListener("keydown", function (e) {
+      if (current !== "wordle") return;
+      if (e.key === "Enter") { e.preventDefault(); submit(); }
+      else if (e.key === "Backspace") { e.preventDefault(); input("\u232B"); }
+      else if (/^[a-zA-Z]$/.test(e.key)) { e.preventDefault(); input(e.key.toUpperCase()); }
+    });
+    $("wlNew").addEventListener("click", reset);
+    reset();
+  })();
+
+/* ============ 43. CHECKERS ============ */
+(function () {
+  var ckBoard = $("ckBoard");
+  var ckMsg = $("ckMsg");
+  var ckYou = $("ckYou");
+  var ckDraw = $("ckDraw");
+  var ckCpu = $("ckCpu");
+  var ckBanner = $("ckBanner");
+
+  var board = [];
+  var turn = 1;
+  var sel = null;
+  var selMoves = [];
+  var over = false;
+  var cpuTimer = null;
+  var msgTimer = null;
+  var you = 0;
+  var draws = 0;
+  var cpu = 0;
+  var sinceCap = 0;
+
+  function cfg() { return DP.checkers[diff()]; }
+
+  function inb(r, c) { return r >= 0 && r < 8 && c >= 0 && c < 8; }
+
+  function isSide(v, side) {
+    return side === 1 ? (v === 1 || v === 2) : (v === 3 || v === 4);
+  }
+
+  function isEnemy(v, side) {
+    return side === 1 ? (v === 3 || v === 4) : (v === 1 || v === 2);
+  }
+
+  function copyBoard(b) {
+    var nb = [];
+    for (var i = 0; i < 8; i++) nb.push(b[i].slice());
+    return nb;
+  }
+
+  function dirsFor(v, side) {
+    if (v === 2 || v === 4) return [[-1, -1], [-1, 1], [1, -1], [1, 1]];
+    return side === 1 ? [[-1, -1], [-1, 1]] : [[1, -1], [1, 1]];
+  }
+
+  function jumpDFS(b, r, c, v, side, path, jumps) {
+    var ds = dirsFor(v, side);
+    var extended = false;
+    for (var d = 0; d < ds.length; d++) {
+      var mr = r + ds[d][0];
+      var mc = c + ds[d][1];
+      var lr = r + 2 * ds[d][0];
+      var lc = c + 2 * ds[d][1];
+      if (inb(lr, lc) && isEnemy(b[mr][mc], side) && b[lr][lc] === 0) {
+        var nb = copyBoard(b);
+        nb[r][c] = 0;
+        nb[mr][mc] = 0;
+        var nv = v;
+        if (side === 1 && v === 1 && lr === 0) nv = 2;
+        if (side === 2 && v === 3 && lr === 7) nv = 4;
+        nb[lr][lc] = nv;
+        var newPath = path.concat([[lr, lc]]);
+        extended = true;
+        if (nv !== v) {
+          jumps.push({ from: path[0], path: newPath });
+        } else {
+          jumpDFS(nb, lr, lc, nv, side, newPath, jumps);
+        }
+      }
+    }
+    if (!extended && path.length > 1) {
+      jumps.push({ from: path[0], path: path });
+    }
+  }
+
+  function genMoves(b, side) {
+    var jumps = [];
+    var r, c, d;
+    for (r = 0; r < 8; r++) {
+      for (c = 0; c < 8; c++) {
+        if (isSide(b[r][c], side)) {
+          jumpDFS(b, r, c, b[r][c], side, [[r, c]], jumps);
+        }
+      }
+    }
+    if (jumps.length > 0) return jumps;
+    var moves = [];
+    for (r = 0; r < 8; r++) {
+      for (c = 0; c < 8; c++) {
+        if (isSide(b[r][c], side)) {
+          var ds = dirsFor(b[r][c], side);
+          for (d = 0; d < ds.length; d++) {
+            var nr = r + ds[d][0];
+            var nc = c + ds[d][1];
+            if (inb(nr, nc) && b[nr][nc] === 0) {
+              moves.push({ from: [r, c], path: [[nr, nc]] });
+            }
+          }
+        }
+      }
+    }
+    return moves;
+  }
+
+  function applyMove(b, move, side) {
+    var nb = copyBoard(b);
+    var from = move.from;
+    var path = move.path;
+    nb[from[0]][from[1]] = 0;
+    for (var i = 0; i < path.length - 1; i++) {
+      var a = path[i];
+      var bb = path[i + 1];
+      if (Math.abs(bb[0] - a[0]) === 2) {
+        nb[(a[0] + bb[0]) / 2][(a[1] + bb[1]) / 2] = 0;
+      }
+    }
+    var last = path[path.length - 1];
+    var v = b[from[0]][from[1]];
+    if (side === 1 && v === 1 && last[0] === 0) v = 2;
+    if (side === 2 && v === 3 && last[0] === 7) v = 4;
+    nb[last[0]][last[1]] = v;
+    return nb;
+  }
+
+  function evaluate(b) {
+    var s = 0;
+    for (var r = 0; r < 8; r++) {
+      for (var c = 0; c < 8; c++) {
+        var v = b[r][c];
+        if (v === 1) s += 100 + (7 - r) * 4;
+        else if (v === 2) s += 300;
+        else if (v === 3) s -= 100 + r * 4;
+        else if (v === 4) s -= 300;
+      }
+    }
+    return s;
+  }
+
+  function minimax(b, depth, maximizing, alpha, beta) {
+    var side = maximizing ? 1 : 2;
+    var moves = genMoves(b, side);
+    if (depth === 0) return evaluate(b);
+    if (moves.length === 0) return maximizing ? -100000 : 100000;
+    var i;
+    if (maximizing) {
+      var best = -Infinity;
+      for (i = 0; i < moves.length; i++) {
+        var nb = applyMove(b, moves[i], 1);
+        best = Math.max(best, minimax(nb, depth - 1, false, alpha, beta));
+        alpha = Math.max(alpha, best);
+        if (beta <= alpha) break;
+      }
+      return best;
+    }
+    var best2 = Infinity;
+    for (i = 0; i < moves.length; i++) {
+      var nb2 = applyMove(b, moves[i], 2);
+      best2 = Math.min(best2, minimax(nb2, depth - 1, true, alpha, beta));
+      beta = Math.min(beta, best2);
+      if (beta <= alpha) break;
+    }
+    return best2;
+  }
+
+  function render() {
+    ckBoard.innerHTML = "";
+    ckBoard.style.gridTemplateColumns = "repeat(8, 1fr)";
+    for (var r = 0; r < 8; r++) {
+      for (var c = 0; c < 8; c++) {
+        (function (r, c) {
+          var v = board[r][c];
+          var cls = "ck-cell" + ((r + c) % 2 === 0 ? " light" : " dark");
+          if (v === 1 || v === 2) cls += " p1";
+          if (v === 3 || v === 4) cls += " p2";
+          if (v === 2 || v === 4) cls += " king";
+          if (sel && sel[0] === r && sel[1] === c) cls += " sel";
+          for (var m = 0; m < selMoves.length; m++) {
+            var p = selMoves[m].path;
+            var last = p[p.length - 1];
+            if (last[0] === r && last[1] === c) { cls += " hint"; break; }
+          }
+          var btn = document.createElement("button");
+          btn.className = cls;
+          btn.addEventListener("click", function () { tapCell(r, c); });
+          ckBoard.appendChild(btn);
+        })(r, c);
+      }
+    }
+  }
+
+  function tapCell(r, c) {
+    if (over || turn !== 1) return;
+    var m, i;
+    if (sel) {
+      for (m = 0; m < selMoves.length; m++) {
+        var p = selMoves[m].path;
+        var last = p[p.length - 1];
+        if (last[0] === r && last[1] === c) {
+          var move = selMoves[m];
+          var fromV = board[move.from[0]][move.from[1]];
+          board = applyMove(board, move, 1);
+          var wasJump = move.path.length > 2;
+          var wasPromo = (fromV === 1 && last[0] === 0);
+          sinceCap = (wasJump || wasPromo) ? 0 : sinceCap + 1;
+          sel = null;
+          selMoves = [];
+          afterMove();
+          return;
+        }
+      }
+    }
+    if (board[r][c] === 1 || board[r][c] === 2) {
+      var all = genMoves(board, 1);
+      var mine = [];
+      for (i = 0; i < all.length; i++) {
+        if (all[i].from[0] === r && all[i].from[1] === c) mine.push(all[i]);
+      }
+      if (mine.length > 0) {
+        sel = [r, c];
+        selMoves = mine;
+        beep(400, 0.04);
+        render();
+      } else {
+        ckMsg.textContent = "Another piece must jump.";
+        if (msgTimer) clearTimeout(msgTimer);
+        msgTimer = setTimeout(function () {
+          if (!over && turn === 1) ckMsg.textContent = "Your turn.";
+        }, 1200);
+      }
+    } else {
+      sel = null;
+      selMoves = [];
+      render();
+    }
+  }
+
+  function afterMove() {
+    if (sinceCap >= 80) { gameOver(0); return; }
+    turn = (turn === 1 ? 2 : 1);
+    if (genMoves(board, turn).length === 0) {
+      gameOver(turn === 1 ? 2 : 1);
+      return;
+    }
+    if (turn === 2) {
+      ckMsg.textContent = "CPU thinking…";
+      render();
+      cpuTimer = setTimeout(function () { cpuMove(); }, 450);
+    } else {
+      ckMsg.textContent = "Your turn.";
+      render();
+    }
+  }
+
+  function cpuMove() {
+    if (over) return;
+    var depth = cfg().depth;
+    var moves = genMoves(board, 2);
+    if (moves.length === 0) { gameOver(1); return; }
+    var best = null;
+    var i;
+    if (depth === 1 && Math.random() < 0.25) {
+      best = moves[Math.floor(Math.random() * moves.length)];
+    } else {
+      var bestV = Infinity;
+      var bestIdxs = [];
+      for (i = 0; i < moves.length; i++) {
+        var nb = applyMove(board, moves[i], 2);
+        var v = minimax(nb, depth - 1, true, -Infinity, Infinity);
+        if (v < bestV) { bestV = v; bestIdxs = [i]; }
+        else if (v === bestV) { bestIdxs.push(i); }
+      }
+      best = moves[bestIdxs[Math.floor(Math.random() * bestIdxs.length)]];
+    }
+    var fromV = board[best.from[0]][best.from[1]];
+    var last = best.path[best.path.length - 1];
+    var wasJump = best.path.length > 2;
+    var wasPromo = (fromV === 3 && last[0] === 7);
+    board = applyMove(board, best, 2);
+    sinceCap = (wasJump || wasPromo) ? 0 : sinceCap + 1;
+    afterMove();
+  }
+
+  function gameOver(result) {
+    over = true;
+    if (cpuTimer) { clearTimeout(cpuTimer); cpuTimer = null; }
+    if (msgTimer) { clearTimeout(msgTimer); msgTimer = null; }
+    if (result === 1) you++;
+    else if (result === 2) cpu++;
+    else draws++;
+    ckYou.textContent = you;
+    ckDraw.textContent = draws;
+    ckCpu.textContent = cpu;
+    var html;
+    if (result === 1) { ckMsg.textContent = "You win!"; html = "You win! 🎉"; }
+    else if (result === 2) { ckMsg.textContent = "CPU wins."; html = "CPU wins."; }
+    else { ckMsg.textContent = "Draw."; html = "Draw."; }
+    banner(ckBanner, html);
+    beep(result === 1 ? 750 : 200, 0.3);
+    render();
+  }
+
+  function reset() {
+    board = [];
+    for (var r = 0; r < 8; r++) {
+      var row = [];
+      for (var c = 0; c < 8; c++) {
+        var v = 0;
+        if ((r + c) % 2 === 1) {
+          if (r <= 2) v = 3;
+          else if (r >= 5) v = 1;
+        }
+        row.push(v);
+      }
+      board.push(row);
+    }
+    turn = 1;
+    sel = null;
+    selMoves = [];
+    over = false;
+    sinceCap = 0;
+    if (cpuTimer) { clearTimeout(cpuTimer); cpuTimer = null; }
+    if (msgTimer) { clearTimeout(msgTimer); msgTimer = null; }
+    ckYou.textContent = you;
+    ckDraw.textContent = draws;
+    ckCpu.textContent = cpu;
+    ckMsg.textContent = "Your turn — blue moves first.";
+    hideBanner(ckBanner);
+    render();
+  }
+
+  stopFns.checkers = function () {
+    if (cpuTimer) { clearTimeout(cpuTimer); cpuTimer = null; }
+    if (msgTimer) { clearTimeout(msgTimer); msgTimer = null; }
+  };
+
+  $("ckNew").addEventListener("click", reset);
+  reset();
+})();
+
+/* ============ 44. MANCALA ============ */
+(function () {
+  var mcBoard = $("mcBoard");
+  var mcMsg = $("mcMsg");
+  var mcYou = $("mcYou");
+  var mcDraw = $("mcDraw");
+  var mcCpu = $("mcCpu");
+  var mcBanner = $("mcBanner");
+
+  var board = [];
+  var turn = 0;
+  var over = false;
+  var cpuTimer = null;
+  var you = 0;
+  var draws = 0;
+  var cpu = 0;
+
+  function cfg() { return DP.mancala[diff()]; }
+
+  function myStore(side) { return side === 0 ? 6 : 13; }
+  function oppStore(side) { return side === 0 ? 13 : 6; }
+  function isMyPit(i, side) { return side === 0 ? (i >= 0 && i <= 5) : (i >= 7 && i <= 12); }
+
+  function sow(b, pit, side) {
+    var nb = b.slice();
+    var stones = nb[pit];
+    nb[pit] = 0;
+    var i = pit;
+    while (stones > 0) {
+      i = (i + 1) % 14;
+      if (i === oppStore(side)) continue;
+      nb[i]++;
+      stones--;
+    }
+    var extra = (i === myStore(side));
+    if (!extra && isMyPit(i, side) && nb[i] === 1) {
+      var opp = 12 - i;
+      if (nb[opp] > 0) {
+        nb[myStore(side)] += nb[opp] + 1;
+        nb[opp] = 0;
+        nb[i] = 0;
+      }
+    }
+    return { board: nb, extra: extra };
+  }
+
+  function legalMoves(b, side) {
+    var ms = [];
+    var i;
+    if (side === 0) {
+      for (i = 0; i <= 5; i++) { if (b[i] > 0) ms.push(i); }
+    } else {
+      for (i = 7; i <= 12; i++) { if (b[i] > 0) ms.push(i); }
+    }
+    return ms;
+  }
+
+  function isEnd(b) {
+    var i;
+    var empty0 = true;
+    for (i = 0; i <= 5; i++) {
+      if (b[i] > 0) { empty0 = false; break; }
+    }
+    if (empty0) return true;
+    for (i = 7; i <= 12; i++) {
+      if (b[i] > 0) return false;
+    }
+    return true;
+  }
+
+  function finalize(b) {
+    var nb = b.slice();
+    var s0 = 0;
+    var s1 = 0;
+    var i;
+    for (i = 0; i <= 5; i++) s0 += nb[i];
+    for (i = 7; i <= 12; i++) s1 += nb[i];
+    nb[6] += s0;
+    nb[13] += s1;
+    for (i = 0; i <= 5; i++) nb[i] = 0;
+    for (i = 7; i <= 12; i++) nb[i] = 0;
+    return nb;
+  }
+
+  function evalBoard(b) { return b[6] - b[13]; }
+
+  function minimax(b, depth, side) {
+    if (depth === 0 || isEnd(b)) {
+      var bb = isEnd(b) ? finalize(b) : b;
+      return evalBoard(bb);
+    }
+    var moves = legalMoves(b, side);
+    var i;
+    if (side === 0) {
+      var best = -Infinity;
+      for (i = 0; i < moves.length; i++) {
+        var res = sow(b, moves[i], 0);
+        var v = res.extra ? minimax(res.board, depth - 1, 0) : minimax(res.board, depth - 1, 1);
+        if (v > best) best = v;
+      }
+      return best;
+    }
+    var best2 = Infinity;
+    for (i = 0; i < moves.length; i++) {
+      var res2 = sow(b, moves[i], 1);
+      var v2 = res2.extra ? minimax(res2.board, depth - 1, 1) : minimax(res2.board, depth - 1, 0);
+      if (v2 < best2) best2 = v2;
+    }
+    return best2;
+  }
+
+  function render() {
+    mcBoard.innerHTML = "";
+    var s = document.createElement("div");
+    s.className = "mc-store cpu";
+    s.textContent = board[13];
+    mcBoard.appendChild(s);
+    var i;
+    for (i = 7; i <= 12; i++) {
+      var p = document.createElement("div");
+      p.className = "mc-pit";
+      p.textContent = board[i];
+      mcBoard.appendChild(p);
+    }
+    var ys = document.createElement("div");
+    ys.className = "mc-store you";
+    ys.textContent = board[6];
+    mcBoard.appendChild(ys);
+    for (i = 0; i <= 5; i++) {
+      (function (i) {
+        var btn = document.createElement("button");
+        btn.className = "mc-pit mine" + (board[i] === 0 ? " empty" : "");
+        btn.textContent = board[i];
+        btn.addEventListener("click", function () { tapPit(i); });
+        mcBoard.appendChild(btn);
+      })(i);
+    }
+  }
+
+  function tapPit(i) {
+    if (over || turn !== 0) return;
+    if (!isMyPit(i, 0) || board[i] === 0) return;
+    var res = sow(board, i, 0);
+    board = res.board;
+    beep(450, 0.05);
+    afterMove(res.extra ? 0 : 1);
+  }
+
+  function afterMove(nextTurn) {
+    if (isEnd(board)) {
+      board = finalize(board);
+      gameOver();
+      return;
+    }
+    turn = nextTurn;
+    if (turn === 1) {
+      mcMsg.textContent = "CPU thinking…";
+      render();
+      cpuTimer = setTimeout(function () { cpuMove(); }, 500);
+    } else {
+      mcMsg.textContent = "Your turn — tap one of your pits.";
+      render();
+    }
+  }
+
+  function cpuMove() {
+    if (over) return;
+    var depth = cfg().depth;
+    var moves = legalMoves(board, 1);
+    if (moves.length === 0) {
+      board = finalize(board);
+      gameOver();
+      return;
+    }
+    var best = moves[0];
+    var i;
+    if (depth === 1 && Math.random() < 0.25) {
+      best = moves[Math.floor(Math.random() * moves.length)];
+    } else {
+      var bestV = Infinity;
+      var bestIdxs = [];
+      for (i = 0; i < moves.length; i++) {
+        var res = sow(board, moves[i], 1);
+        var v = res.extra ? minimax(res.board, depth - 1, 1) : minimax(res.board, depth - 1, 0);
+        if (v < bestV) { bestV = v; bestIdxs = [i]; }
+        else if (v === bestV) { bestIdxs.push(i); }
+      }
+      best = moves[bestIdxs[Math.floor(Math.random() * bestIdxs.length)]];
+    }
+    var res2 = sow(board, best, 1);
+    board = res2.board;
+    afterMove(res2.extra ? 1 : 0);
+  }
+
+  function gameOver() {
+    over = true;
+    if (cpuTimer) { clearTimeout(cpuTimer); cpuTimer = null; }
+    var html;
+    var playerWon = board[6] > board[13];
+    if (playerWon) { you++; html = "You win! 🎉"; }
+    else if (board[13] > board[6]) { cpu++; html = "CPU wins."; }
+    else { draws++; html = "Draw."; }
+    mcYou.textContent = you;
+    mcDraw.textContent = draws;
+    mcCpu.textContent = cpu;
+    mcMsg.textContent = "Stores — you: " + board[6] + ", CPU: " + board[13];
+    banner(mcBanner, html);
+    beep(playerWon ? 750 : 200, 0.3);
+    render();
+  }
+
+  function reset() {
+    board = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0];
+    turn = 0;
+    over = false;
+    if (cpuTimer) { clearTimeout(cpuTimer); cpuTimer = null; }
+    mcYou.textContent = you;
+    mcDraw.textContent = draws;
+    mcCpu.textContent = cpu;
+    mcMsg.textContent = "Your turn — tap one of your pits.";
+    hideBanner(mcBanner);
+    render();
+  }
+
+  stopFns.mancala = function () {
+    if (cpuTimer) { clearTimeout(cpuTimer); cpuTimer = null; }
+  };
+
+  $("mcNew").addEventListener("click", reset);
+  reset();
+})();
+
+/* ============ 47. AIR HOCKEY ============ */
+(function () {
+  var W = 360, H = 360, GOAL_W = 120, MALLET_R = 22, PUCK_R = 12;
+  var player = { x: W / 2, y: H - 60, vx: 0, vy: 0, r: MALLET_R };
+  var cpu = { x: W / 2, y: 60, vx: 0, vy: 0, r: MALLET_R };
+  var puck = { x: W / 2, y: H / 2, vx: 0, vy: 0, r: PUCK_R };
+  var youScore = 0, cpuScore = 0, running = false, raf = null, over = false;
+  var pointer = null;
+  var best = 0;
+
+  function cfg() { return DP.hockey[diff()]; }
+
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+
+  function updatePlayer() {
+    var ox = player.x, oy = player.y;
+    if (pointer) {
+      var tx = clamp(pointer.x, MALLET_R, W - MALLET_R);
+      var ty = clamp(pointer.y, H / 2 + MALLET_R, H - MALLET_R);
+      player.x = tx;
+      player.y = ty;
+    }
+    player.vx = player.x - ox;
+    player.vy = player.y - oy;
+  }
+
+  function updateCpu() {
+    var ox = cpu.x, oy = cpu.y;
+    var tx, ty;
+    if (puck.y < H / 2 && puck.vy < 0.5) {
+      var t = clamp((cpu.y - puck.y) / (puck.vy || -1), 0, 60);
+      tx = clamp(puck.x + puck.vx * t, MALLET_R, W - MALLET_R);
+      ty = clamp(puck.y, MALLET_R + 4, H / 2 - MALLET_R);
+    } else {
+      tx = W / 2;
+      ty = MALLET_R + 24;
+    }
+    var sp = cfg().cpu;
+    var dx = tx - cpu.x, dy = ty - cpu.y;
+    var d = Math.sqrt(dx * dx + dy * dy);
+    if (d > sp) {
+      cpu.x += dx / d * sp;
+      cpu.y += dy / d * sp;
+    } else {
+      cpu.x = tx;
+      cpu.y = ty;
+    }
+    cpu.vx = cpu.x - ox;
+    cpu.vy = cpu.y - oy;
+  }
+
+  function updatePuck() {
+    puck.x += puck.vx;
+    puck.y += puck.vy;
+    puck.vx *= 0.995;
+    puck.vy *= 0.995;
+    var sp = Math.sqrt(puck.vx * puck.vx + puck.vy * puck.vy);
+    if (sp > 15) {
+      puck.vx = puck.vx / sp * 15;
+      puck.vy = puck.vy / sp * 15;
+    }
+    if (puck.x < puck.r) { puck.x = puck.r; puck.vx = Math.abs(puck.vx); beep(300, 0.03); }
+    if (puck.x > W - puck.r) { puck.x = W - puck.r; puck.vx = -Math.abs(puck.vx); beep(300, 0.03); }
+    var inGoal = (puck.x > W / 2 - GOAL_W / 2 && puck.x < W / 2 + GOAL_W / 2);
+    if (puck.y < puck.r) {
+      if (inGoal) { goal(1); return; }
+      puck.y = puck.r;
+      puck.vy = Math.abs(puck.vy);
+      beep(300, 0.03);
+    }
+    if (puck.y > H - puck.r) {
+      if (inGoal) { goal(2); return; }
+      puck.y = H - puck.r;
+      puck.vy = -Math.abs(puck.vy);
+      beep(300, 0.03);
+    }
+    collide(player);
+    collide(cpu);
+  }
+
+  function collide(m) {
+    var dx = puck.x - m.x, dy = puck.y - m.y;
+    var dist = Math.sqrt(dx * dx + dy * dy);
+    var minD = m.r + puck.r;
+    if (dist < minD && dist > 0.001) {
+      var nx = dx / dist, ny = dy / dist;
+      puck.x = m.x + nx * minD;
+      puck.y = m.y + ny * minD;
+      var rvx = puck.vx - m.vx, rvy = puck.vy - m.vy;
+      var dot = rvx * nx + rvy * ny;
+      if (dot < 0) {
+        puck.vx = rvx - 2 * dot * nx + m.vx * 1.2;
+        puck.vy = rvy - 2 * dot * ny + m.vy * 1.2;
+        beep(500, 0.04);
+      }
+    }
+  }
+
+  function goal(side) {
+    if (side === 1) { youScore++; } else { cpuScore++; }
+    $("hkYou").textContent = youScore;
+    $("hkCpu").textContent = cpuScore;
+    beep(side === 1 ? 700 : 200, 0.25);
+    if (youScore >= 7 || cpuScore >= 7) { endGame(); return; }
+    serve();
+  }
+
+  function serve() {
+    var a = Math.random() * Math.PI * 2;
+    puck.x = W / 2;
+    puck.y = H / 2;
+    puck.vx = Math.cos(a) * 4;
+    puck.vy = Math.sin(a) * 4;
+    player.x = W / 2; player.y = H - 60; player.vx = 0; player.vy = 0;
+    cpu.x = W / 2; cpu.y = 60; cpu.vx = 0; cpu.vy = 0;
+  }
+
+  function endGame() {
+    running = false;
+    over = true;
+    if (raf) { cancelAnimationFrame(raf); raf = null; }
+    var win = youScore > cpuScore;
+    if (win) {
+      best = lsGet("gb_hockey_best_" + diff(), 0);
+      if (!best || cpuScore < best) {
+        best = cpuScore;
+        lsSet("gb_hockey_best_" + diff(), best);
+      }
+    }
+    banner($("hkBanner"), win ? "You win <b>" + youScore + "–" + cpuScore + "</b>!" : "CPU wins <b>" + cpuScore + "–" + youScore + "</b>.");
+    beep(win ? 750 : 200, 0.3);
+    draw();
+  }
+
+  function step() {
+    if (!running) { raf = null; return; }
+    updatePlayer();
+    updateCpu();
+    updatePuck();
+    draw();
+    raf = requestAnimationFrame(step);
+  }
+
+  function draw() {
+    var c = $("hkCanvas");
+    var ctx = c.getContext("2d");
+    ctx.fillStyle = "#0b0f13";
+    ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = "#2c3743";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, H / 2);
+    ctx.lineTo(W, H / 2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(W / 2, H / 2, 40, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.fillStyle = "#12351f";
+    ctx.fillRect(W / 2 - GOAL_W / 2, 0, GOAL_W, 4);
+    ctx.fillStyle = "#3b1414";
+    ctx.fillRect(W / 2 - GOAL_W / 2, H - 4, GOAL_W, 4);
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.arc(puck.x, puck.y, puck.r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#38bdf8";
+    ctx.beginPath();
+    ctx.arc(player.x, player.y, player.r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#f87171";
+    ctx.beginPath();
+    ctx.arc(cpu.x, cpu.y, cpu.r, 0, Math.PI * 2);
+    ctx.fill();
+    if (!running) {
+      ctx.fillStyle = "#8a97a5";
+      ctx.font = "16px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("Tap Start to play", W / 2, H / 2 + 80);
+    }
+  }
+
+  function setPointer(e) {
+    var rect = $("hkCanvas").getBoundingClientRect();
+    var cx, cy;
+    if (e.touches && e.touches.length > 0) {
+      cx = e.touches[0].clientX;
+      cy = e.touches[0].clientY;
+    } else {
+      cx = e.clientX;
+      cy = e.clientY;
+    }
+    pointer = {
+      x: (cx - rect.left) / rect.width * W,
+      y: (cy - rect.top) / rect.height * H
+    };
+  }
+
+  var cv = $("hkCanvas");
+  cv.addEventListener("touchstart", function (e) { e.preventDefault(); setPointer(e); }, { passive: false });
+  cv.addEventListener("touchmove", function (e) { e.preventDefault(); setPointer(e); }, { passive: false });
+  cv.addEventListener("mousedown", function (e) { setPointer(e); });
+  cv.addEventListener("mousemove", function (e) { setPointer(e); });
+
+  function start() {
+    reset();
+    running = true;
+    if (!raf) raf = requestAnimationFrame(step);
+  }
+
+  function reset() {
+    youScore = 0;
+    cpuScore = 0;
+    over = false;
+    running = false;
+    $("hkYou").textContent = "0";
+    $("hkCpu").textContent = "0";
+    hideBanner($("hkBanner"));
+    serve();
+    draw();
+  }
+
+  $("hkStart").addEventListener("click", start);
+  stopFns.hockey = function () {
+    running = false;
+    if (raf) { cancelAnimationFrame(raf); raf = null; }
+  };
+  reset();
+})();
+
+/* ============ 48. SLOTS ============ */
+(function () {
+  var SYM = ["\uD83C\uDF52","\uD83C\uDF4B","\uD83C\uDF47","\uD83C\uDF49","\u2B50","\uD83D\uDC8E","7"];
+  var PAY = [15, 20, 30, 40, 60, 100, 250];
+  var coins = 0, spinning = false, best = 0;
+  var ivs = [], tms = [];
+
+  function cfg() { return DP.slots[diff()]; }
+
+  function randSym() { return Math.floor(Math.random() * SYM.length); }
+
+  function updateSpinBtn() {
+    $("scSpin").disabled = spinning || coins < 10;
+    $("scSpin").textContent = spinning ? "Spinning…" : (coins < 10 ? "Need 10" : "Spin (10)");
+  }
+
+  function spin() {
+    if (spinning || coins < 10) return;
+    coins -= 10;
+    $("scCoins").textContent = coins;
+    spinning = true;
+    updateSpinBtn();
+    $("scMsg").textContent = "Spinning…";
+    var result = [randSym(), randSym(), randSym()];
+    for (var i = 0; i < 3; i++) {
+      (function (i) {
+        var iv = setInterval(function () {
+          $("scR" + i).textContent = SYM[Math.floor(Math.random() * SYM.length)];
+          $("scR" + i).classList.add("spin");
+        }, 60);
+        ivs.push(iv);
+        var tm = setTimeout(function () {
+          clearInterval(iv);
+          $("scR" + i).classList.remove("spin");
+          $("scR" + i).textContent = SYM[result[i]];
+          if (i === 2) settle(result);
+        }, 500 + i * 350);
+        tms.push(tm);
+      })(i);
+    }
+  }
+
+  function settle(result) {
+    spinning = false;
+    updateSpinBtn();
+    var mult = cfg().mult;
+    if (result[0] === result[1] && result[1] === result[2]) {
+      var idx = SYM.indexOf(result[0]);
+      var win = Math.round(PAY[idx] * mult);
+      coins += win;
+      $("scMsg").textContent = (win >= 200 ? "JACKPOT! +" : "Three " + result[0] + " ! +") + win;
+      beep(700, 0.3);
+    } else {
+      $("scMsg").textContent = "No match. -10";
+      beep(200, 0.15);
+    }
+    $("scCoins").textContent = coins;
+    if (coins > best) {
+      best = coins;
+      lsSet("gb_slots_best_" + diff(), best);
+      $("scBest").textContent = best;
+    }
+    if (coins < 10) {
+      banner($("scBanner"), "Out of coins! Best: <b>" + best + "</b>. Press New to rebuy.");
+    }
+  }
+
+  function reset() {
+    coins = cfg().coins;
+    spinning = false;
+    for (var i = 0; i < ivs.length; i++) clearInterval(ivs[i]);
+    for (var j = 0; j < tms.length; j++) clearTimeout(tms[j]);
+    ivs = [];
+    tms = [];
+    best = lsGet("gb_slots_best_" + diff(), 0);
+    $("scCoins").textContent = coins;
+    $("scBest").textContent = best;
+    $("scMsg").textContent = "Match three of a kind to win. 7-7-7 is the jackpot.";
+    hideBanner($("scBanner"));
+    $("scR0").textContent = SYM[0];
+    $("scR1").textContent = SYM[1];
+    $("scR2").textContent = SYM[2];
+    updateSpinBtn();
+  }
+
+  $("scSpin").addEventListener("click", spin);
+  $("scNew").addEventListener("click", reset);
+  stopFns.slots = function () {
+    for (var i = 0; i < ivs.length; i++) clearInterval(ivs[i]);
+    for (var j = 0; j < tms.length; j++) clearTimeout(tms[j]);
+    ivs = [];
+    tms = [];
+    spinning = false;
+  };
+  reset();
+})();
+
+/* ============ 45. FLOW FREE ============ */
+(function () {
+  var fwGrid = $("fwGrid");
+  var fwMoves = $("fwMoves");
+  var fwBest = $("fwBest");
+  var fwBanner = $("fwBanner");
+
+  var n, pairs, endpoints, paths, grid, complete, active, dragging, done, moves;
+
+  var PAL = ["#f87171", "#fbbf24", "#4ade80", "#38bdf8", "#a78bfa", "#fb923c"];
+
+  function cfg() { return DP.flow[diff()]; }
+
+  function shuffle(a) {
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+  }
+
+  function hamiltonian(n) {
+    var total = n * n;
+    var visited = [];
+    var path = [];
+    var dirs = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+    var budget = 200000;
+    var nodes = 0;
+
+    for (var i = 0; i < n; i++) { visited.push(new Array(n).fill(false)); }
+
+    var sr = Math.floor(Math.random() * n);
+    var sc = Math.floor(Math.random() * n);
+
+    function dfs(r, c) {
+      if (++nodes > budget) return false;
+      path.push([r, c]);
+      visited[r][c] = true;
+      if (path.length === total) return true;
+      shuffle(dirs);
+      for (var d = 0; d < 4; d++) {
+        var nr = r + dirs[d][0], nc = c + dirs[d][1];
+        if (nr >= 0 && nr < n && nc >= 0 && nc < n && !visited[nr][nc]) {
+          if (dfs(nr, nc)) return true;
+        }
+      }
+      path.pop();
+      visited[r][c] = false;
+      return false;
+    }
+
+    if (dfs(sr, sc)) return path;
+    return null;
+  }
+
+  function snakePath(n) {
+    var path = [];
+    for (var r = 0; r < n; r++) {
+      if (r % 2 === 0) {
+        for (var c = 0; c < n; c++) path.push([r, c]);
+      } else {
+        for (var c = n - 1; c >= 0; c--) path.push([r, c]);
+      }
+    }
+    return path;
+  }
+
+  function gen() {
+    n = cfg().n; pairs = cfg().pairs;
+    var path = snakePath(n);
+    var total = n * n;
+    var segLen = total / pairs;
+    endpoints = []; paths = []; grid = [];
+    for (var r = 0; r < n; r++) { grid.push([]); for (var c = 0; c < n; c++) grid[r].push(-1); }
+    for (var i = 0; i < pairs; i++) {
+      var start = Math.round(i * segLen);
+      var end = Math.round((i + 1) * segLen);
+      if (i === pairs - 1) end = total;
+      if (end <= start) end = start + 1;
+      var seg = path.slice(start, end);
+      if (seg.length < 2) continue;
+      var ep = [seg[0], seg[seg.length - 1]];
+      endpoints.push(ep);
+      paths.push(null);
+      grid[ep[0][0]][ep[0][1]] = i;
+      grid[ep[1][0]][ep[1][1]] = i;
+    }
+    complete = [];
+    for (var k = 0; k < pairs; k++) complete.push(false);
+    active = -1; dragging = false; done = false; moves = 0;
+  }
+
+  function reset() {
+    gen();
+    fwMoves.textContent = "0";
+    var best = lsGet("gb_flow_best_" + diff(), 0);
+    fwBest.textContent = best || "\u221E";
+    hideBanner(fwBanner);
+    render();
+  }
+
+  function render() {
+    fwGrid.innerHTML = "";
+    fwGrid.style.gridTemplateColumns = "repeat(" + n + ", 1fr)";
+    for (var r = 0; r < n; r++) {
+      for (var c = 0; c < n; c++) {
+        (function (r, c) {
+          var d = document.createElement("div");
+          d.className = "fw-cell";
+          var val = grid[r][c];
+          if (val >= 0) {
+            d.style.background = PAL[val];
+            d.className += " pipe";
+          }
+          for (var k = 0; k < endpoints.length; k++) {
+            if ((endpoints[k][0][0] === r && endpoints[k][0][1] === c) ||
+                (endpoints[k][1][0] === r && endpoints[k][1][1] === c)) {
+              d.className += " dot";
+              break;
+            }
+          }
+          fwGrid.appendChild(d);
+        })(r, c);
+      }
+    }
+  }
+
+  function cellFromEvent(e, rect) {
+    var cx = e.clientX, cy = e.clientY;
+    if (e.touches && e.touches.length > 0) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; }
+    var c = Math.floor((cx - rect.left) / rect.width * n);
+    var r = Math.floor((cy - rect.top) / rect.height * n);
+    if (r < 0 || r >= n || c < 0 || c >= n) return null;
+    return [r, c];
+  }
+
+  function startDrag(r, c) {
+    var val = grid[r][c];
+    if (val < 0) return false;
+    for (var k = 0; k < endpoints.length; k++) {
+      if ((endpoints[k][0][0] === r && endpoints[k][0][1] === c) ||
+          (endpoints[k][1][0] === r && endpoints[k][1][1] === c)) {
+        active = k;
+        paths[k] = [[r, c]];
+        complete[k] = false;
+        dragging = true;
+        beep(420, 0.04);
+        return true;
+      }
+    }
+    if (paths[val]) {
+      for (var i = 0; i < paths[val].length; i++) {
+        if (paths[val][i][0] === r && paths[val][i][1] === c) {
+          var ep = endpoints[val];
+          if (ep[0][0] === r && ep[0][1] === c) continue;
+          if (ep[1][0] === r && ep[1][1] === c) continue;
+          paths[val] = paths[val].slice(0, i + 1);
+          for (var j = i + 1; j < paths[val].length; j++) {
+            var cell = paths[val][j];
+            if (!(cell[0] === ep[0][0] && cell[1] === ep[0][1]) &&
+                !(cell[0] === ep[1][0] && cell[1] === ep[1][1])) {
+              grid[cell[0]][cell[1]] = -1;
+            }
+          }
+          active = val;
+          dragging = true;
+          beep(420, 0.04);
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  function continueDrag(r, c) {
+    if (active < 0 || !dragging) return;
+    var path = paths[active];
+    if (!path) return;
+    var head = path[path.length - 1];
+    if (Math.abs(r - head[0]) + Math.abs(c - head[1]) !== 1) return;
+    if (path.length >= 2 && r === path[path.length - 2][0] && c === path[path.length - 2][1]) {
+      var popped = path.pop();
+      var ep = endpoints[active];
+      if (!(popped[0] === ep[0][0] && popped[1] === ep[0][1]) &&
+          !(popped[0] === ep[1][0] && popped[1] === ep[1][1])) {
+        grid[popped[0]][popped[1]] = -1;
+      }
+      render();
+      return;
+    }
+    var ep = endpoints[active];
+    var otherEp = (ep[0][0] === head[0] && ep[0][1] === head[1]) ? ep[1] : ep[0];
+    if (r === otherEp[0] && c === otherEp[1]) {
+      path.push([r, c]);
+      grid[r][c] = active;
+      complete[active] = true;
+      active = -1;
+      dragging = false;
+      moves++;
+      fwMoves.textContent = moves;
+      beep(600, 0.06);
+      render();
+      checkWin();
+      return;
+    }
+    if (grid[r][c] === -1) {
+      path.push([r, c]);
+      grid[r][c] = active;
+      render();
+      return;
+    }
+    active = -1;
+    dragging = false;
+  }
+
+  function endDrag() {
+    dragging = false;
+    active = -1;
+  }
+
+  function checkWin() {
+    for (var k = 0; k < pairs; k++) {
+      if (!complete[k]) return;
+    }
+    for (var r = 0; r < n; r++) {
+      for (var c = 0; c < n; c++) {
+        if (grid[r][c] === -1) return;
+      }
+    }
+    done = true;
+    var best = lsGet("gb_flow_best_" + diff(), 0);
+    if (!best || moves < best) { best = moves; lsSet("gb_flow_best_" + diff(), best); }
+    fwBest.textContent = best;
+    banner(fwBanner, "Connected all <b>" + pairs + "</b> pairs in <b>" + moves + "</b> moves!");
+    beep(750, 0.3);
+  }
+
+  var rectCache = null;
+  function getRect() {
+    if (!rectCache) rectCache = fwGrid.getBoundingClientRect();
+    return rectCache;
+  }
+
+  fwGrid.addEventListener("touchstart", function (e) {
+    rectCache = fwGrid.getBoundingClientRect();
+    var rc = cellFromEvent(e, rectCache);
+    if (rc) startDrag(rc[0], rc[1]);
+    render();
+  }, { passive: true });
+
+  fwGrid.addEventListener("touchmove", function (e) {
+    e.preventDefault();
+    var rc = cellFromEvent(e, rectCache);
+    if (rc) continueDrag(rc[0], rc[1]);
+  }, { passive: false });
+
+  fwGrid.addEventListener("touchend", function (e) {
+    endDrag();
+  }, { passive: true });
+
+  fwGrid.addEventListener("mousedown", function (e) {
+    rectCache = fwGrid.getBoundingClientRect();
+    var rc = cellFromEvent(e, rectCache);
+    if (rc) startDrag(rc[0], rc[1]);
+    render();
+  });
+
+  fwGrid.addEventListener("mousemove", function (e) {
+    if (e.buttons & 1) {
+      var rc = cellFromEvent(e, rectCache);
+      if (rc) continueDrag(rc[0], rc[1]);
+    }
+  });
+
+  fwGrid.addEventListener("mouseup", function (e) {
+    endDrag();
+  });
+
+  stopFns.flow = function () { active = -1; dragging = false; };
+
+  $("fwNew").addEventListener("click", reset);
+  reset();
+})();
+
+/* ============ 46. TYPING TEST ============ */
+(function () {
+  var tyWord = $("tyWord");
+  var tyInput = $("tyInput");
+  var tyWpm = $("tyWpm");
+  var tyTime = $("tyTime");
+  var tyBest = $("tyBest");
+  var tyBanner = $("tyBanner");
+
+  var WORDS = [
+    "the","and","for","are","but","not","you","all","can","her","was","one","our","out","day","get","has","him","his","how","man","new","now","old","see","two","way","who","boy","did","its","let","put","say","she","too","use",
+    "about","after","again","below","could","every","first","found","great","house","large","learn","never","other","place","plant","point","right","small","sound","spell","still","study","their","there","these","thing","think","three","water","where","which","world","would","write",
+    "always","because","become","before","behind","better","bring","brother","careful","change","children","classic","clever","close","colour","common","correct","dancer","dinner","doctor","dollar","double","easier","family","famous","father","friend","future","garden","gentle","golden","happen","hazard","health","heaven","hidden","hunger","imagine","island","jungle","kitten","ladder","lively","lovely","market","master","memory","middle","minute","mirror","modern","mother","mountain","muscle","mystery","narrow","native","nearly","needle","nickel","nobody","notion","number","object","office","online","orange","palace","parent","partly","patience","people","period","person","picture","pioneer","plastic","player","please","plenty","pocket","poetry","police","polite","popular","portrait","poster","potato","powder","prayer","prefer","pretty","priest","prince","prison","profit","proper","public","purple","puzzle","quarrel","rabbit","rarely","rather","really","reason","recent","recipe","regret","relief","remain","remote","repair","repeat","report","rescue","result","return","reveal","review","reward","ribbon","rocket","rubber","saddle","safety","salary","sample","school","screen","script","search","season","second","secret","sector","senior","serial","shadow","shelter","shortage","shoulder","silver","simple","sister","sketch","smooth","soccer","solar","somehow","speaker","special","spirit","splash","spoken","spread","spring","square","stable","station","stomach","stone","strike","strong","studio","submit","subtle","sudden","summer","sunset","supply","surely","survey","switch","symbol","system","tackle","talent","temple","tender","tennis","thanks","theory","thirty","thought","thunder","tobacco","tomorrow","tongue","toward","trader","traffic","travel","treaty","tunnel","twelve","twenty","unique","united","unless","update","useful","valley","various","vendor","verbal","verify","victory","village","violin","virtue","vision","visual","volume","voyage","wander","warmth","wealth","weapon","weekly","weight","whisper","widely","window","winner","winter","wisdom","wonder","worker","writer","yellow","yesterday","youngster","zebra","zigzag"
+  ];
+
+  var pool, current, typed, chars, errors, timeLeft, timer, running, t0, lastVal;
+
+  function cfg() { return DP.type[diff()]; }
+
+  function reset() {
+    pool = WORDS.filter(function (w) { return w.length >= 3 && w.length <= cfg().maxlen; });
+    current = pool[Math.floor(Math.random() * pool.length)];
+    typed = 0; chars = 0; errors = 0; timeLeft = cfg().time; running = true; t0 = Date.now(); lastVal = "";
+    tyInput.value = "";
+    tyWpm.textContent = "0";
+    tyTime.textContent = cfg().time;
+    var best = lsGet("gb_type_best_" + diff(), 0);
+    tyBest.textContent = best || "0";
+    hideBanner(tyBanner);
+    renderWord();
+    if (timer) { clearInterval(timer); timer = null; }
+    timer = setInterval(tick, 100);
+    try { tyInput.focus(); } catch (e) {}
+  }
+
+  function tick() {
+    if (!running) return;
+    timeLeft -= 0.1;
+    tyTime.textContent = Math.max(0, Math.ceil(timeLeft));
+    if (timeLeft <= 0) finish();
+  }
+
+  function renderWord() {
+    var v = tyInput.value;
+    var html = "";
+    for (var i = 0; i < current.length; i++) {
+      if (i < v.length && v[i] === current[i]) {
+        html += "<span style='color:#4ade80'>" + current[i] + "</span>";
+      } else if (i < v.length) {
+        html += "<span style='color:#f87171'>" + current[i] + "</span>";
+      } else {
+        html += "<span>" + current[i] + "</span>";
+      }
+    }
+    tyWord.innerHTML = html;
+  }
+
+  function updateWpm() {
+    var elapsed = (Date.now() - t0) / 1000;
+    if (elapsed < 1/60) elapsed = 1/60;
+    var wpm = Math.round((chars / 5) / (elapsed / 60));
+    tyWpm.textContent = wpm;
+  }
+
+  function finish() {
+    running = false;
+    if (timer) { clearInterval(timer); timer = null; }
+    updateWpm();
+    var wpm = parseInt(tyWpm.textContent, 10) || 0;
+    var acc = (chars + errors) > 0 ? Math.round(chars / (chars + errors) * 100) : 100;
+    var best = lsGet("gb_type_best_" + diff(), 0);
+    if (wpm > best) { best = wpm; lsSet("gb_type_best_" + diff(), best); }
+    tyBest.textContent = best;
+    banner(tyBanner, "Time! <b>" + wpm + "</b> WPM \u00b7 " + acc + "% accuracy \u00b7 " + typed + " words");
+    beep(700, 0.3);
+  }
+
+  tyInput.addEventListener("input", function () {
+    if (!running) return;
+    var v = tyInput.value;
+    if (v === current) {
+      chars += current.length;
+      typed++;
+      beep(650, 0.05);
+      var newWord = current;
+      while (newWord === current && pool.length > 1) newWord = pool[Math.floor(Math.random() * pool.length)];
+      current = newWord;
+      tyInput.value = "";
+      lastVal = "";
+      updateWpm();
+      renderWord();
+    } else {
+      if (v.length > lastVal.length && current.indexOf(v) !== 0) {
+        errors++;
+      }
+      lastVal = v;
+      renderWord();
+    }
+  });
+
+  stopFns.type = function () {
+    running = false;
+    if (timer) { clearInterval(timer); timer = null; }
+  };
+
+  $("tyNew").addEventListener("click", reset);
+  reset();
+})();
+
+/* ============ 49. QUIZ ============ */
+(function () {
+  var BANK = [
+    [
+      { q: "What colour do you get by mixing blue and yellow?", opts: ["Green", "Purple", "Orange", "Red"], a: 0 },
+      { q: "How many days are there in a week?", opts: ["Five", "Six", "Seven", "Eight"], a: 2 },
+      { q: "What is 9 + 10?", opts: ["19", "20", "21", "18"], a: 0 },
+      { q: "Which animal says 'moo'?", opts: ["Dog", "Cat", "Cow", "Pig"], a: 2 },
+      { q: "What is the capital of France?", opts: ["London", "Paris", "Rome", "Berlin"], a: 1 },
+      { q: "How many legs does a spider have?", opts: ["Six", "Eight", "Ten", "Four"], a: 1 },
+      { q: "Which planet is known as the Red Planet?", opts: ["Venus", "Jupiter", "Mars", "Saturn"], a: 2 },
+      { q: "What is H2O more commonly called?", opts: ["Salt", "Water", "Air", "Sugar"], a: 1 },
+      { q: "How many sides does a triangle have?", opts: ["Two", "Three", "Four", "Five"], a: 1 },
+      { q: "What is the largest ocean on Earth?", opts: ["Atlantic", "Indian", "Arctic", "Pacific"], a: 3 },
+      { q: "Which season comes after summer?", opts: ["Spring", "Winter", "Autumn", "Summer"], a: 2 },
+      { q: "What is 100 - 50?", opts: ["25", "50", "75", "100"], a: 1 },
+      { q: "Which fruit is yellow and curved?", opts: ["Apple", "Banana", "Grape", "Orange"], a: 1 },
+      { q: "How many minutes are in an hour?", opts: ["30", "60", "90", "100"], a: 1 },
+      { q: "What do bees make?", opts: ["Milk", "Honey", "Silk", "Wool"], a: 1 }
+    ],
+    [
+      { q: "What is the capital of Japan?", opts: ["Beijing", "Seoul", "Tokyo", "Bangkok"], a: 2 },
+      { q: "Which gas do plants absorb from the air?", opts: ["Oxygen", "Carbon dioxide", "Nitrogen", "Helium"], a: 1 },
+      { q: "What is 12 x 12?", opts: ["124", "132", "144", "156"], a: 2 },
+      { q: "Who painted the Mona Lisa?", opts: ["Van Gogh", "Picasso", "Da Vinci", "Monet"], a: 2 },
+      { q: "What is the largest planet in our solar system?", opts: ["Earth", "Mars", "Jupiter", "Saturn"], a: 2 },
+      { q: "How many continents are there?", opts: ["Five", "Six", "Seven", "Eight"], a: 2 },
+      { q: "What is the chemical symbol for gold?", opts: ["Ag", "Au", "Gd", "Go"], a: 1 },
+      { q: "Which country is home to the kangaroo?", opts: ["New Zealand", "Australia", "South Africa", "Brazil"], a: 1 },
+      { q: "What is the square root of 64?", opts: ["6", "7", "8", "9"], a: 2 },
+      { q: "In which year did humans first land on the Moon?", opts: ["1959", "1965", "1969", "1975"], a: 2 },
+      { q: "What is the smallest prime number?", opts: ["0", "1", "2", "3"], a: 2 },
+      { q: "What is the capital of Canada?", opts: ["Toronto", "Vancouver", "Ottawa", "Montreal"], a: 2 },
+      { q: "How many bones are in the adult human body?", opts: ["106", "206", "306", "406"], a: 1 },
+      { q: "Which element has the atomic number 1?", opts: ["Helium", "Hydrogen", "Oxygen", "Carbon"], a: 1 },
+      { q: "Which of these is a primary colour?", opts: ["Green", "Orange", "Red", "Purple"], a: 2 }
+    ],
+    [
+      { q: "What is the capital of Australia?", opts: ["Sydney", "Melbourne", "Canberra", "Perth"], a: 2 },
+      { q: "Which war ended in 1945?", opts: ["World War I", "World War II", "Cold War", "Korean War"], a: 1 },
+      { q: "What is the approximate speed of light?", opts: ["300,000 km/s", "150,000 km/s", "30,000 km/s", "1,000,000 km/s"], a: 0 },
+      { q: "Who developed the theory of relativity?", opts: ["Newton", "Einstein", "Bohr", "Heisenberg"], a: 1 },
+      { q: "What is the currency of Switzerland?", opts: ["Euro", "Franc", "Krona", "Mark"], a: 1 },
+      { q: "Which organelle is the powerhouse of the cell?", opts: ["Nucleus", "Ribosome", "Mitochondria", "Golgi apparatus"], a: 2 },
+      { q: "What is 17 squared?", opts: ["269", "289", "309", "329"], a: 1 },
+      { q: "What is the hardest natural substance?", opts: ["Quartz", "Diamond", "Titanium", "Obsidian"], a: 1 },
+      { q: "In computing, what does 'HTTP' stand for?", opts: ["HyperText Transfer Protocol", "High Transfer Text Protocol", "HyperText Transit Protocol", "Host Text Transfer Protocol"], a: 0 },
+      { q: "What is the capital of Brazil?", opts: ["Rio de Janeiro", "São Paulo", "Brasília", "Salvador"], a: 2 },
+      { q: "Which blood type is known as the universal donor?", opts: ["A", "B", "AB", "O negative"], a: 3 },
+      { q: "In what year did the Berlin Wall fall?", opts: ["1987", "1989", "1991", "1993"], a: 1 },
+      { q: "What is the approximate value of Pi to two decimals?", opts: ["3.12", "3.14", "3.16", "3.18"], a: 1 },
+      { q: "Which planet has the most confirmed moons?", opts: ["Jupiter", "Saturn", "Uranus", "Neptune"], a: 1 },
+      { q: "What is the longest river in the world (commonly cited)?", opts: ["Amazon", "Nile", "Yangtze", "Mississippi"], a: 1 }
+    ],
+    [
+      { q: "What is the capital of Kazakhstan?", opts: ["Almaty", "Astana", "Tashkent", "Bishkek"], a: 1 },
+      { q: "Which element has the chemical symbol 'W'?", opts: ["Tungsten", "Iron", "Lead", "Tin"], a: 0 },
+      { q: "What is the smallest country in the world?", opts: ["Monaco", "Vatican City", "San Marino", "Liechtenstein"], a: 1 },
+      { q: "Who wrote 'One Hundred Years of Solitude'?", opts: ["Jorge Luis Borges", "Gabriel García Márquez", "Pablo Neruda", "Isabel Allende"], a: 1 },
+      { q: "What is the only mammal capable of true sustained flight?", opts: ["Flying squirrel", "Sugar glider", "Bat", "Colugo"], a: 2 },
+      { q: "In which year was the first iPhone released?", opts: ["2005", "2007", "2009", "2010"], a: 1 },
+      { q: "What is the most abundant gas in Earth's atmosphere?", opts: ["Oxygen", "Carbon dioxide", "Nitrogen", "Argon"], a: 2 },
+      { q: "Which mathematician is known as the father of geometry?", opts: ["Pythagoras", "Euclid", "Archimedes", "Eratosthenes"], a: 1 },
+      { q: "What is the capital of Mongolia?", opts: ["Ulaanbaatar", "Astana", "Tashkent", "Kathmandu"], a: 0 },
+      { q: "How many hearts does an octopus have?", opts: ["One", "Two", "Three", "Four"], a: 2 },
+      { q: "What is the chemical formula for table salt?", opts: ["NaCl", "KCl", "CaCO3", "H2SO4"], a: 0 },
+      { q: "Which country has the most time zones (including territories)?", opts: ["Russia", "USA", "France", "China"], a: 2 },
+      { q: "What is the largest desert in the world?", opts: ["Sahara", "Gobi", "Antarctic Desert", "Arabian"], a: 2 },
+      { q: "Who was the first woman to win a Nobel Prize?", opts: ["Marie Curie", "Rosalind Franklin", "Ada Lovelace", "Dorothy Hodgkin"], a: 0 },
+      { q: "What is the approximate speed of sound in air?", opts: ["343 m/s", "150 m/s", "1000 m/s", "500 m/s"], a: 0 }
+    ]
+  ];
+  var pool, qNum, score, streak, timeLeft, timer, nextTimer, current, locked, over, lastIdx, best;
+
+  function cfg() { return DP.quiz[diff()]; }
+
+  function reset() {
+    pool = BANK[cfg().pool];
+    qNum = 0;
+    score = 0;
+    streak = 0;
+    over = false;
+    locked = false;
+    lastIdx = -1;
+    if (timer) { clearInterval(timer); timer = null; }
+    if (nextTimer) { clearTimeout(nextTimer); nextTimer = null; }
+    $("qzScore").textContent = "0";
+    best = lsGet("gb_quiz_best_" + diff(), 0);
+    $("qzBest").textContent = best;
+    hideBanner($("qzBanner"));
+    nextQuestion();
+  }
+
+  function nextQuestion() {
+    if (qNum >= 10) { finish(); return; }
+    var idx;
+    if (pool.length > 1) {
+      do { idx = Math.floor(Math.random() * pool.length); } while (idx === lastIdx);
+    } else {
+      idx = 0;
+    }
+    lastIdx = idx;
+    current = pool[idx];
+    qNum++;
+    locked = false;
+    $("qzQ").textContent = current.q;
+    var cont = $("qzOpts");
+    cont.innerHTML = "";
+    for (var i = 0; i < current.opts.length; i++) {
+      (function (i) {
+        var btn = document.createElement("button");
+        btn.className = "qz-opt";
+        btn.textContent = current.opts[i];
+        btn.addEventListener("click", function () { answer(i); });
+        cont.appendChild(btn);
+      })(i);
+    }
+    timeLeft = cfg().time;
+    $("qzTime").textContent = Math.ceil(timeLeft);
+    if (timer) { clearInterval(timer); }
+    timer = setInterval(tick, 100);
+  }
+
+  function tick() {
+    if (locked || over) return;
+    timeLeft -= 0.1;
+    $("qzTime").textContent = Math.max(0, Math.ceil(timeLeft));
+    if (timeLeft <= 0) { timeout(); }
+  }
+
+  function timeout() {
+    if (locked || over) return;
+    locked = true;
+    clearInterval(timer);
+    streak = 0;
+    var opts = $("qzOpts").children;
+    for (var i = 0; i < opts.length; i++) {
+      if (i === current.a) { opts[i].className = "qz-opt good"; }
+      opts[i].disabled = true;
+    }
+    beep(200, 0.2);
+    nextTimer = setTimeout(nextQuestion, 1000);
+  }
+
+  function answer(i) {
+    if (locked || over) return;
+    locked = true;
+    clearInterval(timer);
+    var correct = (i === current.a);
+    var opts = $("qzOpts").children;
+    if (correct) {
+      streak++;
+      var pts = 10 + (streak - 1) * 5;
+      score += pts;
+      beep(600, 0.08);
+      opts[i].className = "qz-opt good";
+    } else {
+      streak = 0;
+      beep(200, 0.2);
+      opts[i].className = "qz-opt bad";
+      opts[current.a].className = "qz-opt good";
+    }
+    for (var j = 0; j < opts.length; j++) { opts[j].disabled = true; }
+    $("qzScore").textContent = score;
+    nextTimer = setTimeout(nextQuestion, 1000);
+  }
+
+  function finish() {
+    over = true;
+    clearInterval(timer);
+    clearTimeout(nextTimer);
+    best = lsGet("gb_quiz_best_" + diff(), 0);
+    if (score > best) {
+      best = score;
+      lsSet("gb_quiz_best_" + diff(), best);
+    }
+    $("qzBest").textContent = best;
+    banner($("qzBanner"), "Round over! Score: <b>" + score + "</b> · Best: " + best);
+    beep(700, 0.3);
+  }
+
+  $("qzNew").addEventListener("click", reset);
+  stopFns.quiz = function () {
+    if (timer) { clearInterval(timer); timer = null; }
+    if (nextTimer) { clearTimeout(nextTimer); nextTimer = null; }
+  };
+  reset();
+})();
+
+/* ============ 50. BUBBLE SHOOTER ============ */
+(function () {
+  var W = 360, H = 360, COLS = 9, R = 20, ROW_H = R * 1.732, DEADLINE = H - 90;
+  var PAL = ["#f87171", "#fbbf24", "#4ade80", "#38bdf8", "#a78bfa", "#fb923c"];
+  var rows, topParity, numColors, current, next, flying, aim, shotsUntilDrop, score, best, running, raf, over;
+
+  function cfg() { return DP.bubble[diff()]; }
+
+  function rowLength(r) {
+    var parity = (topParity + r) % 2;
+    return parity === 0 ? COLS : COLS - 1;
+  }
+
+  function cellCenter(r, c) {
+    var parity = (topParity + r) % 2;
+    var x = (parity === 0 ? R : 2 * R) + c * 2 * R;
+    var y = R + r * ROW_H;
+    return { x: x, y: y };
+  }
+
+  function neighbors(r, c) {
+    var list = [[r, c - 1], [r, c + 1]];
+    if ((topParity + r) % 2 === 0) {
+      list.push([r - 1, c - 1]);
+      list.push([r - 1, c]);
+      list.push([r + 1, c - 1]);
+      list.push([r + 1, c]);
+    } else {
+      list.push([r - 1, c]);
+      list.push([r - 1, c + 1]);
+      list.push([r + 1, c]);
+      list.push([r + 1, c + 1]);
+    }
+    return list;
+  }
+
+  function randomPresentColor() {
+    var set = {};
+    var r, c;
+    for (r = 0; r < rows.length; r++) {
+      for (c = 0; c < rows[r].length; c++) {
+        if (rows[r][c] >= 0) { set[rows[r][c]] = true; }
+      }
+    }
+    var keys = [];
+    for (var k in set) { keys.push(parseInt(k, 10)); }
+    if (keys.length === 0) {
+      for (var i = 0; i < numColors; i++) { keys.push(i); }
+    }
+    return keys[Math.floor(Math.random() * keys.length)];
+  }
+
+  function ensureRow(r) {
+    while (rows.length <= r) {
+      var len = rowLength(rows.length);
+      var row = [];
+      for (var i = 0; i < len; i++) { row.push(-1); }
+      rows.push(row);
+    }
+  }
+
+  function floodGroup(r, c, color) {
+    var seen = {};
+    var out = [];
+    var stack = [[r, c]];
+    seen[r + "," + c] = true;
+    while (stack.length > 0) {
+      var cell = stack.pop();
+      var cr = cell[0], cc = cell[1];
+      out.push(cell);
+      var ns = neighbors(cr, cc);
+      for (var i = 0; i < ns.length; i++) {
+        var nr = ns[i][0], nc = ns[i][1];
+        var key = nr + "," + nc;
+        if (seen[key]) { continue; }
+        if (nr < 0 || nr >= rows.length) { continue; }
+        if (nc < 0 || nc >= rows[nr].length) { continue; }
+        if (rows[nr][nc] !== color) { continue; }
+        seen[key] = true;
+        stack.push([nr, nc]);
+      }
+    }
+    return out;
+  }
+
+  function connectedToTop() {
+    var conn = {};
+    var stack = [];
+    var c, i;
+    if (rows.length > 0) {
+      for (c = 0; c < rows[0].length; c++) {
+        if (rows[0][c] >= 0) {
+          conn["0," + c] = true;
+          stack.push([0, c]);
+        }
+      }
+    }
+    while (stack.length > 0) {
+      var cell = stack.pop();
+      var ns = neighbors(cell[0], cell[1]);
+      for (i = 0; i < ns.length; i++) {
+        var nr = ns[i][0], nc = ns[i][1];
+        var key = nr + "," + nc;
+        if (conn[key]) { continue; }
+        if (nr < 0 || nr >= rows.length) { continue; }
+        if (nc < 0 || nc >= rows[nr].length) { continue; }
+        if (rows[nr][nc] < 0) { continue; }
+        conn[key] = true;
+        stack.push([nr, nc]);
+      }
+    }
+    return conn;
+  }
+
+  function hitBubble(f) {
+    for (var r = 0; r < rows.length; r++) {
+      for (var c = 0; c < rows[r].length; c++) {
+        if (rows[r][c] < 0) { continue; }
+        var ctr = cellCenter(r, c);
+        var dx = ctr.x - f.x, dy = ctr.y - f.y;
+        if (dx * dx + dy * dy < (2 * R - 2) * (2 * R - 2)) { return true; }
+      }
+    }
+    return false;
+  }
+
+  function snap(f) {
+    var candidates = [];
+    var r, c, i, nr, nc, ctr, dx, dy, d;
+    if (f.y <= R + 1) {
+      for (c = 0; c < rowLength(0); c++) {
+        if (rows.length === 0 || rows[0][c] < 0) { candidates.push([0, c]); }
+      }
+    } else {
+      var bestD = Infinity, br = -1, bc = -1;
+      for (r = 0; r < rows.length; r++) {
+        for (c = 0; c < rows[r].length; c++) {
+          if (rows[r][c] < 0) { continue; }
+          ctr = cellCenter(r, c);
+          dx = ctr.x - f.x; dy = ctr.y - f.y;
+          d = dx * dx + dy * dy;
+          if (d < bestD) { bestD = d; br = r; bc = c; }
+        }
+      }
+      if (br >= 0) {
+        var ns = neighbors(br, bc);
+        for (i = 0; i < ns.length; i++) {
+          nr = ns[i][0]; nc = ns[i][1];
+          if (nr < 0 || nc < 0 || nr > rows.length) { continue; }
+          if (nr === rows.length) {
+            if (nc < rowLength(nr)) { candidates.push([nr, nc]); }
+          } else if (nc < rows[nr].length && rows[nr][nc] < 0) {
+            candidates.push([nr, nc]);
+          }
+        }
+      }
+    }
+    if (candidates.length === 0) {
+      for (r = 0; r < rows.length; r++) {
+        for (c = 0; c < rows[r].length; c++) {
+          if (rows[r][c] >= 0) { continue; }
+          if (r === 0) { candidates.push([r, c]); continue; }
+          var ns2 = neighbors(r, c);
+          for (i = 0; i < ns2.length; i++) {
+            nr = ns2[i][0]; nc = ns2[i][1];
+            if (nr >= 0 && nr < rows.length && nc >= 0 && nc < rows[nr].length && rows[nr][nc] >= 0) {
+              candidates.push([r, c]);
+              break;
+            }
+          }
+        }
+      }
+    }
+    if (candidates.length === 0) { return null; }
+    var bestC = null, bestCD = Infinity;
+    for (i = 0; i < candidates.length; i++) {
+      ctr = cellCenter(candidates[i][0], candidates[i][1]);
+      dx = ctr.x - f.x; dy = ctr.y - f.y;
+      d = dx * dx + dy * dy;
+      if (d < bestCD) { bestCD = d; bestC = candidates[i]; }
+    }
+    return bestC;
+  }
+
+  function descend() {
+    topParity = (topParity + 1) % 2;
+    var len = rowLength(0);
+    var newRow = [];
+    for (var i = 0; i < len; i++) { newRow.push(Math.floor(Math.random() * numColors)); }
+    rows.unshift(newRow);
+  }
+
+  function fire() {
+    if (flying || over || !running) { return; }
+    var spd = 12;
+    flying = { x: W / 2, y: H - 40, vx: Math.cos(aim) * spd, vy: Math.sin(aim) * spd, color: current };
+    current = next;
+    next = randomPresentColor();
+    beep(500, 0.04);
+  }
+
+  function updateFlying() {
+    if (!flying) { return; }
+    flying.x += flying.vx;
+    flying.y += flying.vy;
+    if (flying.x < R) { flying.x = R; flying.vx = Math.abs(flying.vx); }
+    if (flying.x > W - R) { flying.x = W - R; flying.vx = -Math.abs(flying.vx); }
+    if (flying.y <= R || hitBubble(flying)) {
+      var cell = snap(flying);
+      if (cell) {
+        ensureRow(cell[0]);
+        rows[cell[0]][cell[1]] = flying.color;
+        resolve(cell[0], cell[1]);
+      }
+      flying = null;
+      shotsUntilDrop--;
+      if (shotsUntilDrop <= 0) {
+        descend();
+        shotsUntilDrop = 5;
+      }
+      checkLose();
+    }
+  }
+
+  function resolve(r, c) {
+    var color = rows[r][c];
+    var group = floodGroup(r, c, color);
+    if (group.length >= 3) {
+      for (var i = 0; i < group.length; i++) {
+        rows[group[i][0]][group[i][1]] = -1;
+      }
+      score += group.length * 10;
+      beep(600, 0.1);
+      var conn = connectedToTop();
+      var dropped = 0;
+      for (var rr = 0; rr < rows.length; rr++) {
+        for (var cc = 0; cc < rows[rr].length; cc++) {
+          if (rows[rr][cc] < 0) { continue; }
+          if (!conn[rr + "," + cc]) {
+            rows[rr][cc] = -1;
+            dropped++;
+          }
+        }
+      }
+      if (dropped > 0) {
+        score += dropped * 20;
+        beep(700, 0.15);
+      }
+      $("bbScore").textContent = score;
+    }
+  }
+
+  function checkLose() {
+    for (var r = 0; r < rows.length; r++) {
+      for (var c = 0; c < rows[r].length; c++) {
+        if (rows[r][c] < 0) { continue; }
+        if (cellCenter(r, c).y >= DEADLINE) { gameOver(); return; }
+      }
+    }
+  }
+
+  function gameOver() {
+    running = false;
+    over = true;
+    if (raf) { cancelAnimationFrame(raf); raf = null; }
+    best = lsGet("gb_bubble_best_" + diff(), 0);
+    if (score > best) {
+      best = score;
+      lsSet("gb_bubble_best_" + diff(), best);
+    }
+    $("bbBest").textContent = best;
+    banner($("bbBanner"), "Game over! Score: <b>" + score + "</b>");
+    beep(180, 0.3);
+    draw();
+  }
+
+  function draw() {
+    var cv = $("bbCanvas");
+    var ctx = cv.getContext("2d");
+    ctx.fillStyle = "#0b0f13";
+    ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = "#f87171";
+    if (ctx.setLineDash) { ctx.setLineDash([6, 6]); }
+    ctx.beginPath();
+    ctx.moveTo(0, DEADLINE);
+    ctx.lineTo(W, DEADLINE);
+    ctx.stroke();
+    if (ctx.setLineDash) { ctx.setLineDash([]); }
+    var r, c, ctr;
+    for (r = 0; r < rows.length; r++) {
+      for (c = 0; c < rows[r].length; c++) {
+        if (rows[r][c] < 0) { continue; }
+        ctr = cellCenter(r, c);
+        ctx.fillStyle = PAL[rows[r][c]];
+        ctx.beginPath();
+        ctx.arc(ctr.x, ctr.y, R, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    ctx.fillStyle = PAL[current];
+    ctx.beginPath();
+    ctx.arc(W / 2, H - 40, R, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = PAL[next];
+    ctx.beginPath();
+    ctx.arc(W / 2 + 40, H - 40, R * 0.6, 0, Math.PI * 2);
+    ctx.fill();
+    var dx = Math.cos(aim), dy = Math.sin(aim);
+    var px = W / 2, py = H - 40;
+    var vx = dx, vy = dy;
+    ctx.fillStyle = "#8a97a5";
+    for (var s = 0; s < 150; s += 10) {
+      px += vx * 10;
+      py += vy * 10;
+      if (px < R) { px = R; vx = Math.abs(vx); }
+      if (px > W - R) { px = W - R; vx = -Math.abs(vx); }
+      if (py < R) { break; }
+      ctx.beginPath();
+      ctx.arc(px, py, 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    if (flying) {
+      ctx.fillStyle = PAL[flying.color];
+      ctx.beginPath();
+      ctx.arc(flying.x, flying.y, R, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    if (!running) {
+      ctx.fillStyle = "#8a97a5";
+      ctx.font = "16px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("Tap Start to play", W / 2, H / 2);
+    }
+  }
+
+  function step() {
+    if (!running) { raf = null; return; }
+    updateFlying();
+    draw();
+    raf = requestAnimationFrame(step);
+  }
+
+  function start() {
+    reset();
+    running = true;
+    if (!raf) { raf = requestAnimationFrame(step); }
+  }
+
+  function reset() {
+    numColors = (diff() === "easy" || diff() === "medium") ? 4 : 5;
+    topParity = 0;
+    rows = [];
+    for (var r = 0; r < cfg().rows; r++) {
+      var len = rowLength(r);
+      var row = [];
+      for (var c = 0; c < len; c++) {
+        row.push(Math.floor(Math.random() * numColors));
+      }
+      rows.push(row);
+    }
+    shotsUntilDrop = 5;
+    score = 0;
+    over = false;
+    running = false;
+    flying = null;
+    aim = -Math.PI / 2;
+    current = randomPresentColor();
+    next = randomPresentColor();
+    $("bbScore").textContent = "0";
+    best = lsGet("gb_bubble_best_" + diff(), 0);
+    $("bbBest").textContent = best;
+    hideBanner($("bbBanner"));
+    draw();
+  }
+
+  function onPointer(ev) {
+    var cv = $("bbCanvas");
+    var rect = cv.getBoundingClientRect();
+    var px, py;
+    if (ev.touches && ev.touches.length > 0) {
+      px = ev.touches[0].clientX;
+      py = ev.touches[0].clientY;
+    } else {
+      px = ev.clientX;
+      py = ev.clientY;
+    }
+    var x = (px - rect.left) * (W / rect.width);
+    var y = (py - rect.top) * (H / rect.height);
+    var dx = x - W / 2, dy = y - (H - 40);
+    aim = Math.atan2(dy, dx);
+    if (aim > -0.35) { aim = -0.35; }
+    if (aim < -Math.PI + 0.35) { aim = -Math.PI + 0.35; }
+    fire();
+  }
+
+  $("bbCanvas").addEventListener("mousedown", onPointer);
+  $("bbCanvas").addEventListener("touchstart", function (ev) {
+    ev.preventDefault();
+    onPointer(ev);
+  }, { passive: false });
+  $("bbStart").addEventListener("click", start);
+  stopFns.bubble = function () {
+    running = false;
+    if (raf) { cancelAnimationFrame(raf); raf = null; }
+  };
+  reset();
+})();
 })();
 </script>
 </body>

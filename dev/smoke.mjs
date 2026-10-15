@@ -76,6 +76,8 @@ async function enter(key) {
 function back() { click(byId("backBtn")); }
 
 function boxOf(i) { return Math.floor(Math.floor(i / 9) / 3) * 3 + Math.floor((i % 9) / 3); }
+// A few valid words per length (all present in the game's Wordle pools) for driving guesses.
+const WORDLE_WORDS = { 4: ["COLD", "WARM", "GAME"], 5: ["CRANE", "SLATE", "ROAST"], 6: ["PLANET", "BRIDGE", "CASTLE"], 7: ["RAINBOW", "PYRAMID", "VOLCANO"] };
 function solveSudoku(g) {
   const r = g.slice();
   const ok = (i, v) => {
@@ -264,12 +266,125 @@ async function exercise(key, scr, deep, diff) {
     assert(swapped, "match3 valid swap registerable");
     return;
   }
+  if (key === "nono") {
+    var n = DP.nono[diff()].n;
+    var nCells = scr.querySelectorAll("#noWrap .no-cell");
+    assert(nCells.length === n * n, `nono grid ${n}x${n} (got ${nCells.length})`);
+    assert(scr.querySelectorAll("#noWrap .no-clue").length === 1 + 2 * n, "nono clue cells");
+    for (var nt = 0; nt < Math.min(5, nCells.length); nt++) nCells[nt].click();
+    return;
+  }
+  if (key === "wordle") {
+    var wl = DP.wordle[diff()];
+    var tiles = scr.querySelectorAll("#wlGrid .wl-tile");
+    assert(tiles.length === wl.guesses * wl.len, `wordle tiles (got ${tiles.length})`);
+    assert(scr.querySelectorAll("#wlKeys .wl-key").length >= 28, "wordle keyboard");
+    var word = WORDLE_WORDS[wl.len][0];
+    var before = num("#wlLeft", scr);
+    for (var ch = 0; ch < word.length; ch++) {
+      var kbtn = scr.querySelector("#wl-k-" + word[ch]);
+      if (kbtn) kbtn.click();
+    }
+    var enterBtn = [...scr.querySelectorAll("#wlKeys .wl-key")].find(function (b) { return b.textContent === "ENTER"; });
+    if (enterBtn) enterBtn.click();
+    assert(num("#wlLeft", scr) === before - 1, "wordle guess consumed");
+    return;
+  }
+  if (key === "checkers") {
+    var ckCells = scr.querySelectorAll("#ckBoard .ck-cell");
+    assert(ckCells.length === 64, "checkers 64 cells");
+    assert(scr.querySelectorAll("#ckBoard .ck-cell.p1").length === 12, "checkers 12 player pieces");
+    assert(scr.querySelectorAll("#ckBoard .ck-cell.p2").length === 12, "checkers 12 cpu pieces");
+    var moved = false;
+    for (var ci = 0; ci < ckCells.length && !moved; ci++) {
+      if (!ckCells[ci].classList.contains("p1")) continue;
+      ckCells[ci].click();
+      var hints = scr.querySelectorAll("#ckBoard .ck-cell.hint");
+      if (hints.length > 0) { hints[0].click(); moved = true; }
+      else { ckCells[ci].click(); }
+    }
+    assert(moved, "checkers player move registered");
+    await sleep(600);
+    return;
+  }
+  if (key === "mancala") {
+    assert(scr.querySelectorAll("#mcBoard > *").length === 14, "mancala 14 cells");
+    assert(scr.querySelectorAll("#mcBoard .mc-store").length === 2, "mancala 2 stores");
+    var mine = scr.querySelectorAll("#mcBoard .mc-pit.mine");
+    assert(mine.length === 6, `mancala 6 player pits (got ${mine.length})`);
+    var clicked = false;
+    for (var mi = 0; mi < mine.length && !clicked; mi++) {
+      if (parseInt(mine[mi].textContent, 10) > 0) { mine[mi].click(); clicked = true; }
+    }
+    assert(clicked, "mancala player move registered");
+    await sleep(600);
+    return;
+  }
+  if (key === "flow") {
+    var fn = DP.flow[diff()].n;
+    var fwCells = scr.querySelectorAll("#fwGrid .fw-cell");
+    assert(fwCells.length === fn * fn, `flow grid ${fn}x${fn} (got ${fwCells.length})`);
+    assert(scr.querySelectorAll("#fwGrid .fw-cell.dot").length === DP.flow[diff()].pairs * 2, "flow endpoints");
+    var gridEl = scr.querySelector("#fwGrid");
+    var step = 360 / fn;
+    fire(gridEl, "touchstart", { touches: [{ clientX: step * 0.5, clientY: step * 0.5 }], changedTouches: [{ clientX: step * 0.5, clientY: step * 0.5 }] });
+    fire(gridEl, "touchmove", { touches: [{ clientX: step * 1.5, clientY: step * 0.5 }], changedTouches: [{ clientX: step * 1.5, clientY: step * 0.5 }] });
+    fire(gridEl, "touchend", { touches: [], changedTouches: [{ clientX: step * 1.5, clientY: step * 0.5 }] });
+    return;
+  }
+  if (key === "type") {
+    assert(!!scr.querySelector("#tyInput"), "type input exists");
+    var tword = scr.querySelector("#tyWord").textContent;
+    assert(tword.length >= 3, "type word shown");
+    var inp = scr.querySelector("#tyInput");
+    inp.value = tword;
+    fire(inp, "input");
+    await sleep(20);
+    assert(num("#tyWpm", scr) > 0, "type WPM accrues");
+    return;
+  }
+  if (key === "hockey") {
+    click(byId("hkStart"));
+    await sleep(100);
+    assert(num("#hkYou", scr) === 0 && num("#hkCpu", scr) === 0, "hockey scores start at 0");
+    var hkCanvas = byId("hkCanvas");
+    fire(hkCanvas, "touchstart", { touches: [{ clientX: 180, clientY: 300 }], changedTouches: [{ clientX: 180, clientY: 300 }] });
+    await sleep(50);
+    return;
+  }
+  if (key === "slots") {
+    assert(scr.querySelectorAll("#scReels .sc-reel").length === 3, "slots 3 reels");
+    var before = num("#scCoins", scr);
+    var spinBtn = byId("scSpin");
+    assert(!spinBtn.disabled, "slots spin enabled");
+    spinBtn.click();
+    assert(num("#scCoins", scr) === before - 10, "slots bet deducted");
+    return;
+  }
+  if (key === "quiz") {
+    assert(scr.querySelector("#qzQ").textContent.length > 5, "quiz question shown");
+    var qopts = scr.querySelectorAll("#qzOpts .qz-opt");
+    assert(qopts.length === 4, `quiz 4 options (got ${qopts.length})`);
+    qopts[0].click();
+    await sleep(30);
+    assert(scr.querySelectorAll("#qzOpts .qz-opt:disabled").length === 4, "quiz options locked after answer");
+    return;
+  }
+  if (key === "bubble") {
+    click(byId("bbStart"));
+    await sleep(100);
+    assert(num("#bbScore", scr) === 0, "bubble score starts at 0");
+    var bbCanvas = byId("bbCanvas");
+    fire(bbCanvas, "touchstart", { touches: [{ clientX: 180, clientY: 100 }], changedTouches: [{ clientX: 180, clientY: 100 }] });
+    await sleep(50);
+    return;
+  }
   return generic(scr);
 }
 
 // ---------- structural ----------
 const cards = [...doc.querySelectorAll(".game-card")];
-assert(cards.length === 40, `40 cards (got ${cards.length})`);
+assert(cards.length === 50, `50 cards (got ${cards.length})`);
 const allIds = [...doc.querySelectorAll("[id]")].map((e) => e.id);
 assert(new Set(allIds).size === allIds.length, "ids unique");
 for (const c of cards) {
