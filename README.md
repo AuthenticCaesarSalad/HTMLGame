@@ -1,6 +1,6 @@
-# GameBox — 50 Offline Games in 1 File
+# GameBox — 53 Offline Games in 1 File
 
-GameBox is a single HTML file (`GameBox.html`) containing 50 complete games. No internet, no installs, no dependencies — open the file in any browser (phone or desktop) and play.
+GameBox is a single HTML file (`GameBox.html`) containing 53 complete games. No internet, no installs, no dependencies — open the file in any browser (phone or desktop) and play.
 
 ## How to Run
 
@@ -72,6 +72,9 @@ Highlights per level:
 - **Slots** starts you with fewer coins and pays out less
 - **Quiz** shrinks from 20s to 8s per question and uses a harder pool
 - **Bubble Shooter** starts with more rows and faster descent
+- **Tower Defense** starts with 250 gold / 30 lives (Easy) down to 100 gold / 8 lives (Impossible)
+- **Doom** spawns 6 demons at 60 HP (Easy) up to 18 at 120 HP, hitting harder and moving faster (Impossible)
+- **Rogue Dungeon** adds more monsters and multiplies monster damage (0.8x Easy → 1.6x Impossible)
 
 ---
 
@@ -638,11 +641,50 @@ Aim and fire coloured bubbles into the cluster. Three or more of a colour pop. T
 - On Impossible the cluster starts 6 rows deep and falls fast — clear the bottom first
 - Best score is saved per difficulty
 
+### 51. Tower Defense 🏰
+Build Gun, Cannon and Frost towers along a winding lane and hold off 15 waves of enemies. Enemies follow a fixed path from left to right; each one that leaks costs lives. Kill them for gold, invest it in upgrades, and don't run out of lives.
+
+**Controls:** tap a free cell to build the selected tower; tap a tower to upgrade it (up to level 3); toggle Sell to refund 70% of what you invested; Next Wave starts the next assault.
+
+**Walkthrough:**
+- Place towers on corners first — that's where enemies spend the most time, so every tower there gets maximum coverage
+- Mix the three types: Gun for raw DPS, Cannon for splash (great against tank clusters), Frost to slow the pack so the others fire more volleys per pass
+- Upgrades beat new towers: a level-3 Gun is cheaper DPS than three level-1 Guns, and the +0.3 range per level doubles a tower's useful zone
+- Start the wave as soon as the button says "Next Wave" — don't sit on a full bank of gold, interest is not paid
+- Runners (wave 3+) need fast-reacting towers near the exit; tanks (wave 5+) reward Frost + Cannon mid-lane
+- On Impossible you start with 100 gold and 8 lives — every placement must count; selling and rebuilding is sometimes the right play
+
+### 52. Doom 🔥
+A first-person raycaster FPS in the spirit of classic Doom. Procedurally carved mazes, demons that chase you and shoot when they have line of sight, health packs, and a hitscan gun. Clear the sector to win.
+
+**Controls:** WASD or arrow keys to move and turn, Space/Enter to fire. On touch: drag on the screen to turn, a quick tap fires, and the on-screen pad works too.
+
+**Walkthrough:**
+- Wall shading tells you distance: dark walls are far, bright walls are close — use it to navigate corridors
+- Fight one demon at a time: line of sight is a two-way street, so lure enemies around corners to split the pack
+- Strafe after a demon shoots — its shot is aimed at where you were, and sidestepping makes it miss
+- Health packs heal 25; grab them before a fight, not during one
+- Your gun hits whatever is closest within a narrow angle — aim dead-center before firing or you'll damage the wrong demon
+- On Impossible, 18 demons at 120 HP hunt you — constant movement is your best defense; standing still is death
+
+### 53. Rogue Dungeon ⚔️
+A turn-based roguelike: procedurally generated dungeons, fog of war, four kinds of monsters, potions, gold, and a staircase down to the next depth. Reach depth 10 to escape.
+
+**Controls:** arrows/WASD move one tile (bumping a monster attacks it), P drinks a potion, Enter or > descends when on the stairs. On-screen D-pad plus Drink/Descend buttons for touch.
+
+**Walkthrough:**
+- Bumping is attacking: walk into a monster to hit it. Kill things for XP; each level-up heals you fully and raises max HP
+- Depth 1-2 is rats only — bank XP and potions there before the goblins arrive
+- Potions heal 40% of max HP. Drink below half, not at the last hit point — monster damage varies, so a single big roll can kill you
+- Monsters scale with depth, but so do XP and loot: depth 5 brings orcs, depth 6 adds trolls
+- The fog is your friend: monsters only act when they can see you. Break line of sight to reset fights
+- Gold is score only — don't die collecting it. On Impossible, monster damage is 1.6x, so kite monsters through corridors one at a time
+
 ---
 
 ## Tech Notes
 
-- Single file, zero dependencies, ~240KB. Works offline forever once downloaded
+- Single file, zero dependencies, ~280KB. Works offline forever once downloaded
 - Touch-first (mobile), with keyboard support on desktop (arrows/Space)
 - Best scores persist in localStorage per browser
 - Sounds are synthesized with the Web Audio API — no audio files
