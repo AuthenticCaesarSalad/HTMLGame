@@ -54,9 +54,14 @@
   @media (max-width: 420px) { .diff-label { display: none; } }
 
   /* ---------- Menu ---------- */
-  #menu { max-width: 520px; margin: 0 auto; padding: 20px 16px 40px; }
+  #menu { max-width: 1280px; margin: 0 auto; padding: 20px 16px 40px; }
   #menu p.sub { color: var(--muted); font-size: 14px; margin: 0 0 18px; }
-  .game-list { display: flex; flex-direction: column; gap: 12px; }
+  /* Cards stand side by side and fill the width on PC; one column on phones */
+  .game-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 12px;
+  }
   .game-card {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 14px; padding: 16px 18px;
@@ -76,7 +81,7 @@
   .game-card .arrow { color: var(--muted); font-size: 20px; }
 
   /* ---------- Game shell ---------- */
-  .screen { display: none; max-width: 520px; margin: 0 auto; padding: 16px; }
+  .screen { display: none; max-width: 620px; margin: 0 auto; padding: 16px; }
   .screen.active { display: block; }
   .hud {
     display: flex; justify-content: space-between; align-items: center;
@@ -106,7 +111,8 @@
   /* ---------- Snake ---------- */
   #snakeCanvas {
     background: #0b0f13; border: 1px solid var(--border); border-radius: 12px;
-    width: 100%; aspect-ratio: 1/1; display: block; touch-action: none;
+    width: min(100%, calc(100vh - 360px)); aspect-ratio: 1/1; display: block; touch-action: none;
+    margin: 0 auto;
   }
   .dpad {
     display: grid; grid-template-columns: repeat(3, 56px); grid-template-rows: repeat(3, 56px);
@@ -166,7 +172,8 @@
   /* ---------- Breakout / Flappy ---------- */
   .tall-canvas {
     background: #0b0f13; border: 1px solid var(--border); border-radius: 12px;
-    width: 100%; aspect-ratio: 3/4; display: block; touch-action: none;
+    width: min(100%, calc((100vh - 250px) * 3 / 4)); aspect-ratio: 3/4; display: block; touch-action: none;
+    margin: 0 auto;
   }
 
   /* ---------- Simon ---------- */
@@ -247,6 +254,7 @@
 
   /* ---------- Reaction ---------- */
   #rxPanel {
+    width: min(100%, calc((100vh - 250px) * 3 / 4)); margin: 0 auto;
     aspect-ratio: 3/4; border-radius: 14px; border: 1px solid var(--border);
     display: flex; align-items: center; justify-content: center;
     font-size: clamp(20px, 7vw, 30px); font-weight: 700; text-align: center;
@@ -342,7 +350,8 @@
   /* ---------- Square canvases (Sokoban / Maze) ---------- */
   .sq-canvas {
     background: #0b0f13; border: 1px solid var(--border); border-radius: 12px;
-    width: 100%; aspect-ratio: 1/1; display: block; touch-action: none;
+    width: min(100%, calc(100vh - 360px)); aspect-ratio: 1/1; display: block; touch-action: none;
+    margin: 0 auto;
   }
 
   /* ---------- SameGame ---------- */
@@ -589,7 +598,8 @@
   /* ---------- Tower Defense / Doom / Rogue ---------- */
   .wide-canvas {
     background: #0b0f13; border: 1px solid var(--border); border-radius: 12px;
-    width: 100%; aspect-ratio: 3/2; display: block; touch-action: none;
+    width: min(100%, calc((100vh - 230px) * 3 / 2)); aspect-ratio: 3/2; display: block; touch-action: none;
+    margin: 0 auto;
   }
   .game-bar {
     display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 12px;

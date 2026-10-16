@@ -2,6 +2,8 @@
 
 GameBox is a single HTML file (`GameBox.html`) containing 53 complete games. No internet, no installs, no dependencies — open the file in any browser (phone or desktop) and play.
 
+**Layout:** the menu is a responsive grid — game cards stack in a single column on phones and stand side by side filling the screen on desktops, so the whole list needs minimal scrolling. Game screens stay centered, are wider on desktop, and cap their play areas to the viewport height so boards fit without scrolling.
+
 ## How to Run
 
 1. Download `GameBox.html`
